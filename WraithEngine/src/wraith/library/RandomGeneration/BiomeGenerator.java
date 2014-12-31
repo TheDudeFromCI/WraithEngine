@@ -50,18 +50,8 @@ public class BiomeGenerator{
 			biomeMerge.percents[bio]/=(smoothing*2+1)*d.length;
 			s+=biomeMerge.percents[bio]*biomeMerge.percents[bio];
 		}
-		System.out.println(s);
 		s=Math.sqrt(s);
-		System.out.println(s);
-		float t = 0;
-		float pt = 0;
-		if(s>0)for(int a = 0; a<biomeMerge.percents.length; a++){
-			System.out.println(" "+biomeMerge.percents[a]);
-			pt+=biomeMerge.percents[a];
-			t+=biomeMerge.percents[a]/=s;
-		}
-		System.out.println("PT: "+pt);
-		System.out.println("T: "+t);
+		if(s>0)for(int a = 0; a<biomeMerge.percents.length; a++)biomeMerge.percents[a]/=s;
 		return biomeMerge;
 	}
 	public BiomeGenerator(float scale){ this(randomizeSeeds(), scale); }
