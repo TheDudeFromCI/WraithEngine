@@ -8,13 +8,16 @@ public class NoiseGenerator{
 	private int detail;
 	private float maxHeight;
 	private boolean onlyPositive;
-	public NoiseGenerator(long seed, float smoothness, int detail, boolean onlyPositive){
+	private int blending;
+	public NoiseGenerator(long seed, float smoothness, int detail, boolean onlyPositive, int blending){
 		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
 		if(detail<1)throw new IllegalArgumentException("Detail must be at least 1!");
+		if(blending<0)throw new IllegalArgumentException("Blending cannot be negative!");
 		this.seed=seed;
 		this.smoothness=smoothness;
 		this.detail=detail;
 		this.onlyPositive=onlyPositive;
+		this.blending=blending;
 		maxHeight=m(detail);
 	}
 	public float noise(float... x){
@@ -71,12 +74,12 @@ public class NoiseGenerator{
 		int[] n = new int[x.length];
 		for(int i = 0; i<n.length; i++)n[i]=x[i];
 		for(int a = 0; a<x.length; a++){
-			for(int b = -1; b<=1; b++){
+			for(int b = -blending; b<=blending; b++){
 				n[a]=x[a]+b;
 				total+=r(n);
 			}
 		}
-		return total/(x.length*3);
+		return total/(x.length*(blending*2+1));
 	}
 	private float r(int[] x){
 		final long s = 4294967291L;
@@ -85,6 +88,22 @@ public class NoiseGenerator{
 		for(int a : x)t+=a*a*s;
 		return new Random(t).nextFloat()*2-1;
 	}
-	public NoiseGenerator(boolean onlyPositive){ this((int)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*100), (int)(Math.random()*25)+1, onlyPositive); }
+	public void setSmoothness(float smoothness){
+		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
+		this.smoothness=smoothness;
+	}
+	public void setDetail(int detail){
+		if(detail<1)throw new IllegalArgumentException("Detail must be at least 1!");
+		this.detail=detail;
+		maxHeight=m(detail);
+	}
+	public NoiseGenerator(boolean onlyPositive){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
+	public NoiseGenerator(long seed, boolean onlyPositive){ this(seed, (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
 	private int f(float x){ return x>=0?(int)x:(int)x-1; }
+	public long getSeed(){ return seed; }
+	public void setSeed(long seed){ this.seed=seed; }
+	public float getSmoothness(){ return smoothness; }
+	public int getDetail(){ return detail; }
+	public boolean isOnlyPositive(){ return onlyPositive; }
+	public void setOnlyPositive(boolean onlyPositive){ this.onlyPositive=onlyPositive; }
 }
