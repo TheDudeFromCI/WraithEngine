@@ -1,35 +1,43 @@
 package wraith.library.RandomGeneration;
 
-import java.util.Random;
+import java.util.ArrayList;
+import wraith.library.WorldManagement.Biome;
 
 public class BiomeGenerator{
-	private NoiseGenerator[] n;
-	public BiomeGenerator(long[] seeds){
-		n=new NoiseGenerator[seeds.length];
-		Random r;
-		for(int a = 0; a<seeds.length; a++){
-			r=new Random(seeds[a]+100);
-			n[a]=new NoiseGenerator(seeds[a], r.nextFloat()*40+10, 1, false, r.nextInt(5)+1);
-		}
+	private NoiseGenerator n1;
+	private NoiseGenerator n2;
+	private ArrayList<Biome> biomes = new ArrayList<>();
+	public BiomeGenerator(long[] seeds, float scale){
+		n1=new NoiseGenerator(seeds[0], true);
+		n2=new NoiseGenerator(seeds[1], true);
+		n1.setSmoothness(n1.getSmoothness()*scale);
+		n2.setSmoothness(n2.getSmoothness()*scale);
 	}
-	public int biomeAt(float... cords){
-		int highest = 0;
-		float val = -10;
-		float f;
-		for(int a = 0; a<n.length; a++){
-			f=n[a].noise(cords);
-			if(f>val){
-				val=f;
-				highest=a;
+	public Biome biome(float... cords){
+		if(biomes.size()==0)throw new IllegalStateException("No biomes loaded!");
+		float a1 = n1.noise(cords);
+		float a2 = n2.noise(cords);
+		Biome c = null;
+		float s = -1;
+		for(Biome b : biomes){
+			float f = b.similarity(a1, a2)*b.rarity;
+			if(f>s){
+				s=f;
+				c=b;
 			}
 		}
-		return highest;
+		return c;
 	}
-	public BiomeGenerator(int biomes){ this(randomSeeds(biomes)); }
-	public BiomeGenerator(NoiseGenerator[] biomes){ n=biomes; }
-	public static long[] randomSeeds(int l){
-		long[] a = new long[l];
-		for(int i = 0; i<l; i++)a[i]=(long)(Math.random()*Long.MAX_VALUE);
-		return a;
+	public BiomeGenerator(float scale){ this(randomizeSeeds(), scale); }
+	public void addBiome(Biome biome){ biomes.add(biome); }
+	public void removeBiome(Biome biome){ biomes.remove(biome); }
+	public void clearBiomes(){ biomes.clear(); }
+	public int getBiomeCount(){ return biomes.size(); }
+	public int indexOf(Biome b){ return biomes.indexOf(b); }
+	public ArrayList<Biome> getBiomes(){ return biomes; }
+	private static long[] randomizeSeeds(){
+		long[] l = new long[2];
+		for(int i = 0; i<l.length; i++)l[i]=(long)(Math.random()*Long.MAX_VALUE);
+		return l;
 	}
 }

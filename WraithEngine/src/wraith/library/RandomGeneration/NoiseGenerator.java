@@ -98,7 +98,7 @@ public class NoiseGenerator{
 		maxHeight=m(detail);
 	}
 	public NoiseGenerator(boolean onlyPositive){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
-	public NoiseGenerator(long seed, boolean onlyPositive){ this(seed, (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
+	public NoiseGenerator(long seed, boolean onlyPositive){ this(seed, new Random(seed).nextFloat()*40+10, new Random(seed).nextInt(10)+1, onlyPositive, 1); }
 	private int f(float x){ return x>=0?(int)x:(int)x-1; }
 	public long getSeed(){ return seed; }
 	public void setSeed(long seed){ this.seed=seed; }
