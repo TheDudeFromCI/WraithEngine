@@ -11,6 +11,7 @@ public class BiomeGenerator{
 			r=new Random(seeds[a]+100);
 			n[a]=new NoiseGenerator(seeds[a], r.nextFloat()*40+10, 1, false, r.nextInt(5)+1);
 		}
+		//Test
 	}
 	public int biomeAt(float... cords){
 		int highest = 0;
