@@ -1,5 +1,7 @@
 package wraith.library.BinaryFile;
 
+import java.io.File;
+
 /**
  * A class designed to decode a byte array into more useable primitive objects.
  * @author TheDudeFromCI
@@ -127,6 +129,11 @@ public class BinaryDecoder{
 	 * @param bytes - The byte array that needs to be decoded.
 	 */
 	public BinaryDecoder(byte[] bytes){ this.bytes=bytes; }
+	/**
+	 * Creates a new BinaryDecoder.
+	 * @param file - The file to load the bytes from.
+	 */
+	public BinaryDecoder(File file){ bytes=BinaryFileUtil.readFile(file); }
 	/**
 	 * Resets the iterator back to the begining of the byte array.
 	 */
