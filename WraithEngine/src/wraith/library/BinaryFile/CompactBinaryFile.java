@@ -109,7 +109,7 @@ public class CompactBinaryFile extends File{
 		if(bits<1)throw new IllegalArgumentException("Cannot write a number with less then 1 bit!");
 		if(bits>64)throw new IllegalArgumentException("Cannot write a number with more then 64 bits!");
 		long a;
-		for(int i = bits; i>=0; i--){
+		for(int i = bits-1; i>=0; i--){
 			a=power(i);
 			addBit((number&a)==a);
 		}
