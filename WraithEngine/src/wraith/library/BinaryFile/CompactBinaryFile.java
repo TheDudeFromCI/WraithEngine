@@ -114,6 +114,16 @@ public class CompactBinaryFile extends File{
 			addBit((number&a)==a);
 		}
 	}
+	public void addString(String s, int lengthAllocation){
+		byte[] b = s.getBytes();
+		addNumber(b.length, lengthAllocation);
+		for(byte a : b)addNumber(a, 8);
+	}
+	public String getString(int lengthAllocation){
+		byte[] bytes = new byte[(int)getNumber(lengthAllocation)];
+		for(int a = 0; a<bytes.length; a++)bytes[a]=(byte)getNumber(8);
+		return new String(bytes);
+	}
 	public CompactBinaryFile(File parent, String child){ super(parent, child); }
 	public CompactBinaryFile(String parent, String child){ super(parent, child); }
 	public CompactBinaryFile(URI uri){ super(uri); }
