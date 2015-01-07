@@ -124,6 +124,14 @@ public class CompactBinaryFile extends File{
 		for(int a = 0; a<bytes.length; a++)bytes[a]=(byte)getNumber(8);
 		return new String(bytes);
 	}
+	public boolean ensureExistance(){
+		if(exists())return false;
+		try{
+			getParentFile().mkdirs();
+			createNewFile();
+		}catch(Exception exception){ exception.printStackTrace(); }
+		return true;
+	}
 	public CompactBinaryFile(File parent, String child){ super(parent, child); }
 	public CompactBinaryFile(String parent, String child){ super(parent, child); }
 	public CompactBinaryFile(URI uri){ super(uri); }
