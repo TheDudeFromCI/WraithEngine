@@ -1,4 +1,4 @@
-package wraith.library.BinaryFile;
+package wraith.library.File.BinaryFile;
 
 /**
  * A helpful class designed to aid developers in creating bytes arrays from primitive objects.

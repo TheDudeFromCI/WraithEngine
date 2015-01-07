@@ -1,4 +1,4 @@
-package wraith.library.BinaryFile;
+package wraith.library.File.TextFile;
 
 import java.io.BufferedReader;
 import java.io.File;

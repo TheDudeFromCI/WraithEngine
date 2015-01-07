@@ -1,4 +1,4 @@
-package wraith.library.BinaryFile;
+package wraith.library.File.BinaryFile;
 
 import java.io.File;
 
