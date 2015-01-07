@@ -1,8 +1,10 @@
 package wraith.library.File.TextFile;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -42,6 +44,18 @@ public class ConfigFile extends File{
 		if(values.containsKey(key))return values.get(key);
 		return null;
 	}
+	public void save(){
+		BufferedWriter out = null;
+		try{
+			out=new BufferedWriter(new FileWriter(this));
+			for(String s : values.keySet())out.write(s+": "+values.get(s)+"\n");
+		}catch(Exception exception){ exception.printStackTrace(); }
+		finally{
+			try{ out.close();
+			}catch(Exception exception){ exception.printStackTrace(); }
+		}
+	}
+	public void setValue(String key, String value){ values.put(key, value); }
 	public ConfigFile(File parent, String child){ super(parent, child); }
 	public ConfigFile(String parent, String child){ super(parent, child); }
 	public ConfigFile(URI uri){ super(uri); }
