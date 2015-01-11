@@ -127,7 +127,7 @@ public class CompactBinaryFile extends File{
 	public boolean ensureExistance(){
 		if(exists())return false;
 		try{
-			getParentFile().mkdirs();
+			if(getParentFile()!=null)getParentFile().mkdirs();
 			createNewFile();
 		}catch(Exception exception){ exception.printStackTrace(); }
 		return true;
