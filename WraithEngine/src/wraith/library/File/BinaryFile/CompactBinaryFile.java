@@ -92,7 +92,7 @@ public class CompactBinaryFile extends File{
 		for(int i = position; i<length+position; i++)bits[i]=nextBit();
 	}
 	public void resetIterator(){
-		if(!reading||!writing)throw new IllegalStateException("Not editing file!");
+		if(!reading&&!writing)throw new IllegalStateException("Not editing file!");
 		pos=subPos=0;
 	}
 	public boolean hasFinished(){
