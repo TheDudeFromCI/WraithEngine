@@ -5,7 +5,6 @@ import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -15,7 +14,6 @@ public class BetterConsole extends JFrame{
 	private JTextPane textPanel;
 	private JScrollPane scrollPane;
 	private ArrayList<Object> values = new ArrayList<>();
-	private Rectangle r;
 	public BetterConsole(boolean exitOnClose){
 		setTitle("Debug Console");
 		setDefaultCloseOperation(exitOnClose?JFrame.EXIT_ON_CLOSE:JFrame.DISPOSE_ON_CLOSE);
@@ -31,6 +29,7 @@ public class BetterConsole extends JFrame{
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		new SmartScroller(scrollPane);
 		setVisible(true);
 	}
 	public void clear(){
@@ -47,35 +46,26 @@ public class BetterConsole extends JFrame{
 		if(values.size()==0){
 			values.add(a.toString());
 			updateText();
-			scrollToBottom();
 		}else{
 			Object o = values.get(values.size()-1);
 			if(o instanceof String)values.set(values.size()-1, o.toString()+a.toString());
 			else values.add(a.toString());
 			updateText();
-			scrollToBottom();
 		}
 	}
 	public void printChanging(Object a){
 		if(a==null)return;
 		values.add(a);
 		updateText();
-		scrollToBottom();
 	}
 	public void printChangingLine(Object a){
 		if(a==null)return;
 		values.add(a);
 		println();
-		scrollToBottom();
 	}
 	public void println(Object a){
 		if(a==null)return;
 		print(a+"\n");
-	}
-	private void scrollToBottom(){
-		r=scrollPane.getBounds();
-		r.y=textPanel.getHeight()-r.height;
-		scrollPane.scrollRectToVisible(r);
 	}
 	public void println(){ print("\n"); }
 }
