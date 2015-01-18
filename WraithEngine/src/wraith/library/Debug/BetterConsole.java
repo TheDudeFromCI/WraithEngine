@@ -20,7 +20,6 @@ public class BetterConsole extends JFrame{
 		setLocationRelativeTo(null);
 		textPanel = new JTextPane();
 		textPanel.setEditable(false);
-		textPanel.setText("Starting Console.\r\n");
 		textPanel.setBackground(Color.BLACK);
 		textPanel.setForeground(Color.GREEN);
 		textPanel.setFont(new Font("Courier New", Font.BOLD, 14));
@@ -54,6 +53,7 @@ public class BetterConsole extends JFrame{
 	public void printChanging(Object a){
 		if(a==null)return;
 		values.add(a);
+		updateText();
 	}
 	public void println(Object a){
 		if(a==null)return;
