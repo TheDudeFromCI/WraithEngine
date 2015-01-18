@@ -5,6 +5,7 @@ import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -12,19 +13,21 @@ import javax.swing.ScrollPaneConstants;
 @SuppressWarnings("serial")
 public class BetterConsole extends JFrame{
 	private JTextPane textPanel;
+	private JScrollPane scrollPane;
 	private ArrayList<Object> values = new ArrayList<>();
+	private Rectangle r;
 	public BetterConsole(boolean exitOnClose){
 		setTitle("Debug Console");
 		setDefaultCloseOperation(exitOnClose?JFrame.EXIT_ON_CLOSE:JFrame.DISPOSE_ON_CLOSE);
 		setSize(500, 500);
 		setLocationRelativeTo(null);
-		textPanel = new JTextPane();
+		textPanel=new JTextPane();
 		textPanel.setContentType("log");
 		textPanel.setEditable(false);
 		textPanel.setBackground(Color.BLACK);
 		textPanel.setForeground(Color.GREEN);
 		textPanel.setFont(new Font("Courier New", Font.BOLD, 14));
-		JScrollPane scrollPane = new JScrollPane(textPanel);
+		scrollPane=new JScrollPane(textPanel);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -38,6 +41,9 @@ public class BetterConsole extends JFrame{
 		String a = "";
 		for(Object v : values)a+=v.toString();
 		textPanel.setText(a);
+		r=scrollPane.getBounds();
+		r.y=textPanel.getHeight()-r.height;
+		scrollPane.scrollRectToVisible(r);
 	}
 	public void print(Object a){
 		if(a==null)return;
