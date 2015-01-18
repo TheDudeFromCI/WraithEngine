@@ -41,35 +41,41 @@ public class BetterConsole extends JFrame{
 		String a = "";
 		for(Object v : values)a+=v.toString();
 		textPanel.setText(a);
-		r=scrollPane.getBounds();
-		r.y=textPanel.getHeight()-r.height;
-		scrollPane.scrollRectToVisible(r);
 	}
 	public void print(Object a){
 		if(a==null)return;
 		if(values.size()==0){
 			values.add(a.toString());
 			updateText();
+			scrollToBottom();
 		}else{
 			Object o = values.get(values.size()-1);
 			if(o instanceof String)values.set(values.size()-1, o.toString()+a.toString());
 			else values.add(a.toString());
 			updateText();
+			scrollToBottom();
 		}
 	}
 	public void printChanging(Object a){
 		if(a==null)return;
 		values.add(a);
 		updateText();
+		scrollToBottom();
 	}
 	public void printChangingLine(Object a){
 		if(a==null)return;
 		values.add(a);
 		println();
+		scrollToBottom();
 	}
 	public void println(Object a){
 		if(a==null)return;
 		print(a+"\n");
+	}
+	private void scrollToBottom(){
+		r=scrollPane.getBounds();
+		r.y=textPanel.getHeight()-r.height;
+		scrollPane.scrollRectToVisible(r);
 	}
 	public void println(){ print("\n"); }
 }
