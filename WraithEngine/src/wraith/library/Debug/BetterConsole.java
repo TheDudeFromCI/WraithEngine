@@ -13,9 +13,9 @@ import javax.swing.ScrollPaneConstants;
 public class BetterConsole extends JFrame{
 	private JTextPane textPanel;
 	private ArrayList<Object> values = new ArrayList<>();
-	public BetterConsole(){
+	public BetterConsole(boolean exitOnClose){
 		setTitle("Debug Console");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(exitOnClose?JFrame.EXIT_ON_CLOSE:JFrame.DISPOSE_ON_CLOSE);
 		setSize(500, 500);
 		setLocationRelativeTo(null);
 		textPanel = new JTextPane();
