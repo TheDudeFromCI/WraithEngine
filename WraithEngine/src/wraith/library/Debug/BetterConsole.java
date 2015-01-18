@@ -33,7 +33,7 @@ public class BetterConsole extends JFrame{
 		values.clear();
 		textPanel.setText("");
 	}
-	private void updateText(){
+	public void updateText(){
 		String a = "";
 		for(Object v : values)a+=v.toString();
 		textPanel.setText(a);
