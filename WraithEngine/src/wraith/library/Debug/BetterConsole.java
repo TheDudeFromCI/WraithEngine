@@ -28,6 +28,7 @@ public class BetterConsole extends JFrame{
 		scrollPane=new JScrollPane(textPanel);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setDoubleBuffered(true);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		new SmartScroller(scrollPane);
 		setVisible(true);
