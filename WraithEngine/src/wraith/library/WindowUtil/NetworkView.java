@@ -20,12 +20,14 @@ public class NetworkView extends JComponent{
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(connectorColor);
-		for(int i = 0; i<nodes.size(); i++)drawNodeConnections(g, nodes.get(i), nodeCords[i][0], nodeCords[i][1]);
-		for(int i = 0; i<nodes.size(); i++)drawNode(g, nodes.get(i), nodeCords[i][0], nodeCords[i][1]);
+		synchronized(nodes){
+			for(int i = 0; i<nodes.size(); i++)drawNodeConnections(g, nodes.get(i), nodeCords[i][0], nodeCords[i][1]);
+			for(int i = 0; i<nodes.size(); i++)drawNode(g, nodes.get(i), nodeCords[i][0], nodeCords[i][1]);
+		}
 		g.dispose();
 	}
 	private void drawNode(Graphics2D g, NetworkNode node, int x, int y){
-		g.setColor(nodeColor);
+		g.setColor(node.isActive()?nodeColor:Color.gray);
 		g.fillOval(x-nodeSize/2, y-nodeSize/2, nodeSize, nodeSize);
 		g.setColor(getForeground());
 		FontMetrics fm = g.getFontMetrics();
@@ -43,18 +45,22 @@ public class NetworkView extends JComponent{
 		}
 	}
 	public void addNetworkNode(NetworkNode node){
-		nodes.add(node);
+		synchronized(nodes){
+			nodes.add(node);
+		}
 		repaint();
 	}
 	public void removeNetworkNode(NetworkNode node){
-		nodes.remove(node);
+		synchronized(nodes){
+			nodes.remove(node);
+		}
 		repaint();
 	}
 	private void recalculateNodeCords(){
 		nodeCords=new int[nodes.size()][];
 		double angle = 2*Math.PI/nodes.size();
-		double horizontalRadius = (getWidth()-nodeSize)*0.5;
-		double verticalRadius = (getHeight()-nodeSize-getFontMetrics(getFont()).getHeight()*2)*0.5;
+		double horizontalRadius = (getWidth()*0.9-nodeSize*2)*0.5;
+		double verticalRadius = (getHeight()*0.9-nodeSize*2)*0.5;
 		for(int i = 0; i<nodeCords.length; i++){
 			nodeCords[i]=new int[]{
 				(int)Math.round(Math.cos(angle*i)*horizontalRadius+getWidth()/2.0),
