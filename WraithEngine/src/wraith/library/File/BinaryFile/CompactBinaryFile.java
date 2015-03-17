@@ -45,11 +45,6 @@ public class CompactBinaryFile extends File{
 		for(int i = bits-1; i>=0; i--)if(nextBit())n+=power(i);
 		return n;
 	}
-	private long power(int p){
-		long a = 1;
-		for(int i = 0; i<p; i++)a*=2;
-		return a;
-	}
 	public void write(){
 		reading=false;
 		writing=true;
@@ -139,4 +134,9 @@ public class CompactBinaryFile extends File{
 	public long getPosition(){ return pos*8+subPos; }
 	public boolean isReadingFile(){ return reading; }
 	public boolean isWritingFile(){ return writing; }
+	private static long power(int p){
+		long a = 1;
+		for(int i = 0; i<p; i++)a*=2;
+		return a;
+	}
 }

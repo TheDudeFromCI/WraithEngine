@@ -2,11 +2,5 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_25"/>
-	<classpathentry kind="lib" path="C:/Users/TheDudeFromCI/Documents/LWJGL/jar/lwjgl.jar" sourcepath="C:/Users/TheDudeFromCI/Documents/LWJGL/src.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/TheDudeFromCI/Documents/LWJGL/doc/javadoc.zip!/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/TheDudeFromCI/Documents/LWJGL/native/windows/x64"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
