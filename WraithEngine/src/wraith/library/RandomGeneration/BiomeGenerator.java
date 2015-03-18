@@ -10,8 +10,8 @@ public class BiomeGenerator{
 	private ArrayList<Biome> biomes = new ArrayList<>();
 	public BiomeGenerator(long[] seeds, float scale){
 		if(scale<=0)throw new IllegalArgumentException("Scale must be greater then 0!");
-		n1=new NoiseGenerator(seeds[0], true);
-		n2=new NoiseGenerator(seeds[1], true);
+		n1=new NoiseGenerator(seeds[0]);
+		n2=new NoiseGenerator(seeds[1]);
 		n1.setSmoothness(n1.getSmoothness()*scale);
 		n2.setSmoothness(n2.getSmoothness()*scale);
 	}

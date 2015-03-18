@@ -5,9 +5,7 @@ import java.util.ArrayList;
 public class EvolutionaryLearningSystem{
 	private boolean listenToLastJump;
 	private int unevenIndex;
-	private double[] jumps;
-	private double[] currentData;
-	private double[] tempData;
+	private double[] jumps, currentData, tempData;
 	private long currentScore = Long.MIN_VALUE;
 	private boolean awaitingScore;
 	private final boolean singleRandom;
@@ -44,7 +42,8 @@ public class EvolutionaryLearningSystem{
 		synchronized(multithreadLock){
 			awaitingScore=false;
 			if(score>currentScore){
-				currentData=tempData;
+				currentData=new double[tempData.length];
+				for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i];
 				currentScore=score;
 				listenToLastJump=true;
 			}else listenToLastJump=false;
@@ -99,10 +98,11 @@ public class EvolutionaryLearningSystem{
 		if(!awaitingScore)throw new IllegalStateException("Not awaiting score!");
 		synchronized(multithreadLock){ return jumps; }
 	}
-	private void randomizeInitalData(){ for(int i = 0; i<currentData.length; i++)tempData[i]=currentData[i]=(Math.random()-0.5)*randomnessFactor; }
+	private void randomizeInitalData(){ for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i]=(Math.random()-0.5)*randomnessFactor; }
 	private void callGenerationListeners(long score){ for(GenerationListener r : generationListeners)r.run(score); }
 	public void addGenerationListener(GenerationListener r){ generationListeners.add(r); }
 	public void removeGenerationListener(GenerationListener r){ generationListeners.remove(r); }
 	public void resetScore(){ currentScore=Long.MIN_VALUE; }
 	public long getCurrentScore(){ return currentScore; }
+	public double[] getBest(){ return currentData; }
 }

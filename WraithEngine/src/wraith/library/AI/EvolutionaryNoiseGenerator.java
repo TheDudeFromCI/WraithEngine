@@ -2,13 +2,18 @@ package wraith.library.AI;
 
 import java.util.ArrayList;
 import java.util.Random;
+import wraith.library.RandomGeneration.NoiseGenerator;
 
 public class EvolutionaryNoiseGenerator{
-	private long[] y;
+	private double[] y, by;
+	private BasicEvolutionProgressLog progressLog;
+	private final NoiseGenerator noiseGenerator;
 	private final EvolutionaryLearningSystem learningSystem;
 	private final ArrayList<StandardHeight> standardHeights = new ArrayList<>();
 	public EvolutionaryNoiseGenerator(){
-		learningSystem=new EvolutionaryLearningSystem(-1, 1, false);
+		noiseGenerator=new NoiseGenerator(new Random().nextLong(), 1, 1, 0);
+		learningSystem=new EvolutionaryLearningSystem(1, 10000, false);
+		progressLog=new BasicEvolutionProgressLog(learningSystem);
 		assignValues();
 	}
 	public double noise(double... x){
@@ -25,29 +30,58 @@ public class EvolutionaryNoiseGenerator{
 				int c = (int)Math.pow(2, j);
 				edge[j]=(i&c)==c?f[j]+1:f[j];
 			}
-			v[i]=random(edge);
+			v[i]=random(edge, false);
 		}
 		return i(v, fracs, 0);
 	}
-	private double random(int[] x){
+	public double bestNoise(double... x){
+		int[] f = new int[x.length];
+		double[] fracs = new double[x.length];
+		for(int i = 0; i<x.length; i++){
+			f[i]=f(x[i]);
+			fracs[i]=x[i]-f[i];
+		}
+		double[] v = new double[(int)Math.pow(2, x.length)];
+		for(int i = 0; i<v.length; i++){
+			int[] edge = new int[x.length];
+			for(int j = 0; j<x.length; j++){
+				int c = (int)Math.pow(2, j);
+				edge[j]=(i&c)==c?f[j]+1:f[j];
+			}
+			v[i]=random(edge, true);
+		}
+		return i(v, fracs, 0);
+	}
+	private double random(int[] x, boolean best){
 		for(StandardHeight s : standardHeights)if(s.equals(x))return s.h;
 		final long s = 4294967291L;
 		long t = 0;
 		for(int a : x)t=t*s+a;
 		for(int a : x)t+=a*a*s;
-		for(long l : y)t+=l*t+s;
-		return new Random(t).nextDouble();
+		double d = new Random(t).nextDouble();
+		return (d+(best?bestRN(x):rn(x)))%1;
+	}
+	private double rn(int[] x){
+		float[] f = new float[x.length+y.length];
+		for(int i = 0; i<f.length; i++){
+			if(i<x.length)f[i]=x[i];
+			else f[i]=(float)y[i-x.length];
+		}
+		return noiseGenerator.noise(f);
+	}
+	private double bestRN(int[] x){
+		float[] f = new float[x.length+by.length];
+		for(int i = 0; i<f.length; i++){
+			if(i<x.length)f[i]=x[i];
+			else f[i]=(float)by[i-x.length];
+		}
+		return noiseGenerator.noise(f);
 	}
 	private double i(double[] v, double[] fracs, int stage){
 		if(v.length==2)return c(v[0], v[1], fracs[stage]);
 		double[] k = new double[v.length/2];
 		for(int i = 0; i<k.length; i++)k[i]=c(v[i*2], v[i*2+1], fracs[stage]);
 		return i(k, fracs, stage+1);
-	}
-	private void assignValues(){
-		double[] d = learningSystem.next();
-		y=new long[d.length];
-		for(int i = 0; i<y.length; i++)y[i]=Math.round(d[i]);
 	}
 	public void score(long score){
 		learningSystem.score(score);
@@ -62,6 +96,11 @@ public class EvolutionaryNoiseGenerator{
 		}
 		standardHeights.add(new StandardHeight(x, h));
 	}
+	private void assignValues(){
+		y=learningSystem.next();
+		by=learningSystem.getBest();
+	}
+	public BasicEvolutionProgressLog getProgressLog(){ return progressLog; }
 	private static double c(double a, double b, double c){
 		c=(float)((1-Math.cos(c*Math.PI))/2);
 		return (a*(1-c)+b*c);

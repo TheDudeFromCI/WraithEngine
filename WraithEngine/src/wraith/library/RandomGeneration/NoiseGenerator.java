@@ -7,29 +7,23 @@ public class NoiseGenerator{
 	private float smoothness;
 	private int detail;
 	private float maxHeight;
-	private boolean onlyPositive;
 	private int blending;
-	public NoiseGenerator(long seed, float smoothness, int detail, boolean onlyPositive, int blending){
+	public NoiseGenerator(long seed, float smoothness, int detail, int blending){
 		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
 		if(detail<1)throw new IllegalArgumentException("Detail must be at least 1!");
 		if(blending<0)throw new IllegalArgumentException("Blending cannot be negative!");
 		this.seed=seed;
 		this.smoothness=smoothness;
 		this.detail=detail;
-		this.onlyPositive=onlyPositive;
 		this.blending=blending;
 		maxHeight=m(detail);
 	}
 	public float noise(float... x){
-		if(x.length==0){
-			if(onlyPositive)return new Random(seed).nextFloat();
-			return new Random(seed).nextFloat()*2-1;
-		}
+		if(x.length==0)return new Random(seed).nextFloat();
 		for(int i = 0; i<x.length; i++)x[i]/=smoothness;
 		float t = 0;
 		for(int i = 0; i<detail; i++)t+=(e(x, (float)Math.pow(2, i), (i+1)*1000)/(i+1))*1/Math.pow(2, i);
 		t=t/maxHeight;
-		if(onlyPositive)t=(t+1)/2;
 		return t;
 	}
 	private float e(float[] x, float pow, int k){
@@ -77,7 +71,7 @@ public class NoiseGenerator{
 		long t = seed;
 		for(int a : x)t=t*s+a;
 		for(int a : x)t+=a*a*s;
-		return new Random(t).nextFloat()*2-1;
+		return new Random(t).nextFloat();
 	}
 	public void setSmoothness(float smoothness){
 		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
@@ -88,14 +82,12 @@ public class NoiseGenerator{
 		this.detail=detail;
 		maxHeight=m(detail);
 	}
-	public NoiseGenerator(boolean onlyPositive){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
-	public NoiseGenerator(long seed, boolean onlyPositive){ this(seed, new Random(seed).nextFloat()*40+10, new Random(seed).nextInt(10)+1, onlyPositive, 1); }
+	public NoiseGenerator(){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, 1); }
+	public NoiseGenerator(long seed){ this(seed, new Random(seed).nextFloat()*40+10, new Random(seed).nextInt(10)+1, 1); }
 	public long getSeed(){ return seed; }
 	public void setSeed(long seed){ this.seed=seed; }
 	public float getSmoothness(){ return smoothness; }
 	public int getDetail(){ return detail; }
-	public boolean isOnlyPositive(){ return onlyPositive; }
-	public void setOnlyPositive(boolean onlyPositive){ this.onlyPositive=onlyPositive; }
 	private static float c(float a, float b, float c){
 		c=(float)((1-Math.cos(c*Math.PI))/2);
 		return (a*(1-c)+b*c);
