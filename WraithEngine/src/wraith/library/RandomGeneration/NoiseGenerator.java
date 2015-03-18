@@ -60,15 +60,6 @@ public class NoiseGenerator{
 		for(int i = 0; i<k.length; i++)k[i]=c(v[i*2], v[i*2+1], fracs[stage]);
 		return i(k, fracs, stage+1);
 	}
-	private float c(float a, float b, float c){
-		c=(float)((1-Math.cos(c*Math.PI))/2);
-		return (a*(1-c)+b*c);
-	}
-	private float m(int i){
-		float f = 0;
-		for(int a = 0; a<i; a++)f+=1/Math.pow(2, a);
-		return f;
-	}
 	private float s(int[] x){
 		float total = 0;
 		int[] n = new int[x.length];
@@ -99,11 +90,20 @@ public class NoiseGenerator{
 	}
 	public NoiseGenerator(boolean onlyPositive){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, onlyPositive, 1); }
 	public NoiseGenerator(long seed, boolean onlyPositive){ this(seed, new Random(seed).nextFloat()*40+10, new Random(seed).nextInt(10)+1, onlyPositive, 1); }
-	private int f(float x){ return x>=0?(int)x:(int)x-1; }
 	public long getSeed(){ return seed; }
 	public void setSeed(long seed){ this.seed=seed; }
 	public float getSmoothness(){ return smoothness; }
 	public int getDetail(){ return detail; }
 	public boolean isOnlyPositive(){ return onlyPositive; }
 	public void setOnlyPositive(boolean onlyPositive){ this.onlyPositive=onlyPositive; }
+	private static float c(float a, float b, float c){
+		c=(float)((1-Math.cos(c*Math.PI))/2);
+		return (a*(1-c)+b*c);
+	}
+	private static float m(int i){
+		float f = 0;
+		for(int a = 0; a<i; a++)f+=1/Math.pow(2, a);
+		return f;
+	}
+	private static int f(float x){ return x>=0?(int)x:(int)x-1; }
 }
