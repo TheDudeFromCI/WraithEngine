@@ -4,15 +4,17 @@ import java.util.HashMap;
 
 public class BinaryEvolutionaryNeuralNetwork{
 	private double[][] weights;
+	private double[][] data;
 	private final EvolutionaryLearningSystem learningSystem;
 	private final BasicEvolutionProgressLog progressLog;
 	private final int inputs, hiddenLayers, hiddenLayerSize, outputs;
-	public BinaryEvolutionaryNeuralNetwork(int inputs, int hiddenLayers, int hiddenLayerSize, int outputs, double randomnessFactor){
+	public BinaryEvolutionaryNeuralNetwork(int inputs, int hiddenLayers, int hiddenLayerSize, int outputs, double randomnessFactor, boolean singleRandom, boolean repetativeGuesses){
 		this.inputs=inputs;
 		this.hiddenLayers=hiddenLayers;
 		this.hiddenLayerSize=hiddenLayerSize;
 		this.outputs=outputs;
 		weights=new double[1+hiddenLayers][];
+		data=new double[hiddenLayers][hiddenLayerSize];
 		int weightLinkCount = 0;
 		for(int i = 0; i<=hiddenLayers; i++){
 			if(i==0)weights[i]=new double[(inputs+1)*hiddenLayerSize];
@@ -20,7 +22,7 @@ public class BinaryEvolutionaryNeuralNetwork{
 			else weights[i]=new double[(hiddenLayerSize+1)*hiddenLayerSize];
 			weightLinkCount+=weights[i].length;
 		}
-		learningSystem=new EvolutionaryLearningSystem(weightLinkCount, randomnessFactor, true);
+		learningSystem=new EvolutionaryLearningSystem(weightLinkCount, randomnessFactor, singleRandom, repetativeGuesses);
 		progressLog=new BasicEvolutionProgressLog(learningSystem);
 		assignWeights();
 	}
@@ -42,7 +44,10 @@ public class BinaryEvolutionaryNeuralNetwork{
 		double[] lastData = new double[inputs+1];
 		for(int a = 0; a<inputs; a++)lastData[a]=in[a];
 		lastData[inputs]=1;
-		for(int a = 0; a<=hiddenLayers; a++)lastData=compileLayer(lastData, a==hiddenLayers?outputs:hiddenLayerSize, a);
+		for(int a = 0; a<=hiddenLayers; a++){
+			lastData=compileLayer(lastData, a==hiddenLayers?outputs:hiddenLayerSize, a);
+			if(a<hiddenLayers)for(int b = 0; b<hiddenLayerSize; b++)data[a][b]=lastData[b];
+		}
 		boolean[] outputData = new boolean[lastData.length];
 		for(int i = 0; i<outputData.length; i++)outputData[i]=Math.round(lastData[i])==1;
 		return outputData;
@@ -80,5 +85,8 @@ public class BinaryEvolutionaryNeuralNetwork{
 	public int getHiddenLayerSize(){ return hiddenLayerSize; }
 	public int getOutputs(){ return outputs; }
 	public BasicEvolutionProgressLog getProgressLog(){ return progressLog; }
+	public EvolutionaryLearningSystem getLearningSystem(){ return learningSystem; }
+	public double[][] getWeights(){ return weights; }
+	public double[][] getData(){ return data; }
 	private static double activeFunction(double d){ return 1/(1+Math.exp(-d)); }
 }

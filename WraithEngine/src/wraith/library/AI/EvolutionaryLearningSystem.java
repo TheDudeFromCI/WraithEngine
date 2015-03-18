@@ -9,14 +9,16 @@ public class EvolutionaryLearningSystem{
 	private long currentScore = Long.MIN_VALUE;
 	private boolean awaitingScore;
 	private final boolean singleRandom;
+	private final boolean repetativeGuesses;
 	private final int dimensions;
 	private final double randomnessFactor;
 	private final Object multithreadLock = 0;
 	private final ArrayList<GenerationListener> generationListeners = new ArrayList<>();
-	public EvolutionaryLearningSystem(int dimensions, double randomnessFactor, boolean singleRandom){
+	public EvolutionaryLearningSystem(int dimensions, double randomnessFactor, boolean singleRandom, boolean repetativeGuesses){
 		this.dimensions=dimensions;
 		this.randomnessFactor=randomnessFactor;
 		this.singleRandom=singleRandom;
+		this.repetativeGuesses=repetativeGuesses;
 		if(dimensions>0){
 			currentData=new double[dimensions];
 			tempData=new double[dimensions];
@@ -41,11 +43,11 @@ public class EvolutionaryLearningSystem{
 		callGenerationListeners(score);
 		synchronized(multithreadLock){
 			awaitingScore=false;
-			if(score>currentScore){
+			if(score>=currentScore){
 				currentData=new double[tempData.length];
 				for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i];
 				currentScore=score;
-				listenToLastJump=true;
+				if(repetativeGuesses)listenToLastJump=true;
 			}else listenToLastJump=false;
 		}
 	}

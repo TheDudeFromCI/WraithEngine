@@ -7,7 +7,7 @@ public class EvolutionaryNeuralNetwork{
 	private final EvolutionaryLearningSystem learningSystem;
 	private final BasicEvolutionProgressLog progressLog;
 	private final int inputs, hiddenLayers, hiddenLayerSize, outputs;
-	public EvolutionaryNeuralNetwork(int inputs, int hiddenLayers, int hiddenLayerSize, int outputs, double randomnessFactor){
+	public EvolutionaryNeuralNetwork(int inputs, int hiddenLayers, int hiddenLayerSize, int outputs, double randomnessFactor, boolean singleRandom, boolean repetativeGuesses){
 		this.inputs=inputs;
 		this.hiddenLayers=hiddenLayers;
 		this.hiddenLayerSize=hiddenLayerSize;
@@ -20,7 +20,7 @@ public class EvolutionaryNeuralNetwork{
 			else weights[i]=new double[(hiddenLayerSize+1)*hiddenLayerSize];
 			weightLinkCount+=weights[i].length;
 		}
-		learningSystem=new EvolutionaryLearningSystem(weightLinkCount, randomnessFactor, true);
+		learningSystem=new EvolutionaryLearningSystem(weightLinkCount, randomnessFactor, singleRandom, repetativeGuesses);
 		progressLog=new BasicEvolutionProgressLog(learningSystem);
 		assignWeights();
 	}

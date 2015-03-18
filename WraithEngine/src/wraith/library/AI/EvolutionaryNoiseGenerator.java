@@ -12,7 +12,7 @@ public class EvolutionaryNoiseGenerator{
 	private final ArrayList<StandardHeight> standardHeights = new ArrayList<>();
 	public EvolutionaryNoiseGenerator(){
 		noiseGenerator=new NoiseGenerator(new Random().nextLong(), 1, 1, 0);
-		learningSystem=new EvolutionaryLearningSystem(1, 10000, false);
+		learningSystem=new EvolutionaryLearningSystem(1, 10000, false, false);
 		progressLog=new BasicEvolutionProgressLog(learningSystem);
 		assignValues();
 	}
