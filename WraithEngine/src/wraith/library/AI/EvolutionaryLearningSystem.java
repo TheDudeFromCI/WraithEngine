@@ -6,19 +6,24 @@ public class EvolutionaryLearningSystem{
 	private boolean listenToLastJump;
 	private int unevenIndex;
 	private double[] jumps, currentData, tempData;
-	private long currentScore = Long.MIN_VALUE;
+	private double currentScore = Long.MIN_VALUE;
 	private boolean awaitingScore;
+	private double randomnessFactor, outfittingRate;
+	private int sibilingNumber;
+	private double totalGenerationScore;
+	private final int sibilings;
 	private final boolean singleRandom;
 	private final boolean repetativeGuesses;
 	private final int dimensions;
-	private final double randomnessFactor;
 	private final Object multithreadLock = 0;
 	private final ArrayList<GenerationListener> generationListeners = new ArrayList<>();
-	public EvolutionaryLearningSystem(int dimensions, double randomnessFactor, boolean singleRandom, boolean repetativeGuesses){
+	public EvolutionaryLearningSystem(int dimensions, double randomnessFactor, boolean singleRandom, boolean repetativeGuesses, double outfittingRate, int sibilings, boolean randomInital){
 		this.dimensions=dimensions;
 		this.randomnessFactor=randomnessFactor;
 		this.singleRandom=singleRandom;
 		this.repetativeGuesses=repetativeGuesses;
+		this.outfittingRate=outfittingRate;
+		this.sibilings=sibilings;
 		if(dimensions>0){
 			currentData=new double[dimensions];
 			tempData=new double[dimensions];
@@ -28,27 +33,38 @@ public class EvolutionaryLearningSystem{
 			tempData=new double[1];
 			jumps=new double[1];
 		}
-		randomizeInitalData();
+		if(randomInital)randomizeInitalData();
 	}
 	public double[] next(){
 		if(awaitingScore)throw new IllegalStateException("Still awaiting score!");
 		synchronized(multithreadLock){
 			awaitingScore=true;
-			randomizeCurrentData();
+			if(sibilingNumber==0)randomizeCurrentData();
 			return tempData;
 		}
 	}
-	public void score(long score){
+	public void score(double score){
 		if(!awaitingScore)throw new IllegalStateException("Not awaiting score!");
-		callGenerationListeners(score);
 		synchronized(multithreadLock){
 			awaitingScore=false;
-			if(score>=currentScore){
-				currentData=new double[tempData.length];
-				for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i];
-				currentScore=score;
-				if(repetativeGuesses)listenToLastJump=true;
-			}else listenToLastJump=false;
+			sibilingNumber++;
+			totalGenerationScore+=score;
+			if(sibilingNumber==sibilings){
+				score=totalGenerationScore/sibilings;
+				sibilingNumber=0;
+				totalGenerationScore=0;
+				if(score>currentScore){
+					callGenerationListeners(score, true, score-currentScore);
+					randomnessFactor*=outfittingRate;
+					currentData=new double[tempData.length];
+					for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i];
+					currentScore=score;
+					if(repetativeGuesses)listenToLastJump=true;
+				}else{
+					callGenerationListeners(score, false, score-currentScore);
+					listenToLastJump=false;
+				}
+			}else callGenerationListeners(score, false, getCurrentGenerationScore()-currentScore);
 		}
 	}
 	private void randomizeCurrentData(){
@@ -101,10 +117,17 @@ public class EvolutionaryLearningSystem{
 		synchronized(multithreadLock){ return jumps; }
 	}
 	private void randomizeInitalData(){ for(int i = 0; i<currentData.length; i++)currentData[i]=tempData[i]=(Math.random()-0.5)*randomnessFactor; }
-	private void callGenerationListeners(long score){ for(GenerationListener r : generationListeners)r.run(score); }
+	private void callGenerationListeners(double score, boolean current, double increase){ for(GenerationListener r : generationListeners)r.run(score, current, increase); }
 	public void addGenerationListener(GenerationListener r){ generationListeners.add(r); }
 	public void removeGenerationListener(GenerationListener r){ generationListeners.remove(r); }
 	public void resetScore(){ currentScore=Long.MIN_VALUE; }
-	public long getCurrentScore(){ return currentScore; }
+	public double getCurrentScore(){ return currentScore; }
 	public double[] getBest(){ return currentData; }
+	public double getRandomnessFactor(){ return randomnessFactor; }
+	public void setRandomnessFactor(double randomnessFactor){ this.randomnessFactor=randomnessFactor; }
+	public double getOutfittingRate(){ return outfittingRate; }
+	public void setOutfittingRate(double outfittingRate){ this.outfittingRate=outfittingRate; }
+	public int getSibilings(){ return sibilings; }
+	public int getSibilingNumber(){ return sibilingNumber; }
+	public double getCurrentGenerationScore(){ return totalGenerationScore/sibilingNumber; }
 }

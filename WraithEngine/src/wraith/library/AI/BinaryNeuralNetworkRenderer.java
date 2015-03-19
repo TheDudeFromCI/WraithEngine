@@ -25,6 +25,9 @@ public class BinaryNeuralNetworkRenderer extends JPanel{
 		renderInputs(g);
 		for(int i = 0; i<neuralNetwork.getHiddenLayers(); i++)renderHiddenLayer(g, i);
 		renderOutputs(g);
+		g.setColor(Color.black);
+		g.drawString("Weights: ["+((int)(lowestWeight*10000)/10000.0)+", "+((int)(highestWeight*10000)/10000.0)+"]", 3, getHeight()-15);
+		g.drawString("Learning {R: "+neuralNetwork.getLearningSystem().getRandomnessFactor()+", O: "+neuralNetwork.getLearningSystem().getOutfittingRate()+"}", 3, getHeight()-3);
 		g.dispose();
 	}
 	private void renderWeights(Graphics2D g){
@@ -75,23 +78,23 @@ public class BinaryNeuralNetworkRenderer extends JPanel{
 	}
 	private void renderWeight(Graphics2D g, int x, int y, int x2, int y2, double w){
 		if(w>0){
-			float p = (float)(w/highestWeight);
+			float p = 1-(float)(w/highestWeight);
 			float[] c = new float[3];
 			float[] hsb = Color.RGBtoHSB(0, 0, 0, null);
 			float[] hsb2 = Color.RGBtoHSB(0, 255, 255, null);
 			c[0]=hsb[0]*p+hsb2[0]*(1-p);
 			c[1]=hsb[1]*p+hsb2[1]*(1-p);
 			c[2]=hsb[2]*p+hsb2[2]*(1-p);
-			g.setColor(Color.getHSBColor(c[0], c[1], c[1]));
+			g.setColor(Color.getHSBColor(c[0], c[1], c[2]));
 		}else{
-			float p = (float)(w/lowestWeight);
+			float p = 1-(float)(w/lowestWeight);
 			float[] c = new float[3];
 			float[] hsb = Color.RGBtoHSB(0, 0, 0, null);
 			float[] hsb2 = Color.RGBtoHSB(255, 255, 0, null);
 			c[0]=hsb[0]*p+hsb2[0]*(1-p);
 			c[1]=hsb[1]*p+hsb2[1]*(1-p);
 			c[2]=hsb[2]*p+hsb2[2]*(1-p);
-			g.setColor(Color.getHSBColor(c[0], c[1], c[1]));
+			g.setColor(Color.getHSBColor(c[0], c[1], c[2]));
 		}
 		g.drawLine(x, y, x2, y2);
 	}
@@ -109,12 +112,13 @@ public class BinaryNeuralNetworkRenderer extends JPanel{
 		g.fillOval(x-NEURON_SIZE/2, y-NEURON_SIZE/2, NEURON_SIZE, NEURON_SIZE);
 	}
 	private static Color calculateNeuronColor(float p){
+		p=1-p;
 		float[] c = new float[3];
 		float[] hsb = Color.RGBtoHSB(255, 0, 0, null);
 		float[] hsb2 = Color.RGBtoHSB(0, 255, 0, null);
 		c[0]=hsb[0]*p+hsb2[0]*(1-p);
 		c[1]=hsb[1]*p+hsb2[1]*(1-p);
 		c[2]=hsb[2]*p+hsb2[2]*(1-p);
-		return Color.getHSBColor(c[0], c[1], c[1]);
+		return Color.getHSBColor(c[0], c[1], c[2]);
 	}
 }

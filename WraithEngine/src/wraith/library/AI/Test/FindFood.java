@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import wraith.library.AI.BinaryEvolutionaryNeuralNetwork;
 import wraith.library.AI.BinaryNeuralNetworkRenderer;
-import wraith.library.AI.BinaryNeuralNetworkTrainingMatrix;
 import wraith.library.AI.ScrollingEvolutionProgressLog;
 
 public class FindFood{
@@ -21,6 +20,7 @@ public class FindFood{
 	private JPanel panel;
 	private BinaryNeuralNetworkRenderer nnRenderer;
 	private boolean slow = true;
+	private boolean paused = false;
 	private long score = 0;
 	private final ArrayList<Ball> balls;
 	private final BinaryEvolutionaryNeuralNetwork neuralNetwork;
@@ -35,11 +35,7 @@ public class FindFood{
 	private static final double TURN_STEP_SIZE = Math.toRadians(1);
 	private static final int GENERATION_LENGTH = 1500;
 	public FindFood(){
-		neuralNetwork=new BinaryEvolutionaryNeuralNetwork(1, 2, 2, 3, 1, true, false);
-		BinaryNeuralNetworkTrainingMatrix matrix = new BinaryNeuralNetworkTrainingMatrix();
-		matrix.addData(new double[]{1}, new boolean[]{false, false, true});
-		matrix.addData(new double[]{0.1}, new boolean[]{true, false, false});
-		neuralNetwork.train(matrix, 10000);
+		neuralNetwork=new BinaryEvolutionaryNeuralNetwork(1, 1, 1, 3, 10, false, true, 0.8, 20, 100);
 		log=new ScrollingEvolutionProgressLog(neuralNetwork.getLearningSystem(), 800);
 		balls=new ArrayList<>();
 		balls.add(new Ball());
@@ -49,7 +45,7 @@ public class FindFood{
 				while(true){
 					steps++;
 					synchronized(LOCK){
-						if(foods.size()<10)foods.add(new Food((int)(Math.random()*panel.getWidth()), (int)(Math.random()*panel.getHeight())));
+						while(foods.size()<3)foods.add(new Food((int)(Math.random()*580+20), (int)(Math.random()*420+20)));
 						for(Ball ball : balls)ball.update();
 					}
 					if(steps%GENERATION_LENGTH==0){
@@ -60,7 +56,11 @@ public class FindFood{
 					frame2.repaint();
 					frame3.repaint();
 					if(slow){
-						try{ Thread.sleep(50);
+						try{ Thread.sleep(25);
+						}catch(Exception exception){}
+					}
+					while(paused){
+						try{ Thread.sleep(1);
 						}catch(Exception exception){}
 					}
 				}
@@ -80,7 +80,10 @@ public class FindFood{
 		frame.addKeyListener(new KeyListener(){
 			public void keyTyped(KeyEvent e){}
 			public void keyReleased(KeyEvent e){}
-			public void keyPressed(KeyEvent e){ if(e.getKeyCode()==KeyEvent.VK_Q)slow=!slow; }
+			public void keyPressed(KeyEvent e){
+				if(e.getKeyCode()==KeyEvent.VK_Q)slow=!slow;
+				if(e.getKeyCode()==KeyEvent.VK_SPACE)paused=!paused;
+			}
 		});
 		frame.add(panel=new JPanel(){
 			@Override public void paint(Graphics g1){
@@ -121,24 +124,29 @@ public class FindFood{
 			@Override public void paint(Graphics g1){
 				Graphics2D g = (Graphics2D)g1;
 				int scrolledData = (int)(getWidth()/(double)log.size()*(log.generations()%log.size()));
-				GradientPaint gradientPaint1 = new GradientPaint(scrolledData, 0, Color.darkGray, getWidth()+scrolledData, 0, Color.lightGray);
+				GradientPaint gradientPaint1 = new GradientPaint(scrolledData, 0, Color.darkGray, getWidth()+scrolledData, 0, Color.gray);
 				g.setPaint(gradientPaint1);
 				g.fillRect(scrolledData, 0, getWidth(), getHeight());
-				GradientPaint gradientPaint = new GradientPaint(scrolledData-getWidth(), 0, Color.darkGray, getWidth(), 0, Color.lightGray);
+				GradientPaint gradientPaint = new GradientPaint(scrolledData-getWidth(), 0, Color.darkGray, getWidth(), 0, Color.gray);
 				g.setPaint(gradientPaint);
 				g.fillRect(scrolledData-getWidth(), 0, getWidth(), getHeight());
 				int generations = log.size();
 				double horizontalSpacing = getWidth()/(double)generations;
+				double height = getHeight()*0.8;
+				double edgeBuffer = getHeight()*0.1;
 				g.setColor(Color.red);
-				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getScorePercent(i))*getHeight()), (int)(horizontalSpacing*(i+1)), (int)((1-log.getScorePercent(i+1))*getHeight()));
+				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getScorePercent(i))*height+edgeBuffer), (int)(horizontalSpacing*(i+1)), (int)((1-log.getScorePercent(i+1))*height+edgeBuffer));
 				g.setColor(Color.white);
-				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getMaxScorePercent(i))*getHeight()), (int)(horizontalSpacing*(i+1)), (int)((1-log.getMaxScorePercent(i+1))*getHeight()));
+				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getMaxScorePercent(i))*height+edgeBuffer), (int)(horizontalSpacing*(i+1)), (int)((1-log.getMaxScorePercent(i+1))*height+edgeBuffer));
+				g.setColor(Color.orange);
+				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getGenerationScorePercent(i))*height+edgeBuffer), (int)(horizontalSpacing*(i+1)), (int)((1-log.getGenerationScorePercent(i+1))*height+edgeBuffer));
 				g.setColor(Color.blue);
-				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getAverageScorePercent(i))*getHeight()), (int)(horizontalSpacing*(i+1)), (int)((1-log.getAverageScorePercent(i+1))*getHeight()));
+				for(int i = 0; i<generations-1; i++)if(log.generations()%log.size()!=i+1)g.drawLine((int)(horizontalSpacing*i), (int)((1-log.getAverageScorePercent(i))*height+edgeBuffer), (int)(horizontalSpacing*(i+1)), (int)((1-log.getAverageScorePercent(i+1))*height+edgeBuffer));
 				g.setColor(Color.green);
-				g.drawString("Generations: "+log.generations(), 3, 13);
+				g.drawString("Generations: "+log.generations()+" (Sib: "+neuralNetwork.getLearningSystem().getSibilingNumber()+", Real: "+(log.generations()/neuralNetwork.getLearningSystem().getSibilings())+")", 3, 13);
 				g.drawString("Range: ["+log.getLowestScore()+", "+log.getHighestScore()+"]", 3, 25);
 				g.drawString("Average: "+log.findAverage(), 3, 37);
+				g.drawString("Learns: "+log.getLearns(), 3, 49);
 				g.dispose();
 			}
 		});
@@ -177,15 +185,15 @@ public class FindFood{
 				int nx = (int)Math.round(x+Math.cos(r)*STEP_SIZE);
 				int ny = (int)Math.round(y+Math.sin(r)*STEP_SIZE);
 				if(nx>=0&&ny>=0&&nx<panel.getWidth()&&ny<panel.getHeight()){
-					boolean spaceAlreadTaken = false;
+					boolean spaceEmpty = true;
 					for(Ball b : balls){
 						if(b==this)continue;
 						if(Math.pow(nx-b.x, 2)+Math.pow(ny-b.y, 2)<=BALL_SIZE*BALL_SIZE){
-							spaceAlreadTaken=true;
+							spaceEmpty=false;
 							break;
 						}
 					}
-					if(!spaceAlreadTaken){
+					if(spaceEmpty){
 						x=nx;
 						y=ny;
 						if(x<0)x+=panel.getWidth();
@@ -213,7 +221,7 @@ public class FindFood{
 					break;
 				}
 			}
-			double[] data = new double[]{foodInSight?1:0.1};
+			double[] data = new double[]{foodInSight?1:0};
 			tasks=neuralNetwork.run(data);
 			nnRenderer.updateRunningData(data);
 		}
