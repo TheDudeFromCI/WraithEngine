@@ -1,7 +1,6 @@
 package wraith.library.AI;
 
 import java.util.ArrayList;
-
 import wraith.library.AI.BinaryNeuralNetworkTrainingMatrix.Data;
 
 public class BinaryEvolutionaryNeuralNetwork{

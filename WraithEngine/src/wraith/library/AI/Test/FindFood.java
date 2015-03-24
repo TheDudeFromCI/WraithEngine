@@ -35,8 +35,8 @@ public class FindFood{
 	private static final double TURN_STEP_SIZE = Math.toRadians(1);
 	private static final int GENERATION_LENGTH = 1500;
 	public FindFood(){
-		neuralNetwork=new BinaryEvolutionaryNeuralNetwork(1, 1, 1, 3, 10, false, true, 0.8, 20, 100);
-		log=new ScrollingEvolutionProgressLog(neuralNetwork.getLearningSystem(), 800);
+		neuralNetwork=new BinaryEvolutionaryNeuralNetwork(13, 5, 5, 6, 10, false, true, 0.8, 1, 0);
+		log=new ScrollingEvolutionProgressLog(neuralNetwork.getLearningSystem(), 1000);
 		balls=new ArrayList<>();
 		balls.add(new Ball());
 		createWindows();
@@ -45,7 +45,7 @@ public class FindFood{
 				while(true){
 					steps++;
 					synchronized(LOCK){
-						while(foods.size()<3)foods.add(new Food((int)(Math.random()*580+20), (int)(Math.random()*420+20)));
+						while(foods.size()<1)foods.add(new Food((int)(Math.random()*580+20), (int)(Math.random()*420+20)));
 						for(Ball ball : balls)ball.update();
 					}
 					if(steps%GENERATION_LENGTH==0){
@@ -164,7 +164,7 @@ public class FindFood{
 	private class Ball{
 		private int x, y;
 		private double r;
-		private boolean[] tasks = new boolean[]{false, false, false};
+		private boolean[] tasks = new boolean[6];
 		private boolean foodInSight;
 		private Ball(){
 			x=(int)(Math.random()*600)+20;
@@ -185,29 +185,82 @@ public class FindFood{
 				int nx = (int)Math.round(x+Math.cos(r)*STEP_SIZE);
 				int ny = (int)Math.round(y+Math.sin(r)*STEP_SIZE);
 				if(nx>=0&&ny>=0&&nx<panel.getWidth()&&ny<panel.getHeight()){
-					boolean spaceEmpty = true;
-					for(Ball b : balls){
-						if(b==this)continue;
-						if(Math.pow(nx-b.x, 2)+Math.pow(ny-b.y, 2)<=BALL_SIZE*BALL_SIZE){
-							spaceEmpty=false;
+					x=nx;
+					y=ny;
+					if(x<0)x+=panel.getWidth();
+					if(y<0)y+=panel.getHeight();
+					if(x>=panel.getWidth())x-=panel.getWidth();
+					if(y>=panel.getHeight())y-=panel.getHeight();
+					Food f;
+					for(int i = 0; i<foods.size(); i++){
+						f=foods.get(i);
+						if(distance(f.x, f.y)<(FOOD_SIZE/2+BALL_SIZE/2)*(FOOD_SIZE/2+BALL_SIZE/2)){
+							foods.remove(f);
+							score+=1;
 							break;
 						}
 					}
-					if(spaceEmpty){
-						x=nx;
-						y=ny;
-						if(x<0)x+=panel.getWidth();
-						if(y<0)y+=panel.getHeight();
-						if(x>=panel.getWidth())x-=panel.getWidth();
-						if(y>=panel.getHeight())y-=panel.getHeight();
-						Food f;
-						for(int i = 0; i<foods.size(); i++){
-							f=foods.get(i);
-							if(distance(f.x, f.y)<(FOOD_SIZE/2+BALL_SIZE/2)*(FOOD_SIZE/2+BALL_SIZE/2)){
-								foods.remove(f);
-								score+=1;
-								break;
-							}
+				}
+			}
+			if(tasks[3]){
+				int nx = (int)Math.round(x+Math.cos(r+Math.PI)*STEP_SIZE);
+				int ny = (int)Math.round(y+Math.sin(r+Math.PI)*STEP_SIZE);
+				if(nx>=0&&ny>=0&&nx<panel.getWidth()&&ny<panel.getHeight()){
+					x=nx;
+					y=ny;
+					if(x<0)x+=panel.getWidth();
+					if(y<0)y+=panel.getHeight();
+					if(x>=panel.getWidth())x-=panel.getWidth();
+					if(y>=panel.getHeight())y-=panel.getHeight();
+					Food f;
+					for(int i = 0; i<foods.size(); i++){
+						f=foods.get(i);
+						if(distance(f.x, f.y)<(FOOD_SIZE/2+BALL_SIZE/2)*(FOOD_SIZE/2+BALL_SIZE/2)){
+							foods.remove(f);
+							score+=1;
+							break;
+						}
+					}
+				}
+			}
+			if(tasks[4]){
+				int nx = (int)Math.round(x+Math.cos(r+Math.PI/2)*STEP_SIZE);
+				int ny = (int)Math.round(y+Math.sin(r+Math.PI/2)*STEP_SIZE);
+				if(nx>=0&&ny>=0&&nx<panel.getWidth()&&ny<panel.getHeight()){
+					x=nx;
+					y=ny;
+					if(x<0)x+=panel.getWidth();
+					if(y<0)y+=panel.getHeight();
+					if(x>=panel.getWidth())x-=panel.getWidth();
+					if(y>=panel.getHeight())y-=panel.getHeight();
+					Food f;
+					for(int i = 0; i<foods.size(); i++){
+						f=foods.get(i);
+						if(distance(f.x, f.y)<(FOOD_SIZE/2+BALL_SIZE/2)*(FOOD_SIZE/2+BALL_SIZE/2)){
+							foods.remove(f);
+							score+=1;
+							break;
+						}
+					}
+				}
+			}
+			if(tasks[5]){
+				int nx = (int)Math.round(x+Math.cos(r-Math.PI/2)*STEP_SIZE);
+				int ny = (int)Math.round(y+Math.sin(r-Math.PI/2)*STEP_SIZE);
+				if(nx>=0&&ny>=0&&nx<panel.getWidth()&&ny<panel.getHeight()){
+					x=nx;
+					y=ny;
+					if(x<0)x+=panel.getWidth();
+					if(y<0)y+=panel.getHeight();
+					if(x>=panel.getWidth())x-=panel.getWidth();
+					if(y>=panel.getHeight())y-=panel.getHeight();
+					Food f;
+					for(int i = 0; i<foods.size(); i++){
+						f=foods.get(i);
+						if(distance(f.x, f.y)<(FOOD_SIZE/2+BALL_SIZE/2)*(FOOD_SIZE/2+BALL_SIZE/2)){
+							foods.remove(f);
+							score+=1;
+							break;
 						}
 					}
 				}
@@ -221,7 +274,7 @@ public class FindFood{
 					break;
 				}
 			}
-			double[] data = new double[]{foodInSight?1:0};
+			double[] data = new double[]{foodInSight?1:0, x/(double)panel.getWidth(), y/(double)panel.getHeight(), r/(Math.PI*2), steps/100000.0, tasks[0]?1:0, tasks[1]?1:0, tasks[2]?1:0, tasks[3]?1:0, tasks[4]?1:0, tasks[5]?1:0, foods.get(0).x/(double)panel.getWidth(), foods.get(0).y/(double)panel.getHeight()};
 			tasks=neuralNetwork.run(data);
 			nnRenderer.updateRunningData(data);
 		}
