@@ -15,6 +15,7 @@ public class SpreadSheet extends JPanel{
 	private byte[] alignments;
 	private int rowHeight;
 	private final ArrayList<Object[]> data = new ArrayList<>();
+	private final ArrayList<Boolean> isBold = new ArrayList<>();
 	private static final Color ALT_COLOR = new Color(230, 255, 230);
 	public SpreadSheet(String[] columnNames, double[] columnSizes, byte[] alignments, int rowHeight){
 		this.columnNames=columnNames;
@@ -22,15 +23,20 @@ public class SpreadSheet extends JPanel{
 		this.alignments=alignments;
 		this.rowHeight=rowHeight;
 	}
-	public void addRow(Object[] row){
+	public void addRow(Object[] row, boolean bold){
 		data.add(row);
+		isBold.add(bold);
 		setPreferredSize(new Dimension(10, (data.size()+1)*rowHeight));
 		repaint();
 	}
 	public void removeRow(Object[] row){
-		data.remove(row);
-		setPreferredSize(new Dimension(10, (data.size()+1)*rowHeight));
-		repaint();
+		int index = data.indexOf(row);
+		if(index>=0){
+			data.remove(index);
+			isBold.remove(index);
+			setPreferredSize(new Dimension(10, (data.size()+1)*rowHeight));
+			repaint();
+		}
 	}
 	@Override public void paint(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
@@ -52,9 +58,15 @@ public class SpreadSheet extends JPanel{
 			}else{
 				if(i-1<data.size()){
 					for(int j = 0; j<columnSizes.length; j++){
+						Font oldFont = null;
+						if(isBold.get(i-1)){
+							oldFont=getFont();
+							g.setFont(new Font(oldFont.getName(), Font.BOLD, oldFont.getSize()));
+						}
 						if(alignments[j]==-1)g.drawString(data.get(i-1)[j].toString(), (int)(width*columnSizes[j])+3, rowHeight*i+textY);
 						else if(alignments[j]==0)g.drawString(data.get(i-1)[j].toString(), (int)(((((j==columnSizes.length-1?1:columnSizes[j+1])-columnSizes[j])*width)-fm.stringWidth(data.get(i-1)[j].toString()))*0.5+width*columnSizes[j]), rowHeight*i+textY);
 						else g.drawString(data.get(i-1)[j].toString(), (int)(width*columnSizes[j])+3, rowHeight*i+textY);
+						if(isBold.get(i-1))g.setFont(oldFont);
 					}
 				}
 			}
@@ -63,9 +75,11 @@ public class SpreadSheet extends JPanel{
 		for(int i = 0; i<columnSizes.length-1; i++)g.drawLine((int)(width*columnSizes[i+1]), 0, (int)(width*columnSizes[i+1]), height);
 		g.dispose();
 	}
-	public void setRows(ArrayList<Object[]> rows){
+	public void setRows(ArrayList<Object[]> rows, boolean[] bolded){
 		data.clear();
+		isBold.clear();
 		data.addAll(rows);
+		for(int i = 0; i<bolded.length; i++)isBold.add(bolded[i]);
 		repaint();
 	}
 	public void setNames(String[] columnNames){
@@ -78,5 +92,6 @@ public class SpreadSheet extends JPanel{
 		this.rowHeight=rowHeight;
 		this.alignments=alignments;
 		data.clear();
+		isBold.clear();
 	}
 }
