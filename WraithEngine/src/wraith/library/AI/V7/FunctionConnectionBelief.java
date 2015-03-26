@@ -1,6 +1,6 @@
 package wraith.library.AI.V7;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class FunctionConnectionBelief{
@@ -9,16 +9,20 @@ public class FunctionConnectionBelief{
 		for(Score s : scores){
 			for(BigScore f : this.scores){
 				if(f.id==s.id){
-					f.total=f.total.add(new BigDecimal(s.value));
+					f.total=f.total.add(new BigInteger(String.valueOf(s.value)));
 					f.passes++;
 				}
 			}
 		}
 	}
+	public long getAverageScore(int scoreId){
+		for(BigScore bs : scores)if(bs.id==scoreId)return bs.total.divide(new BigInteger(String.valueOf(bs.passes))).longValue();
+		return 0;
+	}
 	public FunctionConnectionBelief(Score[] scores){ add(scores); }
 	class BigScore{
 		int id;
-		BigDecimal total;
+		BigInteger total;
 		long passes;
 	}
 }
