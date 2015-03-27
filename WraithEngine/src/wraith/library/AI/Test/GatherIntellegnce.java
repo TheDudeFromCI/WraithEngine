@@ -33,6 +33,7 @@ public class GatherIntellegnce{
 				Animal a;
 				for(int i = 0; i<animals.size(); i++){
 					a=animals.get(i);
+					if(a==null)continue;
 					g.setColor(Color.red);
 					g.fillOval(a.x*32, a.y*32, 32, 32);
 					g.setColor(Color.black);
