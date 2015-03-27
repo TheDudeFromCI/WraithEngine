@@ -25,7 +25,16 @@ public class NodeMap{
 		for(FunctionConnection c : connections)matrix.addConnection(c, scores);
 	}
 	public void evolve(){
-		//TODO
+		ArrayList<EvolutionStep> choices = new ArrayList<>();
+		//TODO Find all possible steps the ai can take to evolve, and pick the one with the highest chance of success.
+		for(Function f : functions)addAllPlacements(choices, f);
+		for(FunctionInstance f : getAllFunctionInstances()){
+			for(int i = 0; i<f.getChildren().length; i++)if(f.getChildren()[i]!=null)continue;
+			choices.add(new EvolutionStep(f));
+		}
+	}
+	private void addAllPlacements(ArrayList<EvolutionStep> choices, Function f){
+		//TODO Find all placements where this function can be added, and save them to this list.
 	}
 	private int getMaximumDepth(){
 		int maxDepth = 0;
