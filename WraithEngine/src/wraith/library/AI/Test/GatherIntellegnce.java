@@ -14,6 +14,7 @@ public class GatherIntellegnce{
 	private JPanel panel;
 	private JFrame frame;
 	private boolean slow = true;
+	private int steps;
 	private final ArrayList<Animal> animals = new ArrayList<>();
 	private final ArrayList<Food> foods = new ArrayList<>();
 	public GatherIntellegnce(){
@@ -47,6 +48,7 @@ public class GatherIntellegnce{
 				Food f;
 				for(int i = 0; i<foods.size(); i++){
 					f=foods.get(i);
+					if(f==null)continue;
 					g.setColor(Color.white);
 					g.fillOval(f.x*32, f.y*32, 32, 32);
 					g.setColor(Color.black);
@@ -61,7 +63,7 @@ public class GatherIntellegnce{
 		frame.addKeyListener(new KeyAdapter(){
 			@Override public void keyPressed(KeyEvent e){ if(e.getKeyCode()==KeyEvent.VK_Q)slow=!slow; }
 		});
-		for(int i = 0; i<10; i++)animals.add(new Animal());
+		for(int i = 0; i<5; i++)animals.add(new Animal());
 		frame.setVisible(true);
 		new Thread(new Runnable(){
 			public void run(){
@@ -77,6 +79,7 @@ public class GatherIntellegnce{
 		}).start();
 	}
 	private void step(){
+		steps++;
 		while(foods.size()<10)foods.add(new Food());
 		for(Animal a : animals)a.step();
 		for(int i = 0; i<animals.size();){
@@ -84,7 +87,7 @@ public class GatherIntellegnce{
 			else i++;
 		}
 		boolean allDead = animals.size()==0;
-		while(animals.size()<10){
+		while(animals.size()<5){
 			if(allDead)animals.add(new Animal());
 			else animals.add(new Animal(animals.get((int)(Math.random()*animals.size())), animals.get((int)(Math.random()*animals.size()))));
 		}
@@ -93,13 +96,13 @@ public class GatherIntellegnce{
 	class Animal{
 		int x, y, health;
 		NeuralNetwork brain;
-		double[] inputs = new double[4];
+		double[] inputs = new double[12];
 		boolean[] outputs = new boolean[4];
 		public Animal(){
 			do{ randomizeLocation();
 			}while(locationTaken(true));
 			health=100;
-			brain=new NeuralNetwork(inputs.length, 10, 2, outputs.length);
+			brain=new NeuralNetwork(inputs.length, 10, 1, outputs.length);
 		}
 		public Animal(Animal a, Animal b){
 			do{ randomizeLocation();
@@ -123,19 +126,29 @@ public class GatherIntellegnce{
 			health--;
 		}
 		void updateSensors(){
-			inputs[0]=x/20.0;
-			inputs[1]=y/15.0;
-			inputs[2]=foods.get(0).x/20.0;
-			inputs[3]=foods.get(0).y/15.0;
+			inputs[0]=testVision(x-1, y)?1:0;
+			inputs[1]=testVision(x+1, y)?1:0;
+			inputs[2]=testVision(x, y-1)?1:0;
+			inputs[3]=testVision(x, y+1)?1:0;
+			inputs[4]=testVisionFood(x-1, y)?1:0;
+			inputs[5]=testVisionFood(x+1, y)?1:0;
+			inputs[6]=testVisionFood(x, y-1)?1:0;
+			inputs[7]=testVisionFood(x, y+1)?1:0;
+			inputs[8]=steps/100.0;
+			inputs[9]=health/100.0;
+			inputs[10]=x/20.0;
+			inputs[11]=y/15.0;
 		}
 		boolean testVision(int x, int y){
-			int nx = x;
-			int ny = y;
-			if(nx<0)return true;
-			if(ny<0)return true;
-			if(nx>=20)return true;
-			if(ny>=15)return true;
-			for(Animal a : animals)if(a!=this&&a.x==nx&&a.y==ny)return true;
+			if(x<0)return true;
+			if(y<0)return true;
+			if(x>=20)return true;
+			if(y>=15)return true;
+			for(Animal a : animals)if(a!=this&&a.x==x&&a.y==y)return true;
+			return false;
+		}
+		boolean testVisionFood(int x, int y){
+			for(Food f : foods)if(f.x==x&&f.y==y)return true;
 			return false;
 		}
 		void motorSkills(){
@@ -143,30 +156,27 @@ public class GatherIntellegnce{
 				if(x>0){
 					x--;
 					if(locationTaken(false))x++;
-					else tryEatFood();
 				}
 			}
 			if(outputs[1]){
 				if(x<19){
 					x++;
 					if(locationTaken(false))x--;
-					else tryEatFood();
 				}
 			}
 			if(outputs[2]){
 				if(y>0){
 					y--;
 					if(locationTaken(false))y++;
-					else tryEatFood();
 				}
 			}
 			if(outputs[3]){
 				if(y<14){
 					y++;
 					if(locationTaken(false))y--;
-					else tryEatFood();
 				}
 			}
+			tryEatFood();
 		}
 		void tryEatFood(){
 			for(int i = 0; i<foods.size();){
