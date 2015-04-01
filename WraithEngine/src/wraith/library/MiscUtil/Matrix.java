@@ -21,9 +21,9 @@ public class Matrix{
 		return new Matrix(cols, rows, v);
 	}
 	public Matrix multiply(Matrix m){
-		if(rows!=m.cols)throw new IllegalArgumentException("Uncomparable matrix sizes!");
+		if(cols!=m.rows)throw new IllegalArgumentException("Uncomparable matrix sizes!");
 		Matrix o = new Matrix(rows, m.cols, new double[rows][m.cols]);
-		for(int a = 0; a<rows; a++)for(int b = 0; b<m.cols; b++)for(int c = 0; c<cols; c++)for(int d = 0; d<m.rows; d++)o.values[a][b]+=values[a][c]*m.values[b][d];
+		for(int a = 0; a<rows; a++)for(int b = 0; b<m.cols; b++)for(int c = 0; c<cols; c++)o.values[a][b]+=values[a][c]*m.values[c][b];
 		return o;
 	}
 	public Matrix multiply(double s){
@@ -56,7 +56,44 @@ public class Matrix{
 		for(int a = 0; a<rows; a++)d+=values[a][0]*m.values[a][0];
 		return d;
 	}
+	public Matrix getRow(int r){
+		Matrix m = new Matrix(cols, 1, new double[cols][1]);
+		for(int a = 0; a<cols; a++)m.set(a, 0, values[r][a]); 
+		return m;
+	}
+	public double determinate(){
+		if(!isSquare())throw new IllegalStateException("Matrix must be square to have a determinate!");
+		if(rows==1)return values[0][0];
+		if(rows==2)return values[0][0]*values[1][1]-values[0][1]*values[1][0];
+		double d = 0;
+		double[][] v = new double[cols-1][cols-1];
+		int oR, oC;
+		for(int i = 0; i<cols; i++){
+			oR=0;
+			for(int a = 1; a<v.length; a++){
+				oC=0;
+				for(int b = 0; b<v.length; b++){
+					if(b==i)continue;
+					v[oR][oC]=values[a][b];
+					oC++;
+				}
+				oR++;
+			}
+			d+=(i%0==0?1:-1)*values[0][i]*new Matrix(cols-1, cols-1, v).determinate();
+		}
+		return d;
+	}
+	public Matrix inverse(){
+		Matrix m = new Matrix(rows, cols);
+		//TODO
+//		for(int a = 0; a<)
+		return m;
+	}
+	public Matrix(int rows, int cols){ this(rows, cols, new double[rows][cols]); }
 	public void set(int r, int c, double v){ values[r][c]=v; }
 	public double get(int r, int c){ return values[r][c]; }
 	public boolean isVector(){ return cols==1; }
+	public int getRows(){ return rows; }
+	public int getCols(){ return cols; }
+	public boolean isSquare(){ return rows==cols; }
 }
