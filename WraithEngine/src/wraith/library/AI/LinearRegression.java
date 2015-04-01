@@ -54,4 +54,5 @@ public class LinearRegression{
 		for(int a = 0; a<data.getRows(); a++)d+=Math.pow(theta.transpose().multiply(x.getRow(a)).get(0, 0)-data.get(a, data.getCols()-1), 2);
 		return (1.0/(2.0*theta.getRows()))*d;
 	}
+	public static double parse(Matrix theta, Matrix x){ return theta.transpose().multiply(x).get(0, 0); }
 }
