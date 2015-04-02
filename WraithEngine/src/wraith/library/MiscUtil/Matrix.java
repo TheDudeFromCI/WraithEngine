@@ -89,6 +89,16 @@ public class Matrix{
 //		for(int a = 0; a<)
 		return m;
 	}
+	public Matrix addRow(double[] row){
+		Matrix m = new Matrix(rows+1, cols);
+		for(int a = 0; a<=rows; a++){
+			for(int b = 0; b<cols; b++){
+				if(a<rows)m.set(a, b, values[a][b]);
+				else m.set(a, b, row[b]);
+			}
+		}
+		return m;
+	}
 	public Matrix(int rows, int cols){ this(rows, cols, new double[rows][cols]); }
 	public void set(int r, int c, double v){ values[r][c]=v; }
 	public double get(int r, int c){ return values[r][c]; }
