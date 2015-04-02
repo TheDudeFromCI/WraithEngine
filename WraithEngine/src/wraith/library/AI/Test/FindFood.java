@@ -11,9 +11,9 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import wraith.library.AI.BinaryEvolutionaryNeuralNetwork;
-import wraith.library.AI.BinaryNeuralNetworkRenderer;
-import wraith.library.AI.ScrollingEvolutionProgressLog;
+import wraith.library.AI.V5.BinaryEvolutionaryNeuralNetwork;
+import wraith.library.AI.V5.BinaryNeuralNetworkRenderer;
+import wraith.library.AI.V5.ScrollingEvolutionProgressLog;
 
 public class FindFood{
 	private JFrame frame, frame2, frame3;

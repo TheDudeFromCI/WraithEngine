@@ -1,4 +1,4 @@
-package wraith.library.AI;
+package wraith.library.AI.V5;
 
 public class ScrollingEvolutionProgressLog{
 	private int generations;

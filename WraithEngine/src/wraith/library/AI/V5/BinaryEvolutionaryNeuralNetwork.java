@@ -1,7 +1,7 @@
-package wraith.library.AI;
+package wraith.library.AI.V5;
 
 import java.util.ArrayList;
-import wraith.library.AI.BinaryNeuralNetworkTrainingMatrix.Data;
+import wraith.library.AI.V5.BinaryNeuralNetworkTrainingMatrix.Data;
 
 public class BinaryEvolutionaryNeuralNetwork{
 	private double[] lastInput;
