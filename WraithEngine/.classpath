@@ -8,5 +8,10 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Phealoon/Documents/Eclipse Code/LWJGL/native/windows/x64"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/eclipse/libs/ejml-v0.27-libs/EJML-simple-0.27.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/libs/ejml-v0.27-libs/EJML-core-0.27.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/libs/ejml-v0.27-libs/EJML-dense64-0.27.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/libs/ejml-v0.27-libs/EJML-denseC64-0.27.jar"/>
+	<classpathentry kind="lib" path="C:/eclipse/libs/ejml-v0.27-libs/EJML-equation-0.27.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
