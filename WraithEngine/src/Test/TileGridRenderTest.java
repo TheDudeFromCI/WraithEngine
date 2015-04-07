@@ -1,4 +1,4 @@
-package wraith.library.Test;
+package Test;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

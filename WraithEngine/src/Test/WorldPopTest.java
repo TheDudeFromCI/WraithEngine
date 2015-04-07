@@ -1,4 +1,4 @@
-package wraith.library.Test;
+package Test;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
