@@ -1,4 +1,4 @@
-package wraith.library.AI.Test;
+package Test;
 
 import java.awt.Color;
 import java.awt.Dimension;
