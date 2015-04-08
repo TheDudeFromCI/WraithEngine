@@ -44,6 +44,10 @@ public class Map{
 		camera.scale=scale;
 		updateImageCompilation();
 	}
+	public void placeTileGroup(TileGroup tileGroup, int x, int y, int z){
+		tileGroup.placeAt(tiles, x, y, z);
+		imageLayers[y].repaint();
+	}
 	public void render(Graphics2D g){ for(int i = 0; i<ySize; i++)imageLayers[i].render(g); }
 	public void updateImageCompilation(){ for(int i = 0; i<ySize; i++)imageLayers[i].repaint(); }
 	public int getSizeX(){ return xSize; }
