@@ -3,6 +3,7 @@ package wraith.library.WorldManagement.TileGrid;
 import java.awt.Graphics2D;
 
 public class Map{
+	private Panoramic panoramic;
 	private final Camera camera = new Camera();
 	private final MapImageLayer[] imageLayers;
 	private final int xSize, ySize, zSize;
@@ -56,4 +57,6 @@ public class Map{
 	public int getCameraScale(){ return camera.scale; }
 	public int getCameraX(){ return camera.x; }
 	public int getCameraZ(){ return camera.z; }
+	public Panoramic getPanoramic(){ return panoramic; }
+	public void setPanoramic(Panoramic panoramic){ this.panoramic=panoramic; }
 }
