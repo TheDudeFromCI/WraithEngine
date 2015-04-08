@@ -18,7 +18,6 @@ public class MapView{
 				g.dispose();
 			}
 		};
-		panel.setDoubleBuffered(false);
 		panel.setPreferredSize(new Dimension(map.getCameraScale()*map.getSizeX(), map.getCameraScale()*map.getSizeZ()));
 		panel.setFocusable(true);
 		new Thread(new Runnable(){
