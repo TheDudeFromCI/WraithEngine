@@ -12,9 +12,10 @@ public class GameScreen{
 		frame.setTitle(name);
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
 		frame.setUndecorated(true);
 		frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		frame.setAlwaysOnTop(true);
+		frame.setLocationRelativeTo(null);
 		frame.addMouseListener(adapter);
 		frame.addMouseMotionListener(adapter);
 		frame.addMouseWheelListener(adapter);
