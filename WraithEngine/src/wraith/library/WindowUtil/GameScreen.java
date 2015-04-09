@@ -21,7 +21,7 @@ public class GameScreen{
 		frame.addKeyListener(adapter);
 		frame.setVisible(true);
 		new Timer().schedule(new TimerTask(){
-			public void run(){ panel.repaint(); }
+			public void run(){ panel.paintImmediately(0, 0, panel.getWidth(), panel.getHeight()); }
 		}, 16, 16);
 	}
 }
