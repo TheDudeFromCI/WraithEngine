@@ -49,7 +49,10 @@ public class Map{
 		tileGroup.placeAt(tiles, x, y, z);
 		imageLayers[y].repaint();
 	}
-	public void render(Graphics2D g){ for(int i = 0; i<ySize; i++)imageLayers[i].render(g); }
+	public void render(Graphics2D g, int width, int height){
+		if(panoramic!=null)panoramic.render(g, width, height);
+		for(int i = 0; i<ySize; i++)imageLayers[i].render(g);
+	}
 	public void updateImageCompilation(){ for(int i = 0; i<ySize; i++)imageLayers[i].repaint(); }
 	public int getSizeX(){ return xSize; }
 	public int getSizeY(){ return ySize; }
