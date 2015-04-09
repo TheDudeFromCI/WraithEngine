@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class MapImageLayer{
 	private BufferedImage staticImage;
+	private Graphics2D g;
 	private final Map map;
 	private final int y;
 	private final ArrayList<Tile> animatedTiles = new ArrayList<>();
@@ -15,14 +16,20 @@ public class MapImageLayer{
 		repaint();
 	}
 	public void repaint(){
-		staticImage=new BufferedImage(map.getSizeX()*map.getCameraScale(), map.getSizeZ()*map.getCameraScale(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = staticImage.createGraphics();
+		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
+			staticImage=new BufferedImage(map.getCameraWidth(), map.getCameraHeight(), BufferedImage.TYPE_INT_ARGB);
+			g=staticImage.createGraphics();
+		}
 		animatedTiles.clear();
 		Tile tile;
 		TileMaterial tileMaterial;
 		BufferedImage img;
-		for(int x = 0; x<map.getSizeX(); x++){
-			for(int z = 0; z<map.getSizeZ(); z++){
+		int lowX = Math.max(map.getCameraX()/map.getCameraScale(), 0);
+		int lowZ = Math.max(map.getCameraZ()/map.getCameraScale(), 0);
+		int highX = (map.getCameraWidth()-map.getCameraX())/map.getCameraScale();
+		int highZ = (map.getCameraHeight()-map.getCameraZ())/map.getCameraScale();
+		for(int x = lowX; x<highX; x++){
+			for(int z = lowZ; z<highZ; z++){
 				tile=map.getTileAt(x, y, z);
 				if(tile==null)continue;
 				tileMaterial=tile.getMaterial();

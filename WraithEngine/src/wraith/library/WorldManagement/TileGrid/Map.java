@@ -33,17 +33,13 @@ public class Map{
 	public void setCameraPosition(int x, int z){
 		camera.x=x;
 		camera.z=z;
-		updateImageCompilation();
 	}
 	public void setCameraScale(int scale){
 		camera.scale=scale;
-		updateImageCompilation();
 	}
-	public void setCameraScaleAndPosition(int x, int z, int scale){
-		camera.x=x;
-		camera.z=z;
-		camera.scale=scale;
-		updateImageCompilation();
+	public void setCameraDimensions(int width, int height){
+		camera.width=width;
+		camera.height=height;
 	}
 	public void placeTileGroup(TileGroup tileGroup, int x, int y, int z){
 		tileGroup.placeAt(tiles, x, y, z);
@@ -62,4 +58,6 @@ public class Map{
 	public int getCameraZ(){ return camera.z; }
 	public Panoramic getPanoramic(){ return panoramic; }
 	public void setPanoramic(Panoramic panoramic){ this.panoramic=panoramic; }
+	public int getCameraWidth(){ return camera.width; }
+	public int getCameraHeight(){ return camera.height; }
 }
