@@ -23,7 +23,6 @@ public class WorldPopTest implements WorldPopulator{
 		}
 		grass=new TileMaterial(){
 			public BufferedImage getImage(){ return chipset.getTile(1, 10); }
-			public boolean isAnimated(){ return false; }
 		};
 		waterfall=new TileMaterial(){
 			@Override public BufferedImage getImage(){
@@ -33,11 +32,9 @@ public class WorldPopTest implements WorldPopulator{
 				if(frame==2)return chipset.getTile(4, 6);
 				return chipset.getTile(4, 7);
 			}
-			@Override public boolean isAnimated(){ return true; }
 		};
 		rock=new TileMaterial(){
 			public BufferedImage getImage(){ return chipset.getTile(26, 10); }
-			public boolean isAnimated(){ return false; }
 		};
 	}
 	public void generate(Tile[][][] tiles){ for(int x = 0; x<tiles.length; x++)for(int y = 0; y<tiles[x].length; y++)for(int z = 0; z<tiles[x][y].length; z++)tiles[x][y][z]=getIdealTile(x, y, z); }

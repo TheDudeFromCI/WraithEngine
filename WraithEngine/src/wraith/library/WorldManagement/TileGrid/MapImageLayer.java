@@ -1,15 +1,14 @@
 package wraith.library.WorldManagement.TileGrid;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class MapImageLayer{
 	private BufferedImage staticImage;
 	private Graphics2D g;
 	private final Map map;
 	private final int y;
-	private final ArrayList<Tile> animatedTiles = new ArrayList<>();
 	public MapImageLayer(Map map, int y){
 		this.map=map;
 		this.y=y;
@@ -17,38 +16,30 @@ public class MapImageLayer{
 	}
 	public void repaint(){
 		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
+			if(g!=null)g.dispose();
 			staticImage=new BufferedImage(map.getCameraWidth(), map.getCameraHeight(), BufferedImage.TYPE_INT_ARGB);
 			g=staticImage.createGraphics();
-		}
-		animatedTiles.clear();
+			g.setBackground(new Color(0, 0, 0, 0));
+		}else g.clearRect(0, 0, staticImage.getWidth(), staticImage.getHeight());
 		Tile tile;
 		TileMaterial tileMaterial;
-		BufferedImage img;
+		int tileX, tileZ;
+		int imageWidth = staticImage.getWidth();
+		int imageHeight = staticImage.getHeight();
 		int lowX = Math.max(map.getCameraX()/map.getCameraScale(), 0);
 		int lowZ = Math.max(map.getCameraZ()/map.getCameraScale(), 0);
-		int highX = (map.getCameraWidth()-map.getCameraX())/map.getCameraScale();
-		int highZ = (map.getCameraHeight()-map.getCameraZ())/map.getCameraScale();
-		for(int x = lowX; x<highX; x++){
-			for(int z = lowZ; z<highZ; z++){
+		int highX = Math.min(lowX+imageWidth/map.getCameraScale(), map.getSizeX()-1)+1;
+		int highZ = Math.min(lowZ+imageHeight/map.getCameraScale(), map.getSizeZ()-1);
+		for(int x = lowX; x<=highX; x++){
+			tileX=x*map.getCameraScale()-map.getCameraX();
+			for(int z = lowZ; z<=highZ; z++){
 				tile=map.getTileAt(x, y, z);
 				if(tile==null)continue;
+				tileZ=z*map.getCameraScale()-map.getCameraZ();
 				tileMaterial=tile.getMaterial();
-				if(tileMaterial.isAnimated())animatedTiles.add(tile);
-				else{
-					img=tileMaterial.getImage();
-					g.drawImage(img, x*map.getCameraScale(), z*map.getCameraScale(), (x+1)*map.getCameraScale(), (z+1)*map.getCameraScale(), 0, 0, img.getWidth(), img.getHeight(), null);
-				}
+				g.drawImage(tileMaterial.getImage(), tileX, tileZ, map.getCameraScale(), map.getCameraScale(), null);
 			}
 		}
-		g.dispose();
 	}
-	public void render(Graphics2D g){
-		g.drawImage(staticImage, -map.getCameraX(), -map.getCameraZ(), null);
-		BufferedImage img;
-		for(Tile t : animatedTiles){
-			img=t.getMaterial().getImage();
-			g.drawImage(img, t.getX()*map.getCameraScale()-map.getCameraX(), t.getZ()*map.getCameraScale()-map.getCameraZ(), (t.getX()+1)*map.getCameraScale()-map.getCameraX(), (t.getZ()+1)*map.getCameraScale()-map.getCameraZ(), 0, 0, img.getWidth(), img.getHeight(), null);
-		}
-	}
-	public ArrayList<Tile> getAnimatedTiles(){ return animatedTiles; }
+	public void render(Graphics2D g){ g.drawImage(staticImage, 0, 0, null); }
 }
