@@ -28,8 +28,8 @@ public class MapImageLayer{
 		int imageHeight = staticImage.getHeight();
 		int lowX = Math.max(map.getCameraX()/map.getCameraRawScale(), 0);
 		int lowZ = Math.max(map.getCameraZ()/map.getCameraRawScale(), 0);
-		int highX = Math.min(lowX+imageWidth/map.getCameraRawScale()+1, map.getSizeX()-1);
-		int highZ = Math.min(lowZ+imageHeight/map.getCameraRawScale(), map.getSizeZ()-1);
+		int highX = Math.min(lowX+imageWidth/map.getCameraScale()+1, map.getSizeX()-1);
+		int highZ = Math.min(lowZ+imageHeight/map.getCameraScale(), map.getSizeZ()-1);
 		for(int x = lowX; x<=highX; x++){
 			tileX=x*map.getCameraRawScale()-map.getCameraX();
 			for(int z = lowZ; z<=highZ; z++){
