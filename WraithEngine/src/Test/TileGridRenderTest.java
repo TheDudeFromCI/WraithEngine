@@ -17,7 +17,7 @@ public class TileGridRenderTest{
 		map.setCameraScale(32);
 		final JPanel panel = new JPanel(){
 			@Override public void paint(Graphics g){
-				map.render((Graphics2D)g);
+				map.render((Graphics2D)g, 480, 480);
 				g.dispose();
 			}
 		};

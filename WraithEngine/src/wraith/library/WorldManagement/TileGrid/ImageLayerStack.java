@@ -3,6 +3,7 @@ package wraith.library.WorldManagement.TileGrid;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import wraith.library.MiscUtil.ImageUtil;
 
 public class ImageLayerStack{
 	private BufferedImage staticImage;
@@ -18,7 +19,7 @@ public class ImageLayerStack{
 		boolean newGraphics = false;
 		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
 			if(g!=null)g.dispose();
-			staticImage=new BufferedImage(map.getCameraWidth(), map.getCameraHeight(), BufferedImage.TYPE_INT_ARGB);
+			staticImage=ImageUtil.getBestFormat(map.getCameraWidth(), map.getCameraHeight());
 			g=staticImage.createGraphics();
 			g.setBackground(new Color(0, 0, 0, 0));
 			newGraphics=true;
@@ -33,5 +34,8 @@ public class ImageLayerStack{
 			for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].render(g);
 		}
 	}
-	public void render(Graphics2D g){ synchronized(LOCK){ g.drawImage(staticImage, 0, 0, null); } }
+	public void render(Graphics2D g, int width, int height){
+		double scale = map.getCameraScale()/(double)map.getCameraRawScale();
+		synchronized(LOCK){ g.drawImage(staticImage, 0, 0, (int)(scale*width), (int)(scale*height), null); }
+	}
 }

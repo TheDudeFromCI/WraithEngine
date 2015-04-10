@@ -38,7 +38,7 @@ public class Map{
 	public void setCameraScale(int scale){ camera.scale=scale; }
 	public Tile getTileAt(int x, int y, int z){ return tiles[x][y][z]; }
 	public void updateImageCompilation(){ imageLayerStack.repaint(); }
-	public void render(Graphics2D g){ imageLayerStack.render(g); }
+	public void render(Graphics2D g, int width, int height){ imageLayerStack.render(g, width, height); }
 	public int getSizeX(){ return xSize; }
 	public int getSizeY(){ return ySize; }
 	public int getSizeZ(){ return zSize; }
@@ -50,4 +50,6 @@ public class Map{
 	public int getCameraWidth(){ return camera.width; }
 	public int getCameraHeight(){ return camera.height; }
 	public MapImageLayer[] getImageLayers(){ return imageLayers; }
+	public int getCameraRawScale(){ return camera.rawScale; }
+	public void setCameraRawScale(int rawScale){ camera.rawScale=rawScale; }
 }

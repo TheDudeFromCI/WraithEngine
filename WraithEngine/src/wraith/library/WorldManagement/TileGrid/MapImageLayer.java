@@ -3,6 +3,7 @@ package wraith.library.WorldManagement.TileGrid;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import wraith.library.MiscUtil.ImageUtil;
 
 public class MapImageLayer{
 	private BufferedImage staticImage;
@@ -17,7 +18,7 @@ public class MapImageLayer{
 	public void repaint(){
 		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
 			if(g!=null)g.dispose();
-			staticImage=new BufferedImage(map.getCameraWidth(), map.getCameraHeight(), BufferedImage.TYPE_INT_ARGB);
+			staticImage=ImageUtil.getBestFormat(map.getCameraWidth(), map.getCameraHeight());
 			g=staticImage.createGraphics();
 			g.setBackground(new Color(0, 0, 0, 0));
 		}else g.clearRect(0, 0, staticImage.getWidth(), staticImage.getHeight());
@@ -25,16 +26,16 @@ public class MapImageLayer{
 		int tileX;
 		int imageWidth = staticImage.getWidth();
 		int imageHeight = staticImage.getHeight();
-		int lowX = Math.max(map.getCameraX()/map.getCameraScale(), 0);
-		int lowZ = Math.max(map.getCameraZ()/map.getCameraScale(), 0);
-		int highX = Math.min(lowX+imageWidth/map.getCameraScale()+1, map.getSizeX()-1);
-		int highZ = Math.min(lowZ+imageHeight/map.getCameraScale(), map.getSizeZ()-1);
+		int lowX = Math.max(map.getCameraX()/map.getCameraRawScale(), 0);
+		int lowZ = Math.max(map.getCameraZ()/map.getCameraRawScale(), 0);
+		int highX = Math.min(lowX+imageWidth/map.getCameraRawScale()+1, map.getSizeX()-1);
+		int highZ = Math.min(lowZ+imageHeight/map.getCameraRawScale(), map.getSizeZ()-1);
 		for(int x = lowX; x<=highX; x++){
-			tileX=x*map.getCameraScale()-map.getCameraX();
+			tileX=x*map.getCameraRawScale()-map.getCameraX();
 			for(int z = lowZ; z<=highZ; z++){
 				tile=map.getTileAt(x, y, z);
 				if(tile==null)continue;
-				g.drawImage(tile.getMaterial().getImage(), tileX, z*map.getCameraScale()-map.getCameraZ(), map.getCameraScale(), map.getCameraScale(), null);
+				g.drawImage(tile.getMaterial().getImage(), tileX, z*map.getCameraRawScale()-map.getCameraZ(), null);
 			}
 		}
 	}
