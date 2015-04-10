@@ -1,5 +1,7 @@
 package wraith.library.MiscUtil;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
 public class ImageUtil{
@@ -12,4 +14,5 @@ public class ImageUtil{
 		for(int i = 0; i<bufs.length; i++)bufs[i]=img.getSubimage(i%cols*width, i/cols*height, width, height);
 		return bufs;
 	}
+	public static BufferedImage getBestFormat(int width, int height){ return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT); }
 }
