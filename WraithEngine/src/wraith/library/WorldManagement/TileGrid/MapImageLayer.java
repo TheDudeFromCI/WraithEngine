@@ -15,7 +15,6 @@ public class MapImageLayer{
 		repaint();
 	}
 	public void repaint(){
-		long time = System.currentTimeMillis();
 		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
 			if(g!=null)g.dispose();
 			staticImage=new BufferedImage(map.getCameraWidth(), map.getCameraHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -38,7 +37,6 @@ public class MapImageLayer{
 				g.drawImage(tile.getMaterial().getImage(), tileX, z*map.getCameraScale()-map.getCameraZ(), map.getCameraScale(), map.getCameraScale(), null);
 			}
 		}
-		System.out.println(System.currentTimeMillis()-time);
 	}
 	public void render(Graphics2D g){ g.drawImage(staticImage, 0, 0, null); }
 }
