@@ -31,6 +31,7 @@ public class Client{
 			clientThread.setName("Client Connection");
 			clientThread.setDaemon(true);
 			clientThread.start();
+			listener.connectedToServer();
 		}catch(UnknownHostException exception){ listener.unknownHost();
 		}catch(IOException exception){ listener.couldNotConnect();
 		}catch(Exception exception){ exception.printStackTrace(); }

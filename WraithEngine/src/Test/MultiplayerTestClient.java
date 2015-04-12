@@ -25,6 +25,7 @@ public class MultiplayerTestClient{
 				System.exit(1);
 			}
 			public void recivedInput(String msg){ System.out.println("Recived: "+msg); }
+			public void connectedToServer(){ System.out.println("Connected."); }
 		};
 		@SuppressWarnings("resource")Scanner scan = new Scanner(System.in);
 		System.out.println("Enter server ip.");
