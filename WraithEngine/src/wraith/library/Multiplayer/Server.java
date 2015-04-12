@@ -32,15 +32,19 @@ public class Server{
 								public void run(){
 									try{
 										clients.add(s);
-										ClientInstance client = new ClientInstance(s.getInetAddress(), s.getPort());
 										BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 										PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+										ClientInstance client = new ClientInstance(s.getInetAddress(), s.getPort());
 										serverListener.clientConncted(client, out);
 										while(open){
 											try{ serverListener.recivedInput(client, in.readLine());
 											}catch(IOException e){
 												serverListener.clientDisconnected(client);
-												try{ s.close();
+												try{
+													if(!s.isClosed()){
+														s.shutdownOutput();
+														s.close();
+													}
 												}catch(Exception exception){ exception.printStackTrace(); }
 												clients.remove(s);
 												return;
@@ -90,8 +94,11 @@ public class Server{
 		for(int i = 0; i<clients.size(); i++){
 			s=clients.get(i);
 			if(client.ip==s.getInetAddress()&&s.getPort()==client.port){
-				try{ s.close();
+				try{
+					s.shutdownOutput();
+					s.close();
 				}catch(IOException e){ e.printStackTrace(); }
+				System.out.println("Closed "+client);
 				return;
 			}
 		}

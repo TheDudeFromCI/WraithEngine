@@ -22,7 +22,17 @@ public class Client{
 			Thread clientThread = new Thread(new Runnable(){
 				public void run(){
 					while(open){
-						try{ clientListener.recivedInput(in.readLine());
+						try{
+							String s = in.readLine();
+							if(s==null){
+								clientListener.disconnected();
+								try{ in.close();
+								}catch(Exception exception){ exception.printStackTrace(); }
+								try{ out.close();
+								}catch(Exception exception){ exception.printStackTrace(); }
+								return;
+							}
+							clientListener.recivedInput(s);
 						}catch(IOException exception){ clientListener.serverClosed();
 						}catch(Exception exception){ exception.printStackTrace(); }
 					}
