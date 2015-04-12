@@ -37,6 +37,7 @@ public class Client{
 							}
 							clientListener.recivedInput(s);
 						}catch(IOException exception){
+							open=false;
 							clientListener.serverClosed();
 							try{ socket.close();
 							}catch(Exception exception1){ exception.printStackTrace(); }
@@ -53,9 +54,16 @@ public class Client{
 			clientThread.setDaemon(true);
 			clientThread.start();
 			listener.connectedToServer();
-		}catch(UnknownHostException exception){ listener.unknownHost();
-		}catch(IOException exception){ listener.couldNotConnect();
-		}catch(Exception exception){ exception.printStackTrace(); }
+		}catch(UnknownHostException exception){
+			open=false;
+			listener.unknownHost();
+		}catch(IOException exception){
+			open=false;
+			listener.couldNotConnect();
+		}catch(Exception exception){
+			open=false;
+			exception.printStackTrace();
+		}
 	}
 	public void dispose(){
 		try{
