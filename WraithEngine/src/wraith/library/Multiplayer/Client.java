@@ -26,6 +26,8 @@ public class Client{
 							String s = in.readLine();
 							if(s==null){
 								clientListener.disconnected();
+								try{ socket.close();
+								}catch(Exception exception){ exception.printStackTrace(); }
 								try{ in.close();
 								}catch(Exception exception){ exception.printStackTrace(); }
 								try{ out.close();
@@ -33,7 +35,15 @@ public class Client{
 								return;
 							}
 							clientListener.recivedInput(s);
-						}catch(IOException exception){ clientListener.serverClosed();
+						}catch(IOException exception){
+							clientListener.serverClosed();
+							try{ socket.close();
+							}catch(Exception exception1){ exception.printStackTrace(); }
+							try{ in.close();
+							}catch(Exception exception1){ exception.printStackTrace(); }
+							try{ out.close();
+							}catch(Exception exception1){ exception.printStackTrace(); }
+							return;
 						}catch(Exception exception){ exception.printStackTrace(); }
 					}
 				}
