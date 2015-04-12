@@ -98,7 +98,6 @@ public class Server{
 					s.shutdownOutput();
 					s.close();
 				}catch(IOException e){ e.printStackTrace(); }
-				System.out.println("Closed "+client);
 				return;
 			}
 		}
