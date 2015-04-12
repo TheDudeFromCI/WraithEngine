@@ -25,6 +25,7 @@ public class Client{
 						try{
 							String s = in.readLine();
 							if(s==null){
+								open=false;
 								clientListener.disconnected();
 								try{ socket.close();
 								}catch(Exception exception){ exception.printStackTrace(); }
@@ -70,4 +71,5 @@ public class Client{
 		}catch(Exception exception){ exception.printStackTrace();}
 	}
 	public void send(String msg){ out.println(msg); }
+	public boolean isConnected(){ return open; }
 }
