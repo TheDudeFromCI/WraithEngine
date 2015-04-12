@@ -85,4 +85,15 @@ public class Server{
 		}catch(UnknownHostException e){ e.printStackTrace(); }
 		return null;
 	}
+	@SuppressWarnings("resource")public void kickClient(ClientInstance client){
+		Socket s;
+		for(int i = 0; i<clients.size(); i++){
+			s=clients.get(i);
+			if(client.ip==s.getInetAddress()&&s.getLocalPort()==client.port){
+				try{ s.close();
+				}catch(IOException e){ e.printStackTrace(); }
+				return;
+			}
+		}
+	}
 }
