@@ -89,7 +89,7 @@ public class Server{
 		Socket s;
 		for(int i = 0; i<clients.size(); i++){
 			s=clients.get(i);
-			if(client.ip==s.getInetAddress()&&s.getLocalPort()==client.port){
+			if(client.ip==s.getInetAddress()&&s.getPort()==client.port){
 				try{ s.close();
 				}catch(IOException e){ e.printStackTrace(); }
 				return;
