@@ -66,4 +66,6 @@ public class GameScreen{
 		ny=y+renderSize.height;
 	}
 	public void setBackgroundColor(Color color){ backgroundColor=color; }
+	public Dimension getScreenSize(){ return screenSize; }
+	public Dimension getRenderSize(){ return renderSize; }
 }
