@@ -33,7 +33,7 @@ public class NodeMap{
 			choices.add(new EvolutionStep(f));
 		}
 	}
-	private void addAllPlacements(ArrayList<EvolutionStep> choices, Function f){
+	@SuppressWarnings("unused")private void addAllPlacements(ArrayList<EvolutionStep> choices, Function f){
 		//TODO Find all placements where this function can be added, and save them to this list.
 	}
 	private int getMaximumDepth(){
