@@ -38,7 +38,8 @@ public class Map{
 	public void setCameraScale(int scale){ camera.scale=scale; }
 	public Tile getTileAt(int x, int y, int z){ return tiles[x][y][z]; }
 	public void updateImageCompilation(){ imageLayerStack.repaint(); }
-	public void render(Graphics2D g, int width, int height){ imageLayerStack.render(g, width, height); }
+	public void render(Graphics2D g, int x, int y, int width, int height){ imageLayerStack.render(g, x, y, width, height); }
+	public void render(Graphics2D g, int width, int height){ render(g, 0, 0, width, height); }
 	public int getSizeX(){ return xSize; }
 	public int getSizeY(){ return ySize; }
 	public int getSizeZ(){ return zSize; }

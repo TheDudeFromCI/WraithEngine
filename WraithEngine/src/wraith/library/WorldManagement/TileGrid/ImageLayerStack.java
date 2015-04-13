@@ -34,8 +34,8 @@ public class ImageLayerStack{
 			for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].render(g);
 		}
 	}
-	public void render(Graphics2D g, int width, int height){
+	public void render(Graphics2D g, int x, int y, int width, int height){
 		double scale = map.getCameraScale()/(double)map.getCameraRawScale();
-		synchronized(LOCK){ g.drawImage(staticImage, 0, 0, (int)(scale*width), (int)(scale*height), null); }
+		synchronized(LOCK){ g.drawImage(staticImage, x, y, (int)(scale*width), (int)(scale*height), null); }
 	}
 }

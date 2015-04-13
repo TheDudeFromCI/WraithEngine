@@ -14,7 +14,7 @@ public class MapView{
 		map=m;
 		panel=new JPanel(){
 			@Override public void paint(Graphics g){
-				map.render((Graphics2D)g, panel.getWidth(), panel.getHeight());
+				map.render((Graphics2D)g, 0, 0, panel.getWidth(), panel.getHeight());
 				g.dispose();
 			}
 		};
