@@ -67,17 +67,19 @@ public class Client{
 	}
 	public void dispose(){
 		try{
-			open=false;
-			socket.close();
-			in.close();
-			out.close();
+			if(open){
+				open=false;
+				socket.close();
+				in.close();
+				out.close();
+				clientListener.disconnected();
+			}
 			socket=null;
 			in=null;
 			out=null;
-			clientListener.disconnected();
 			clientListener=null;
 		}catch(Exception exception){ exception.printStackTrace();}
 	}
-	public void send(String msg){ out.println(msg); }
+	public void send(String msg){ if(open)out.println(msg); }
 	public boolean isConnected(){ return open; }
 }
