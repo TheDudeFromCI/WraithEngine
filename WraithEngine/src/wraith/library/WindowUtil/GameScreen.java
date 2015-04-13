@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class GameScreen{
 	private int x, y, nx, ny;
@@ -17,8 +18,9 @@ public class GameScreen{
 	public GameScreen(String name, final GameRenderer renderer, UserInputAdapter adapter){
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 		renderSize=new Dimension(screenSize);
-		final JFrame frame = new JFrame(){
-			@Override public void paint(Graphics g){
+		final JFrame frame = new JFrame();
+		JPanel panel = new JPanel(){
+			@Override public void paintComponent(Graphics g){
 				g.setColor(backgroundColor);
 				g.fillRect(0, 0, x, screenSize.height);
 				g.fillRect(x, 0, renderSize.width, y);
@@ -28,6 +30,7 @@ public class GameScreen{
 				g.dispose();
 			}
 		};
+		frame.add(panel);
 		frame.setTitle(name);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
