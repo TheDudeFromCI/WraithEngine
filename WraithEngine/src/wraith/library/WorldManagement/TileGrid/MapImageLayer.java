@@ -13,7 +13,6 @@ public class MapImageLayer{
 	public MapImageLayer(Map map, int y){
 		this.map=map;
 		this.y=y;
-		repaint();
 	}
 	public void repaint(){
 		if(staticImage==null||staticImage.getWidth()!=map.getCameraRealWidth()||staticImage.getHeight()!=map.getCameraRealHeight()){

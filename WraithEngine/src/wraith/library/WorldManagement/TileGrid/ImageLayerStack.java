@@ -10,10 +10,6 @@ public class ImageLayerStack{
 	private Graphics2D g;
 	private final Map map;
 	private final Object LOCK = true;
-	public ImageLayerStack(Map map){
-		this.map=map;
-		repaint();
-	}
 	public void repaint(){
 		for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].repaint();
 		boolean newGraphics = false;
@@ -34,5 +30,6 @@ public class ImageLayerStack{
 			for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].render(g);
 		}
 	}
+	public ImageLayerStack(Map map){ this.map=map; }
 	public void render(Graphics2D g, int x, int y, int width, int height){ synchronized(LOCK){ g.drawImage(staticImage, x, y, width, height, null); } }
 }
