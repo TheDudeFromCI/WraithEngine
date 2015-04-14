@@ -3,99 +3,71 @@ package wraith.library.RandomGeneration;
 import java.util.Random;
 
 public class NoiseGenerator{
-	private long seed;
-	private float smoothness;
-	private int detail;
-	private float maxHeight;
-	private int blending;
-	public NoiseGenerator(long seed, float smoothness, int detail, int blending){
-		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
-		if(detail<1)throw new IllegalArgumentException("Detail must be at least 1!");
-		if(blending<0)throw new IllegalArgumentException("Blending cannot be negative!");
+	private int[] reals, edge, c;
+	private float[] fracs, v;
+	private final float maxHeight;
+	private final long seed;
+	private final float smoothness;
+	private final int detail;
+	public NoiseGenerator(long seed, float smoothness, int detail){
 		this.seed=seed;
 		this.smoothness=smoothness;
-		this.detail=detail;
-		this.blending=blending;
-		maxHeight=m(detail);
+		this.detail=detail+1;
+		maxHeight=findMaxHeight(this.detail);
 	}
 	public float noise(float... x){
-		if(x.length==0)return new Random(seed).nextFloat();
-		for(int i = 0; i<x.length; i++)x[i]/=smoothness;
-		float t = 0;
-		for(int i = 0; i<detail; i++)t+=(e(x, (float)Math.pow(2, i), (i+1)*1000)/(i+1))*1/Math.pow(2, i);
-		t=t/maxHeight;
-		return t;
-	}
-	private float e(float[] x, float pow, int k){
-		float[] a = new float[x.length];
-		for(int i = 0; i<a.length; i++)a[i]=x[i]*pow;
-		int w = new Random(k).nextInt();
-		int[] f = new int[a.length];
-		float[] fracs = new float[a.length];
-		for(int i = 0; i<a.length; i++){
-			f[i]=f(a[i]);
-			fracs[i]=a[i]-f[i];
+		if(reals==null||x.length!=reals.length){
+			reals=new int[x.length];
+			fracs=new float[x.length];
+			v=new float[(int)Math.pow(2, x.length)];
+			edge=new int[x.length+1];
+			c=new int[x.length];
+			for(int i = 0; i<c.length; i++)c[i]=(int)Math.pow(2, i);
 		}
-		float[] v = new float[(int)Math.pow(2, a.length)];
-		for(int i = 0; i<v.length; i++){
-			int[] edge = new int[a.length+1];
-			for(int j = 0; j<a.length; j++){
-				int c = (int)Math.pow(2, j);
-				edge[j]=(i&c)==c?f[j]+1:f[j];
-			}
-			edge[a.length]=w;
-			v[i]=s(edge);
-		}
-		return i(v, fracs, 0);
-	}
-	private float i(float[] v, float[] fracs, int stage){
-		if(v.length==2)return c(v[0], v[1], fracs[stage]);
-		float[] k = new float[v.length/2];
-		for(int i = 0; i<k.length; i++)k[i]=c(v[i*2], v[i*2+1], fracs[stage]);
-		return i(k, fracs, stage+1);
-	}
-	private float s(int[] x){
 		float total = 0;
-		int[] n = new int[x.length];
-		for(int i = 0; i<n.length; i++)n[i]=x[i];
-		for(int a = 0; a<x.length; a++){
-			for(int b = -blending; b<=blending; b++){
-				n[a]=x[a]+b;
-				total+=r(n);
-			}
+		int pow;
+		for(int k = 0; k<detail; k++){
+			pow=(int)Math.pow(2, k);
+			total+=layerNoise(x, pow, k)/pow;
 		}
-		return total/(x.length*(blending*2+1));
+		return (total/maxHeight+1)*0.5f;
 	}
-	private float r(int[] x){
+	private float layerNoise(float[] x, int pow, int k){
+		edge[x.length]=new Random(seed+k).nextInt();
+		float a;
+		int i, j;
+		for(i=0; i<x.length; i++){
+			a=x[i]/smoothness*pow;
+			reals[i]=floor(a);
+			fracs[i]=a-reals[i];
+		}
+		for(i=0; i<v.length; i++){
+			for(j=0; j<x.length; j++)edge[j]=(i&c[j])==c[j]?reals[j]+1:reals[j];
+			v[i]=random(edge);
+		}
+		return compress(v, fracs, 0);
+	}
+	private float compress(float[] v, float[] fracs, int stage){
+		if(v.length==2)return interpolate(v[0], v[1], fracs[stage]);
+		float[] k = new float[v.length/2];
+		for(int i = 0; i<k.length; i++)k[i]=interpolate(v[i*2], v[i*2+1], fracs[stage]);
+		return compress(k, fracs, stage+1);
+	}
+	private float random(int[] x){
 		final long s = 4294967291L;
 		long t = seed;
 		for(int a : x)t=t*s+a;
 		for(int a : x)t+=a*a*s;
-		return new Random(t).nextFloat();
+		return new Random(t).nextFloat()*2-1;
 	}
-	public void setSmoothness(float smoothness){
-		if(smoothness<=0)throw new IllegalArgumentException("Smoothness must be greater then 0!");
-		this.smoothness=smoothness;
+	private static float findMaxHeight(int detail){
+		float m = 0;
+		for(int i = 0; i<detail; i++)m+=Math.pow(2, -i);
+		return m;
 	}
-	public void setDetail(int detail){
-		if(detail<1)throw new IllegalArgumentException("Detail must be at least 1!");
-		this.detail=detail;
-		maxHeight=m(detail);
-	}
-	public NoiseGenerator(){ this((long)(Math.random()*Integer.MAX_VALUE), (float)(Math.random()*40)+10, (int)(Math.random()*10)+1, 1); }
-	public NoiseGenerator(long seed){ this(seed, new Random(seed).nextFloat()*40+10, new Random(seed).nextInt(10)+1, 1); }
-	public long getSeed(){ return seed; }
-	public void setSeed(long seed){ this.seed=seed; }
-	public float getSmoothness(){ return smoothness; }
-	public int getDetail(){ return detail; }
-	private static float c(float a, float b, float c){
+	private static float interpolate(float a, float b, float c){
 		c=(float)((1-Math.cos(c*Math.PI))/2);
 		return (a*(1-c)+b*c);
 	}
-	private static float m(int i){
-		float f = 0;
-		for(int a = 0; a<i; a++)f+=1/Math.pow(2, a);
-		return f;
-	}
-	private static int f(float x){ return x>=0?(int)x:(int)x-1; }
+	private static int floor(float x){ return x>=0?(int)x:(int)x-1; }
 }
