@@ -5,6 +5,7 @@ import java.util.Random;
 public class NoiseGenerator{
 	private int[] reals, edge, c;
 	private float[] fracs, v;
+	private InterpolationFunction function;
 	private final float maxHeight;
 	private final long seed;
 	private final float smoothness;
@@ -14,6 +15,7 @@ public class NoiseGenerator{
 		this.smoothness=smoothness;
 		this.detail=detail+1;
 		maxHeight=findMaxHeight(this.detail);
+		function=new CosineInterpolation();
 	}
 	public float noise(float... x){
 		if(reals==null||x.length!=reals.length){
@@ -48,9 +50,9 @@ public class NoiseGenerator{
 		return compress(v, fracs, 0);
 	}
 	private float compress(float[] v, float[] fracs, int stage){
-		if(v.length==2)return interpolate(v[0], v[1], fracs[stage]);
+		if(v.length==2)return function.interpolate(v[0], v[1], fracs[stage]);
 		float[] k = new float[v.length/2];
-		for(int i = 0; i<k.length; i++)k[i]=interpolate(v[i*2], v[i*2+1], fracs[stage]);
+		for(int i = 0; i<k.length; i++)k[i]=function.interpolate(v[i*2], v[i*2+1], fracs[stage]);
 		return compress(k, fracs, stage+1);
 	}
 	private float random(int[] x){
@@ -60,14 +62,12 @@ public class NoiseGenerator{
 		for(int a : x)t+=a*a*s;
 		return new Random(t).nextFloat()*2-1;
 	}
+	public InterpolationFunction getFunction(){ return function; }
+	public void setFunction(InterpolationFunction function){ this.function=function; }
 	private static float findMaxHeight(int detail){
 		float m = 0;
 		for(int i = 0; i<detail; i++)m+=Math.pow(2, -i);
 		return m;
-	}
-	private static float interpolate(float a, float b, float c){
-		c=(float)((1-Math.cos(c*Math.PI))/2);
-		return (a*(1-c)+b*c);
 	}
 	private static int floor(float x){ return x>=0?(int)x:(int)x-1; }
 }
