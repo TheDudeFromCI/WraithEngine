@@ -39,4 +39,13 @@ public class StringUtil{
 		wrappedLine.append(str.substring(offset));
 		return wrappedLine.toString();
 	}
+	public static String arrayToString(Object[] o){
+		StringBuilder sb = new StringBuilder();
+		String comma = ", ";
+		String empty = "";
+		sb.append("[");
+		for(int i = 0; i<o.length; i++)sb.append(i>0?comma:empty).append(o[i].toString());
+		sb.append("]");
+		return sb.toString();
+	}
 }
