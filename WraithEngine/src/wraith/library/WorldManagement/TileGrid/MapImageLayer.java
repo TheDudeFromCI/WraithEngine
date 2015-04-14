@@ -16,9 +16,9 @@ public class MapImageLayer{
 		repaint();
 	}
 	public void repaint(){
-		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
+		if(staticImage==null||staticImage.getWidth()!=map.getCameraRealWidth()||staticImage.getHeight()!=map.getCameraRealHeight()){
 			if(g!=null)g.dispose();
-			staticImage=ImageUtil.getBestFormat(map.getCameraWidth(), map.getCameraHeight());
+			staticImage=ImageUtil.getBestFormat(map.getCameraRealWidth(), map.getCameraRealHeight());
 			g=staticImage.createGraphics();
 			g.setBackground(new Color(0, 0, 0, 0));
 		}else g.clearRect(0, 0, staticImage.getWidth(), staticImage.getHeight());
@@ -28,8 +28,8 @@ public class MapImageLayer{
 		int imageHeight = staticImage.getHeight();
 		int lowX = Math.max(map.getCameraX()/map.getCameraRawScale(), 0);
 		int lowZ = Math.max(map.getCameraZ()/map.getCameraRawScale(), 0);
-		int highX = Math.min(lowX+imageWidth/map.getCameraScale()+1, map.getSizeX()-1);
-		int highZ = Math.min(lowZ+imageHeight/map.getCameraScale(), map.getSizeZ()-1);
+		int highX = Math.min(lowX+imageWidth/map.getCameraRawScale()+1, map.getSizeX()-1);
+		int highZ = Math.min(lowZ+imageHeight/map.getCameraRawScale(), map.getSizeZ()-1);
 		for(int x = lowX; x<=highX; x++){
 			tileX=x*map.getCameraRawScale()-map.getCameraX();
 			for(int z = lowZ; z<=highZ; z++){

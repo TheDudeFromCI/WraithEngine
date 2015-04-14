@@ -30,12 +30,25 @@ public class Map{
 	public void setCameraDimensions(int width, int height){
 		camera.width=width;
 		camera.height=height;
+		updateCameraRealDimensions();
 	}
 	public void placeTileGroup(TileGroup tileGroup, int x, int y, int z){
 		tileGroup.placeAt(tiles, x, y, z);
 		imageLayers[y].repaint();
 	}
-	public void setCameraScale(int scale){ camera.scale=scale; }
+	private void updateCameraRealDimensions(){
+		camera.stretch=(camera.scale/(float)camera.rawScale);
+		camera.realWidth=(int)(camera.width/camera.stretch);
+		camera.realHeight=(int)(camera.height/camera.stretch);
+	}
+	public void setCameraScale(int scale){
+		camera.scale=scale;
+		updateCameraRealDimensions();
+	}
+	public void setCameraRawScale(int rawScale){
+		camera.rawScale=rawScale;
+		updateCameraRealDimensions();
+	}
 	public Tile getTileAt(int x, int y, int z){ return tiles[x][y][z]; }
 	public void updateImageCompilation(){ imageLayerStack.repaint(); }
 	public void render(Graphics2D g, int x, int y, int width, int height){ imageLayerStack.render(g, x, y, width, height); }
@@ -52,5 +65,8 @@ public class Map{
 	public int getCameraHeight(){ return camera.height; }
 	public MapImageLayer[] getImageLayers(){ return imageLayers; }
 	public int getCameraRawScale(){ return camera.rawScale; }
-	public void setCameraRawScale(int rawScale){ camera.rawScale=rawScale; }
+	public int getCameraRealHeight(){ return camera.realHeight; }
+	public int getCameraRealWidth(){ return camera.realWidth; }
+	public float getCameraStretch(){ return camera.stretch; }
+	public String cameraToString(){ return camera.toString(); }
 }

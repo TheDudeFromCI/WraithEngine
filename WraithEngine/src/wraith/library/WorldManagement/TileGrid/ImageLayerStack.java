@@ -17,9 +17,9 @@ public class ImageLayerStack{
 	public void repaint(){
 		for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].repaint();
 		boolean newGraphics = false;
-		if(staticImage==null||staticImage.getWidth()!=map.getCameraWidth()||staticImage.getHeight()!=map.getCameraHeight()){
+		if(staticImage==null||staticImage.getWidth()!=map.getCameraRealWidth()||staticImage.getHeight()!=map.getCameraRealHeight()){
 			if(g!=null)g.dispose();
-			staticImage=ImageUtil.getBestFormat(map.getCameraWidth(), map.getCameraHeight());
+			staticImage=ImageUtil.getBestFormat(map.getCameraRealWidth(), map.getCameraRealHeight());
 			g=staticImage.createGraphics();
 			g.setBackground(new Color(0, 0, 0, 0));
 			newGraphics=true;
@@ -34,8 +34,5 @@ public class ImageLayerStack{
 			for(int i = 0; i<map.getImageLayers().length; i++)map.getImageLayers()[i].render(g);
 		}
 	}
-	public void render(Graphics2D g, int x, int y, int width, int height){
-		double scale = map.getCameraScale()/(double)map.getCameraRawScale();
-		synchronized(LOCK){ g.drawImage(staticImage, x, y, (int)(scale*width), (int)(scale*height), null); }
-	}
+	public void render(Graphics2D g, int x, int y, int width, int height){ synchronized(LOCK){ g.drawImage(staticImage, x, y, width, height, null); } }
 }
