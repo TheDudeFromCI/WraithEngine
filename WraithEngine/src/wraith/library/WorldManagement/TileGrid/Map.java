@@ -1,6 +1,7 @@
 package wraith.library.WorldManagement.TileGrid;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public class Map{
 	private Panoramic panoramic;
@@ -69,4 +70,5 @@ public class Map{
 	public int getCameraRealWidth(){ return camera.realWidth; }
 	public float getCameraStretch(){ return camera.stretch; }
 	public String cameraToString(){ return camera.toString(); }
+	public BufferedImage screenShot(){ return imageLayerStack.getCurrentImage(); }
 }

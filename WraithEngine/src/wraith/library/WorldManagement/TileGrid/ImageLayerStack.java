@@ -32,4 +32,5 @@ public class ImageLayerStack{
 	}
 	public ImageLayerStack(Map map){ this.map=map; }
 	public void render(Graphics2D g, int x, int y, int width, int height){ synchronized(LOCK){ g.drawImage(staticImage, x, y, width, height, null); } }
+	public BufferedImage getCurrentImage(){ return staticImage; }
 }
