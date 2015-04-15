@@ -131,5 +131,13 @@ public class StringUtil{
 		sb.append("]");
 		return sb.toString();
 	}
-
+	public static String getFileExtension(String s){
+		char[] c = s.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		for(int i = c.length-1; i>=0; i--){
+			if(c[i]=='.')break;
+			sb.insert(0, c[i]);
+		}
+		return sb.toString();
+	}
 }
