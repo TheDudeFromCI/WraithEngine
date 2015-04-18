@@ -10,7 +10,8 @@ public class GuiImage extends GuiComponent{
 	private final Point location = new Point();
 	private final BufferedImage buf;
 	private final boolean stretch;
-	public GuiImage(BufferedImage buf, boolean stretch){
+	public GuiImage(GuiContainer parent, BufferedImage buf, boolean stretch){
+		super(parent);
 		this.buf=buf;
 		this.stretch=stretch;
 		calculateAdjustments();
