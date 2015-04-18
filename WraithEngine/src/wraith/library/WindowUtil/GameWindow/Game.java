@@ -3,7 +3,7 @@ package wraith.library.WindowUtil.GameWindow;
 import java.io.File;
 import wraith.library.WindowUtil.UserInputAdapter;
 
-public abstract class Game{
+public class Game{
 	private GameDataFolder gameDataFolder;
 	private GameScreen screen;
 	private GameThread thread;
