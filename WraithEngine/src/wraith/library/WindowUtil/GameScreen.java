@@ -45,7 +45,10 @@ public class GameScreen{
 		frame.addKeyListener(adapter);
 		frame.setVisible(true);
 		new Timer().scheduleAtFixedRate(new TimerTask(){
-			public void run(){ frame.repaint(); }
+			public void run(){
+				if(!frame.isVisible())cancel();
+				else frame.repaint();
+			}
 		}, 20, 20);
 	}
 	public void setRenderSize(int width, int height, boolean scale){
