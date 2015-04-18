@@ -12,10 +12,12 @@ import javax.swing.JPanel;
 
 public class GameScreen{
 	private int x, y, nx, ny;
+	private GameRenderer gameRenderer;
 	private Color backgroundColor = Color.black;
 	private final Dimension renderSize;
 	private final Dimension screenSize;
-	public GameScreen(String name, final GameRenderer renderer, UserInputAdapter adapter){
+	public GameScreen(String name, GameRenderer renderer, UserInputAdapter adapter){
+		gameRenderer=renderer;
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 		renderSize=new Dimension(screenSize);
 		final JFrame frame = new JFrame();
@@ -26,7 +28,7 @@ public class GameScreen{
 				g.fillRect(x, 0, renderSize.width, y);
 				g.fillRect(x, ny, renderSize.width, y);
 				g.fillRect(nx, 0, x, screenSize.height);
-				renderer.render((Graphics2D)g, x, y, renderSize.width, renderSize.height);
+				gameRenderer.render((Graphics2D)g, x, y, renderSize.width, renderSize.height);
 				g.dispose();
 			}
 		};
@@ -68,4 +70,6 @@ public class GameScreen{
 	public void setBackgroundColor(Color color){ backgroundColor=color; }
 	public Dimension getScreenSize(){ return screenSize; }
 	public Dimension getRenderSize(){ return renderSize; }
+	public void setGameRenderer(GameRenderer gameRenderer){ this.gameRenderer=gameRenderer; }
+	public GameRenderer getGameRenderer(){ return gameRenderer; }
 }
