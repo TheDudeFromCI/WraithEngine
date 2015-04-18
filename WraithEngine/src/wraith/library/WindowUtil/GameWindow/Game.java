@@ -1,6 +1,8 @@
 package wraith.library.WindowUtil.GameWindow;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import wraith.library.WindowUtil.ImageWindow;
 import wraith.library.WindowUtil.UserInputAdapter;
 
 public class Game{
@@ -11,7 +13,12 @@ public class Game{
 	private GameRenderer gameRenderer;
 	public Game(String title, File dataFolder){
 		gameDataFolder=new GameDataFolder(dataFolder);
-		screen=new GameScreen(title, gameDataFolder.getIcon(), gameRenderer, inputAdapter);
+		BufferedImage icon = gameDataFolder.getIcon();
+		ImageWindow imageWindow = new ImageWindow(gameDataFolder.getImageWindow());
+		try{ Thread.sleep(2500);
+		}catch(Exception e){}
+		imageWindow.dispose();
+		screen=new GameScreen(title, icon, gameRenderer, inputAdapter);
 		thread=new GameThread();
 	}
 	public void setInputAdapter(UserInputAdapter inputAdapter){

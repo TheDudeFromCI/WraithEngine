@@ -24,4 +24,5 @@ public class GameDataFolder{
 	}
 	public File getFile(String name){ return new File(dataFolder, name); }
 	public BufferedImage getIcon(){ return getImage("Icon.png"); }
+	public BufferedImage getImageWindow(){ return getImage("Image Window.png"); }
 }
