@@ -81,4 +81,5 @@ public class Map{
 	public String cameraToString(){ return camera.toString(); }
 	public BufferedImage screenShot(){ return imageLayerStack.getCurrentImage(); }
 	public int getChipsetScaleDepth(){ return chipset.getScaleDepth(); }
+	public int getChipsetScaleLevel(){ return chipset.getScaleLevel(); }
 }

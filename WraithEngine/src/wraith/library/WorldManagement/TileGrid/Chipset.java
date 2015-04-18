@@ -5,7 +5,7 @@ import wraith.library.MiscUtil.ImageUtil;
 
 public class Chipset{
 	private int scaleLevel;
-	private TileMaterial[][] materials;
+	private ChipsetTileMaterial[] materials;
 	private final int rows, cols, size;
 	private final BufferedImage[][] tiles;
 	public Chipset(BufferedImage img, int rows, int cols, int scales){
@@ -27,15 +27,16 @@ public class Chipset{
 		tiles=ImageUtil.splitImageAndScale(img, rows, cols, scales);
 	}
 	public void generateTileMaterials(){
-		materials=new TileMaterial[tiles.length][tiles[0].length];
-		int i, j;
-		for(i=0; i<tiles.length; i++)for(j=0; j<tiles[0].length; j++)materials[i][j]=new StaticTileMaterial(tiles[i][j]);
+		materials=new ChipsetTileMaterial[tiles[0].length];
+		int i;
+		for(i=0; i<materials.length; i++)materials[i]=new ChipsetTileMaterial(this, i);
 	}
+	public void setScaleLevel(int scaleLevel){ this.scaleLevel=scaleLevel; }
 	public BufferedImage getTile(int x, int y){ return tiles[scaleLevel][y*cols+x]; }
-	public TileMaterial getTileMaterial(int x, int y){ return materials[scaleLevel][y*cols+x]; }
+	public BufferedImage getTile(int index){ return tiles[scaleLevel][index]; }
+	public TileMaterial getTileMaterial(int x, int y){ return materials[y*cols+x]; }
 	public int getRows(){ return rows; }
 	public int getCols(){ return cols; }
-	public void setScaleLevel(int scaleLevel){ this.scaleLevel=scaleLevel; }
 	public int getScaleLevel(){ return scaleLevel; }
 	public int getScaleDepth(){ return tiles.length; }
 	public int getSize(){ return size; }
