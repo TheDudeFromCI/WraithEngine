@@ -20,14 +20,6 @@ public abstract class GuiContainer extends GuiComponent{
 		components.remove(component);
 		validate();
 	}
-	@Override public void setSize(int width, int height){
-		super.setSize(width, height);
-		validate();
-	}
-	@Override public void setLocation(int x, int y){
-		super.setLocation(x, y);
-		validate();
-	}
 	@Override public void setSizeAndLocation(int x, int y, int width, int height){
 		super.setSizeAndLocation(x, y, width, height);
 		validate();
