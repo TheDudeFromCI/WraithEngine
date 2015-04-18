@@ -12,6 +12,11 @@ public abstract class Game{
 		screen=new GameScreen(title, gameDataFolder.getIcon(), panel, panel);
 		thread=new GameThread();
 	}
+	public void setGamePanel(GamePanel panel){
+		this.panel=panel;
+		screen.setGameRenderer(panel);
+		screen.setUserInputAdapter(panel);
+	}
 	public GameScreen getScreen(){ return screen; }
 	public GameDataFolder getGameDataFolder(){ return gameDataFolder; }
 	public GamePanel getPanel(){ return panel; }
