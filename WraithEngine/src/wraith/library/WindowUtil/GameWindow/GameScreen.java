@@ -25,7 +25,7 @@ public class GameScreen{
 		this.adapter=adapter;
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 		renderSize=new Dimension(screenSize);
-		final JFrame frame = new JFrame();
+		frame=new JFrame();
 		JPanel panel = new JPanel(){
 			@Override public void paintComponent(Graphics g){
 				g.setColor(backgroundColor);
@@ -80,10 +80,10 @@ public class GameScreen{
 	}
 	public void setUserInputAdapter(UserInputAdapter adapter){
 		if(this.adapter!=null){
-			frame.removeMouseListener(adapter);
-			frame.removeMouseMotionListener(adapter);
-			frame.removeMouseWheelListener(adapter);
-			frame.removeKeyListener(adapter);
+			frame.removeMouseListener(this.adapter);
+			frame.removeMouseMotionListener(this.adapter);
+			frame.removeMouseWheelListener(this.adapter);
+			frame.removeKeyListener(this.adapter);
 		}
 		this.adapter=adapter;
 		if(adapter!=null){
