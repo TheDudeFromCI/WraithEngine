@@ -10,14 +10,17 @@ public class Map{
 	private final int xSize, ySize, zSize;
 	private final Tile[][][] tiles;
 	private final ImageLayerStack imageLayerStack;
-	public Map(int xSize, int ySize, int zSize, WorldPopulator populator){
+	private final Chipset chipset;
+	public Map(int xSize, int ySize, int zSize, WorldPopulator populator, Chipset chipset){
 		if(xSize<1)throw new IllegalArgumentException("Area cannot be less then 1 block thick!");
 		if(ySize<1)throw new IllegalArgumentException("Area cannot be less then 1 block thick!");
 		if(zSize<1)throw new IllegalArgumentException("Area cannot be less then 1 block thick!");
 		if(populator==null)throw new IllegalArgumentException("World populator cannot be null!");
+		this.chipset=chipset;
 		this.xSize=xSize;
 		this.ySize=ySize;
 		this.zSize=zSize;
+		updateCameraRealDimensions();
 		tiles=new Tile[xSize][ySize][zSize];
 		populator.generate(tiles);
 		imageLayers=new MapImageLayer[ySize];
@@ -38,16 +41,22 @@ public class Map{
 		imageLayers[y].repaint();
 	}
 	private void updateCameraRealDimensions(){
+		int pow, i;
+		int size = chipset.getSize();
+		for(i=chipset.getScaleDepth()-1; i>=0; i--){
+			pow=(int)(Math.pow(2, -i)*size);
+			if(pow>=camera.scale){
+				camera.rawScale=pow;
+				chipset.setScaleLevel(i);
+				break;
+			}
+		}
 		camera.stretch=(camera.scale/(float)camera.rawScale);
 		camera.realWidth=(int)(camera.width/camera.stretch);
 		camera.realHeight=(int)(camera.height/camera.stretch);
 	}
 	public void setCameraScale(int scale){
 		camera.scale=scale;
-		updateCameraRealDimensions();
-	}
-	public void setCameraRawScale(int rawScale){
-		camera.rawScale=rawScale;
 		updateCameraRealDimensions();
 	}
 	public Tile getTileAt(int x, int y, int z){ return tiles[x][y][z]; }
@@ -71,4 +80,5 @@ public class Map{
 	public float getCameraStretch(){ return camera.stretch; }
 	public String cameraToString(){ return camera.toString(); }
 	public BufferedImage screenShot(){ return imageLayerStack.getCurrentImage(); }
+	public int getChipsetScaleDepth(){ return chipset.getScaleDepth(); }
 }
