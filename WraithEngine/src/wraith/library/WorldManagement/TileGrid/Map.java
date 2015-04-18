@@ -45,7 +45,7 @@ public class Map{
 		int size = chipset.getSize();
 		for(i=chipset.getScaleDepth()-1; i>=0; i--){
 			pow=(int)(Math.pow(2, -i)*size);
-			if(pow>=camera.scale){
+			if(pow>=camera.scale||i==0){
 				camera.rawScale=pow;
 				chipset.setScaleLevel(i);
 				break;
