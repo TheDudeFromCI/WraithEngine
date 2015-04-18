@@ -15,7 +15,9 @@ public class Game{
 		gameDataFolder=new GameDataFolder(dataFolder);
 		BufferedImage icon = gameDataFolder.getIcon();
 		ImageWindow imageWindow = new ImageWindow(gameDataFolder.getImageWindow());
-		try{ Thread.sleep(2500);
+		imageWindow.setIconImage(icon);
+		imageWindow.setTitle(title);
+		try{ Thread.sleep(3000);
 		}catch(Exception e){}
 		imageWindow.dispose();
 		screen=new GameScreen(title, icon, gameRenderer, inputAdapter);
