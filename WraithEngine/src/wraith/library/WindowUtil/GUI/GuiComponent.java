@@ -17,5 +17,5 @@ public abstract class GuiComponent{
 	public int getY(){ return y; }
 	public int getWidth(){ return width; }
 	public int getHeight(){ return height; }
-	public abstract void render(Graphics2D g, int offsetX, int offsetY);
+	public abstract void render(Graphics2D g);
 }

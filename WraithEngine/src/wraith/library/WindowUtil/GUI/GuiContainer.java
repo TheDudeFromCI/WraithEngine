@@ -1,6 +1,5 @@
 package wraith.library.WindowUtil.GUI;
 
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 public abstract class GuiContainer extends GuiComponent{
@@ -13,6 +12,7 @@ public abstract class GuiContainer extends GuiComponent{
 		}
 	}
 	public void addComponent(GuiComponent component){
+		if(components.size()>=layout.getMaxChildren())return;
 		components.add(component);
 		validate();
 	}
@@ -20,5 +20,4 @@ public abstract class GuiContainer extends GuiComponent{
 		components.remove(component);
 		validate();
 	}
-	public abstract void render(Graphics2D g, int offsetX, int offsetY);
 }
