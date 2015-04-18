@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +17,7 @@ public class GameScreen{
 	private Color backgroundColor = Color.black;
 	private final Dimension renderSize;
 	private final Dimension screenSize;
-	public GameScreen(String name, GameRenderer renderer, UserInputAdapter adapter){
+	public GameScreen(String name, Image icon, GameRenderer renderer, UserInputAdapter adapter){
 		gameRenderer=renderer;
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 		renderSize=new Dimension(screenSize);
@@ -33,6 +34,7 @@ public class GameScreen{
 			}
 		};
 		frame.add(panel);
+		frame.setIconImage(icon);
 		frame.setTitle(name);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
