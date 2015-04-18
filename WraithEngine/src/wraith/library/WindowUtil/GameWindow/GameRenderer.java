@@ -1,4 +1,4 @@
-package wraith.library.WindowUtil;
+package wraith.library.WindowUtil.GameWindow;
 
 import java.awt.Graphics2D;
 

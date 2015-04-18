@@ -1,4 +1,4 @@
-package wraith.library.WindowUtil;
+package wraith.library.WindowUtil.GameWindow;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import wraith.library.WindowUtil.UserInputAdapter;
 
 public class GameScreen{
 	private int x, y, nx, ny;
