@@ -14,13 +14,14 @@ public class GameDataFolder{
 		}
 		this.dataFolder=dataFolder;
 	}
-	public BufferedImage getIcon(){
-		try{ return ImageIO.read(new File(dataFolder, "Icon.png"));
+	public BufferedImage getImage(String name){
+		try{ return ImageIO.read(getFile(name));
 		}catch(Exception exception){
 			exception.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Could not load icon.");
 			System.exit(1);
 		}
 		return null;
 	}
+	public File getFile(String name){ return new File(dataFolder, name); }
+	public BufferedImage getIcon(){ return getImage("Icon.png"); }
 }
