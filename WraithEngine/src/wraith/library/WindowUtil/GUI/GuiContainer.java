@@ -7,7 +7,7 @@ public abstract class GuiContainer extends GuiComponent{
 	protected final ArrayList<GuiComponent> components = new ArrayList();
 	private void validate(){
 		if(layout!=null){
-			layout.setParentDimensions(width, height);
+			layout.setParentDimensions(x, y, width, height);
 			layout.validateComponents(components);
 		}
 	}
