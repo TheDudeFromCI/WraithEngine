@@ -15,11 +15,14 @@ import wraith.library.WindowUtil.UserInputAdapter;
 public class GameScreen{
 	private int x, y, nx, ny;
 	private GameRenderer gameRenderer;
+	private UserInputAdapter adapter;
+	private JFrame frame;
 	private Color backgroundColor = Color.black;
 	private final Dimension renderSize;
 	private final Dimension screenSize;
 	public GameScreen(String name, Image icon, GameRenderer renderer, UserInputAdapter adapter){
 		gameRenderer=renderer;
+		this.adapter=adapter;
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
 		renderSize=new Dimension(screenSize);
 		final JFrame frame = new JFrame();
@@ -42,10 +45,12 @@ public class GameScreen{
 		frame.setSize(screenSize);
 		frame.setAlwaysOnTop(true);
 		frame.setLocationRelativeTo(null);
-		frame.addMouseListener(adapter);
-		frame.addMouseMotionListener(adapter);
-		frame.addMouseWheelListener(adapter);
-		frame.addKeyListener(adapter);
+		if(adapter!=null){
+			frame.addMouseListener(adapter);
+			frame.addMouseMotionListener(adapter);
+			frame.addMouseWheelListener(adapter);
+			frame.addKeyListener(adapter);
+		}
 		frame.setVisible(true);
 		new Timer().scheduleAtFixedRate(new TimerTask(){
 			public void run(){
@@ -72,6 +77,21 @@ public class GameScreen{
 		y=(screenSize.height-height)/2;
 		nx=x+renderSize.width;
 		ny=y+renderSize.height;
+	}
+	public void setUserInputAdapter(UserInputAdapter adapter){
+		if(this.adapter!=null){
+			frame.removeMouseListener(adapter);
+			frame.removeMouseMotionListener(adapter);
+			frame.removeMouseWheelListener(adapter);
+			frame.removeKeyListener(adapter);
+		}
+		this.adapter=adapter;
+		if(adapter!=null){
+			frame.addMouseListener(adapter);
+			frame.addMouseMotionListener(adapter);
+			frame.addMouseWheelListener(adapter);
+			frame.addKeyListener(adapter);
+		}
 	}
 	public void setBackgroundColor(Color color){ backgroundColor=color; }
 	public Dimension getScreenSize(){ return screenSize; }
