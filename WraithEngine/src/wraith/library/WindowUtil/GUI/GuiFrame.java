@@ -17,9 +17,9 @@ public class GuiFrame extends GuiContainer{
 	}
 	public void update(){
 		if(!needsRepaint)return;
-		needsRepaint=false;
 		g.clearRect(0, 0, width, height);
 		for(int i = 0; i<components.size(); i++)components.get(i).render(g);
+		setRepainted();
 	}
 	@Override public void dispose(){
 		super.dispose();
