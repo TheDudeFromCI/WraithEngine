@@ -30,7 +30,7 @@ public class GameScreen{
 				g.fillRect(x, 0, renderSize.width, y);
 				g.fillRect(x, ny, renderSize.width, y);
 				g.fillRect(nx, 0, x, screenSize.height);
-				gameRenderer.render((Graphics2D)g, x, y, renderSize.width, renderSize.height);
+				if(gameRenderer!=null)gameRenderer.render((Graphics2D)g, x, y, renderSize.width, renderSize.height);
 				g.dispose();
 			}
 		};
