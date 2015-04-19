@@ -46,6 +46,7 @@ public abstract class GuiComponent implements MouseListener, MouseMotionListener
 		c.removeKeyListener(this);
 	}
 	public void dispose(){
+		if(disposed)return;
 		disposed=true;
 		if(parent!=null){
 			parent.components.remove(this);

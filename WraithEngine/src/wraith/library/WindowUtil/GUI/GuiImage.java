@@ -6,10 +6,10 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class GuiImage extends GuiComponent{
-	protected final Dimension size = new Dimension();
-	protected final Point location = new Point();
-	private final BufferedImage buf;
-	private final boolean stretch;
+	protected Dimension size = new Dimension();
+	protected Point location = new Point();
+	private BufferedImage buf;
+	private boolean stretch;
 	public GuiImage(GuiContainer parent, BufferedImage buf, boolean stretch){
 		super(parent, buf.getWidth(), buf.getHeight());
 		this.buf=buf;
@@ -43,6 +43,12 @@ public class GuiImage extends GuiComponent{
 	@Override public boolean isWithinBounds(Point p){
 		if(stretch)return super.isWithinBounds(p);
 		return p.x>=x+location.x&&p.y>=y+location.y&&p.x<x+location.x+size.width&&p.y<y+location.y+size.height;
+	}
+	@Override public void dispose(){
+		super.dispose();
+		buf=null;
+		size=null;
+		location=null;
 	}
 	public void render(Graphics2D g){ g.drawImage(buf, location.x, location.y, size.width, size.height, null); }
 }
