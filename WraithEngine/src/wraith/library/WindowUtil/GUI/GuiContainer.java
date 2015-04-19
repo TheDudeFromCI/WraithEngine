@@ -9,6 +9,7 @@ public abstract class GuiContainer extends GuiComponent{
 		if(layout!=null){
 			layout.setParentDimensions(x, y, width, height);
 			layout.validateComponents(components);
+			setNeedsRepaint();
 		}
 	}
 	public void addComponent(GuiComponent component){
@@ -33,6 +34,10 @@ public abstract class GuiContainer extends GuiComponent{
 	@Override public void setRepainted(){
 		super.setRepainted();
 		for(int i = 0; i<components.size(); i++)components.get(i).setRepainted();
+	}
+	public void clearChildren(){
+		components.clear();
+		validate();
 	}
 	public GuiContainer(GuiContainer parent, int bufferWidth, int bufferHeight){ super(parent, bufferWidth, bufferHeight); }
 }
