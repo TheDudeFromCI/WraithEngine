@@ -11,7 +11,7 @@ public class GuiImage extends GuiComponent{
 	private final BufferedImage buf;
 	private final boolean stretch;
 	public GuiImage(GuiContainer parent, BufferedImage buf, boolean stretch){
-		super(parent);
+		super(parent, buf.getWidth(), buf.getHeight());
 		this.buf=buf;
 		this.stretch=stretch;
 		calculateAdjustments();
