@@ -34,5 +34,5 @@ public abstract class GuiContainer extends GuiComponent{
 		super.setRepainted();
 		for(int i = 0; i<components.size(); i++)components.get(i).setRepainted();
 	}
-	public GuiContainer(GuiContainer parent){ super(parent); }
+	public GuiContainer(GuiContainer parent, int bufferWidth, int bufferHeight){ super(parent, bufferWidth, bufferHeight); }
 }

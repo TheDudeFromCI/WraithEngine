@@ -9,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import wraith.library.MiscUtil.ImageUtil;
 
 public abstract class GuiComponent implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener{
 	protected int x, y;
@@ -16,6 +18,13 @@ public abstract class GuiComponent implements MouseListener, MouseMotionListener
 	private boolean disposed;
 	protected GuiContainer parent;
 	protected boolean needsRepaint;
+	private BufferedImage staticImage;
+	private Graphics2D g;
+	public GuiComponent(GuiContainer parent, int bufferWidth, int bufferHeight){
+		this.parent=parent;
+		staticImage=ImageUtil.getBestFormat(bufferWidth, bufferHeight);
+		g=staticImage.createGraphics();
+	}
 	public void setSizeAndLocation(int x, int y, int width, int height){
 		this.x=x;
 		this.y=y;
@@ -40,13 +49,22 @@ public abstract class GuiComponent implements MouseListener, MouseMotionListener
 			parent.components.remove(this);
 			parent=null;
 		}
+		g.dispose();
+		g=null;
+		staticImage=null;
 	}
 	public void setNeedsRepaint(){
 		needsRepaint=true;
 		if(parent!=null)parent.setNeedsRepaint();
 	}
+	public void update(){
+		if(!needsRepaint)return;
+		g.clearRect(0, 0, width, height);
+		render(g);
+		setRepainted();
+	}
+	public BufferedImage getPane(){ return staticImage; }
 	public void setRepainted(){ needsRepaint=false; }
-	public GuiComponent(GuiContainer parent){ this.parent=parent; }
 	public int getX(){ return x; }
 	public int getY(){ return y; }
 	public int getWidth(){ return width; }
