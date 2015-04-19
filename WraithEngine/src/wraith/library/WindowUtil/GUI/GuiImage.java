@@ -40,5 +40,9 @@ public class GuiImage extends GuiComponent{
 		super.setSizeAndLocation(x, y, width, height);
 		calculateAdjustments();
 	}
+	@Override public boolean isWithinBounds(Point p){
+		if(stretch)return super.isWithinBounds(p);
+		return p.x>=x+location.x&&p.y>=y+location.y&&p.x<x+location.x+size.width&&p.y<y+location.y+size.height;
+	}
 	public void render(Graphics2D g){ g.drawImage(buf, location.x, location.y, size.width, size.height, null); }
 }

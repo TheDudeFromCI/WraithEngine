@@ -2,6 +2,7 @@ package wraith.library.WindowUtil.GUI;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -72,6 +73,7 @@ public abstract class GuiComponent implements MouseListener, MouseMotionListener
 	public int getHeight(){ return height; }
 	public boolean isDisposed(){ return disposed; }
 	public boolean needsRepaint(){ return needsRepaint; }
+	public boolean isWithinBounds(Point p){ return p.x>=x&&p.y>=y&&p.x<width+x&&p.y<height+y; }
 	public abstract void render(Graphics2D g);
 	public void keyPressed(KeyEvent e){}
 	public void keyReleased(KeyEvent e){}
