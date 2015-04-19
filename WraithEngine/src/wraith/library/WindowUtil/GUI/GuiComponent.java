@@ -30,6 +30,7 @@ public abstract class GuiComponent implements MouseListener, MouseMotionListener
 		this.y=y;
 		this.width=width;
 		this.height=height;
+		setNeedsRepaint();
 	}
 	public void addListeners(Component c){
 		c.addMouseListener(this);
