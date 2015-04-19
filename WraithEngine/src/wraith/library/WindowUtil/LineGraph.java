@@ -37,6 +37,7 @@ public class LineGraph extends JPanel{
 		Graphics2D g = (Graphics2D)g1;
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		if(values.length==0)return;
 		FontMetrics fm = g.getFontMetrics();
 		int rowNameBuffer = calculateRowNameBuffer(fm)+PIXEL_TEXT_BUFFER;
 		int colNameBuffer = fm.getHeight()+PIXEL_TEXT_BUFFER;
