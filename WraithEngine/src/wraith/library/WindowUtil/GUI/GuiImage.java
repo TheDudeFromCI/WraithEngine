@@ -6,8 +6,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class GuiImage extends GuiComponent{
-	private final Dimension size = new Dimension();
-	private final Point location = new Point();
+	protected final Dimension size = new Dimension();
+	protected final Point location = new Point();
 	private final BufferedImage buf;
 	private final boolean stretch;
 	public GuiImage(GuiContainer parent, BufferedImage buf, boolean stretch){
