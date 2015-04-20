@@ -1,14 +1,10 @@
 package wraith.library.WindowUtil;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
-public abstract class UserInputAdapter implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener{
+public abstract class UserInputAdapter implements UserInputListener{
 	public void keyPressed(KeyEvent e){}
 	public void keyReleased(KeyEvent e){}
 	public void keyTyped(KeyEvent e){}

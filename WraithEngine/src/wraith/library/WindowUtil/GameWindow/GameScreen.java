@@ -10,17 +10,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import wraith.library.WindowUtil.UserInputAdapter;
+import wraith.library.WindowUtil.UserInputListener;
 
 public class GameScreen{
 	private int x, y, nx, ny;
 	private GameRenderer gameRenderer;
-	private UserInputAdapter adapter;
+	private UserInputListener adapter;
 	private JFrame frame;
 	private Color backgroundColor = Color.black;
 	private final Dimension renderSize;
 	private final Dimension screenSize;
-	public GameScreen(String name, Image icon, GameRenderer renderer, UserInputAdapter adapter){
+	public GameScreen(String name, Image icon, GameRenderer renderer, UserInputListener adapter){
 		gameRenderer=renderer;
 		this.adapter=adapter;
 		screenSize=Toolkit.getDefaultToolkit().getScreenSize();
@@ -78,7 +78,7 @@ public class GameScreen{
 		nx=x+renderSize.width;
 		ny=y+renderSize.height;
 	}
-	public void setUserInputAdapter(UserInputAdapter adapter){
+	public void setUserInputAdapter(UserInputListener adapter){
 		if(this.adapter!=null){
 			frame.removeMouseListener(this.adapter);
 			frame.removeMouseMotionListener(this.adapter);
