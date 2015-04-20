@@ -25,17 +25,25 @@ public class FadeTimer{
 		disposed=true;
 		fadeListeners.clear();
 		fadeListeners=null;
+		timer.cancel();
+		timer=null;
 	}
 	public void start(){
 		if(started)return;
 		started=true;
-		if(isDone())return;
+		if(isDone()){
+			for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
+			return;
+		}
 		timer.scheduleAtFixedRate(new TimerTask(){
 			public void run(){
 				if(isFadingIn())fadeInTick();
 				else if(isFadeStaying())stayTick();
 				else fadeOutTick();
-				if(isDone())cancel();
+				if(isDone()){
+					for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
+					cancel();
+				}
 			}
 		}, pingDelay, pingDelay);
 	}

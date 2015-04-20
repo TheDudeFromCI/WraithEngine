@@ -7,4 +7,5 @@ public interface FadeListener{
 	public void onFadeInComplete();
 	public void onFadeStayTick();
 	public void onFadeStayComplete();
+	public void onComplete();
 }
