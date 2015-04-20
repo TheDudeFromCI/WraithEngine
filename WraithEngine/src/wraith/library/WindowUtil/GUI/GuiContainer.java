@@ -12,13 +12,12 @@ public abstract class GuiContainer extends GuiComponent{
 			setNeedsRepaint();
 		}
 	}
-	public void addComponent(GuiComponent component){
-		if(components.size()>=layout.getMaxChildren())return;
-		components.add(component);
+	public void addComponent(GuiComponent... component){
+		for(GuiComponent c : component)components.add(c);
 		validate();
 	}
-	public void removeComponent(GuiComponent component){
-		components.remove(component);
+	public void removeComponent(GuiComponent... component){
+		for(GuiComponent c : component)components.remove(c);
 		validate();
 	}
 	@Override public void setSizeAndLocation(int x, int y, int width, int height){
