@@ -104,4 +104,6 @@ public class GameScreen{
 	public Dimension getRenderSize(){ return renderSize; }
 	public void setGameRenderer(GameRenderer gameRenderer){ this.gameRenderer=gameRenderer; }
 	public GameRenderer getGameRenderer(){ return gameRenderer; }
+	public int getRenderX(){ return x; }
+	public int getRenderY(){ return y; }
 }

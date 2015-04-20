@@ -40,9 +40,6 @@ public class GuiImage extends GuiComponent{
 		super.setSizeAndLocation(x, y, width, height);
 		calculateAdjustments();
 	}
-	@Override public boolean isWithinBounds(Point p){
-		return p.x>=x&&p.y>=y&&p.x<x+width&&p.y<y+height;
-	}
 	@Override public void dispose(){
 		super.dispose();
 		buf=null;

@@ -38,4 +38,6 @@ public class Game{
 	public GameRenderer getGameRenderer(){ return gameRenderer; }
 	public int getScreenWidth(){ return screen.getRenderSize().width; }
 	public int getScreenHeight(){ return screen.getRenderSize().height; }
+	public int getRenderX(){ return screen.getRenderX(); }
+	public int getRenderY(){ return screen.getRenderY(); }
 }

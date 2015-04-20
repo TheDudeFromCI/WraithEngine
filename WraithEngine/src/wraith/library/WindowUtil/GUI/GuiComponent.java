@@ -66,6 +66,7 @@ public abstract class GuiComponent implements UserInputListener{
 		render(g);
 		setRepainted();
 	}
+	public Point getOffset(){ return parent==null?null:parent.getOffset(); }
 	public BufferedImage getPane(){ return staticImage; }
 	public void setRepainted(){ needsRepaint=false; }
 	public int getX(){ return x; }
@@ -74,7 +75,11 @@ public abstract class GuiComponent implements UserInputListener{
 	public int getHeight(){ return height; }
 	public boolean isDisposed(){ return disposed; }
 	public boolean needsRepaint(){ return needsRepaint; }
-	public boolean isWithinBounds(Point p){ return p.x>=x&&p.y>=y&&p.x<width+x&&p.y<height+y; }
+	public boolean isWithinBounds(Point p){
+		Point off = getOffset();
+		if(off==null)return p.x>=x&&p.y>=y&&p.x<width+x&&p.y<height+y;
+		return p.x-off.x>=x&&p.y-off.y>=y&&p.x-off.x<width+x&&p.y-off.y<height+y;
+	}
 	public abstract void render(Graphics2D g);
 	public void keyPressed(KeyEvent e){}
 	public void keyReleased(KeyEvent e){}
