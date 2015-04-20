@@ -45,7 +45,7 @@ public class FadeTimer{
 				else fadeOutTick();
 				if(isDone()){
 					synchronized(timer){
-						for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
+						for(int i = 0; i<fadeListeners.size(); i++)if(fadeListeners.get(i)!=null)fadeListeners.get(i).onComplete();
 						cancel();
 					}
 				}
