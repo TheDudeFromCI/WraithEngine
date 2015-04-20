@@ -23,7 +23,8 @@ public class GuiScrollPanel extends GuiComponent{
 			g.setColor(Color.white);
 			g.fillRect(0, 0, bufferWidth, bufferHeight);
 		}
-		g.drawImage(totalScreen, 0, 0, bufferWidth, Math.min(bufferHeight, totalScreen.getHeight()), 0, scrollPosition, bufferWidth, Math.min(bufferHeight, totalScreen.getHeight()), null);
+		int panelHeight = Math.min(bufferHeight, totalScreen.getHeight());
+		g.drawImage(totalScreen, 0, 0, bufferWidth, panelHeight, 0, scrollPosition, bufferWidth, panelHeight+scrollPosition, null);
 	}
 	private void renderScreen(){
 		if(totalScreen==null||totalScreen.getHeight()!=entries.size()*entryHeight){
@@ -34,8 +35,14 @@ public class GuiScrollPanel extends GuiComponent{
 		for(int i = 0; i<entries.size(); i++)entries.get(i).renderEntry(graphics, 0, i*entryHeight, totalScreen.getWidth(), entryHeight);
 	}
 	@Override public void mouseWheelMoved(MouseWheelEvent e){
-		int move = e.getScrollAmount();
-		if(move<0)scrollPosition=Math.max(scrollPosition-move, 0);
-		else scrollPosition=Math.max(totalScreen.getHeight()-bufferHeight-(scrollPosition+move), 0);
+		int move = e.getUnitsToScroll();
+		scrollPosition+=move;
+		if(scrollPosition<0)scrollPosition=0;
+		if(scrollPosition>totalScreen.getHeight()-bufferHeight)scrollPosition=Math.max(totalScreen.getHeight()-bufferHeight, 0);
+		setNeedsRepaint();
+	}
+	public void addScrollPanelEntry(ScrollPaneEntry entry){
+		entries.add(entry);
+		setNeedsRepaint();
 	}
 }
