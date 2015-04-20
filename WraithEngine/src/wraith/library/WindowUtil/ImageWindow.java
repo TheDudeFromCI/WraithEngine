@@ -31,7 +31,7 @@ public class ImageWindow extends JFrame{
 			@Override public void paint(Graphics g){
 				g.setColor(getBackground());
 				g.clearRect(0, 0, getWidth(), getHeight());
-				if(fadeTimer)((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
+				((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
 				g.drawImage(img, 0, 0, this);
 				g.dispose();
 			}
@@ -42,10 +42,7 @@ public class ImageWindow extends JFrame{
 		this.fadeTimer=true;
 		final FadeTimer fadeTimer = new FadeTimer(fadeIn, fadeStay, fadeOut, pingDelay);
 		fadeTimer.addListener(new FadeListener(){
-			public void onComplete(){
-				fadeTimer.dispose();
-				dispose();
-			}
+			public void onComplete(){ dispose(); }
 			public void onFadeOutTick(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
 			public void onFadeInTick(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
 			public void onFadeInComplete(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
@@ -55,7 +52,7 @@ public class ImageWindow extends JFrame{
 		});
 		fadeTimer.start();
 	}
-	private void updateFadeLevel(float fade){
+	public void updateFadeLevel(float fade){
 		this.fade=fade;
 		repaint();
 	}

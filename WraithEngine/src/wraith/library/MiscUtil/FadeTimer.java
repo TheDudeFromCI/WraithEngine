@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FadeTimer{
-	private boolean disposed, started;
+	private boolean started;
 	private int fadeIn, stay, fadeOut, pingDelay;
 	private int fadeInStart, fadeOutStart;
 	private float fade;
@@ -20,16 +20,6 @@ public class FadeTimer{
 		this.pingDelay=pingDelay;
 		timer=new Timer();
 	}
-	public void dispose(){
-		synchronized(timer){
-			if(disposed)return;
-			disposed=true;
-			fadeListeners.clear();
-			fadeListeners=null;
-			timer.cancel();
-			timer=null;
-		}
-	}
 	public void start(){
 		if(started)return;
 		started=true;
@@ -39,15 +29,12 @@ public class FadeTimer{
 		}
 		timer.scheduleAtFixedRate(new TimerTask(){
 			public void run(){
-				if(disposed)return;
 				if(isFadingIn())fadeInTick();
 				else if(isFadeStaying())stayTick();
 				else fadeOutTick();
 				if(isDone()){
-					synchronized(timer){
-						for(int i = 0; i<fadeListeners.size(); i++)if(fadeListeners.get(i)!=null)fadeListeners.get(i).onComplete();
-						cancel();
-					}
+					for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
+					cancel();
 				}
 			}
 		}, pingDelay, pingDelay);
@@ -78,8 +65,7 @@ public class FadeTimer{
 			for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onFadeOutTick();
 		}
 	}
-	public void addListener(FadeListener listener){ if(!disposed)fadeListeners.add(listener); }
-	public boolean isDisposed(){ return disposed; }
+	public void addListener(FadeListener listener){ fadeListeners.add(listener); }
 	public boolean isStarted(){ return started; }
 	public long getPingDelay(){ return pingDelay; }
 	public int getRemainingFadeInTicks(){ return fadeIn; }
