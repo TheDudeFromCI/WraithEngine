@@ -41,5 +41,10 @@ public abstract class GuiContainer extends GuiComponent{
 		components.clear();
 		validate();
 	}
+	public void setLayout(GuiLayout layout){
+		this.layout=layout;
+		validate();
+	}
 	public GuiContainer(GuiContainer parent, int bufferWidth, int bufferHeight){ super(parent, bufferWidth, bufferHeight); }
+	public GuiLayout getLayout(){ return layout; }
 }
