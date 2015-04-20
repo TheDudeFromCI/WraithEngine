@@ -25,7 +25,7 @@ public class Game{
 	}
 	public void setInputListener(UserInputListener inputListener){
 		this.inputListener=inputListener;
-		screen.setUserInputAdapter(inputListener);
+		screen.setUserInputListener(inputListener);
 	}
 	public void setGameRenderer(GameRenderer gameRenderer){
 		this.gameRenderer=gameRenderer;

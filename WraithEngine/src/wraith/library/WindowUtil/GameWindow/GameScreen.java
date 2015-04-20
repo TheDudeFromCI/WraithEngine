@@ -78,20 +78,26 @@ public class GameScreen{
 		nx=x+renderSize.width;
 		ny=y+renderSize.height;
 	}
-	public void setUserInputAdapter(UserInputListener adapter){
+	public void setUserInputListener(UserInputListener listener){
 		if(this.adapter!=null){
 			frame.removeMouseListener(this.adapter);
 			frame.removeMouseMotionListener(this.adapter);
 			frame.removeMouseWheelListener(this.adapter);
 			frame.removeKeyListener(this.adapter);
 		}
-		this.adapter=adapter;
-		if(adapter!=null){
-			frame.addMouseListener(adapter);
-			frame.addMouseMotionListener(adapter);
-			frame.addMouseWheelListener(adapter);
-			frame.addKeyListener(adapter);
+		this.adapter=listener;
+		if(listener!=null){
+			frame.addMouseListener(listener);
+			frame.addMouseMotionListener(listener);
+			frame.addMouseWheelListener(listener);
+			frame.addKeyListener(listener);
 		}
+	}
+	public void addUserInputListener(UserInputListener listener){
+		frame.addMouseListener(listener);
+		frame.addMouseMotionListener(listener);
+		frame.addMouseWheelListener(listener);
+		frame.addKeyListener(listener);
 	}
 	public void setBackgroundColor(Color color){ backgroundColor=color; }
 	public Dimension getScreenSize(){ return screenSize; }

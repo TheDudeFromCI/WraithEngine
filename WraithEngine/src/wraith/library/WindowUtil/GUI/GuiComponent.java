@@ -18,8 +18,11 @@ public abstract class GuiComponent implements UserInputListener{
 	protected boolean needsRepaint = true;
 	private BufferedImage staticImage;
 	private Graphics2D g;
+	protected final int bufferWidth, bufferHeight;
 	public GuiComponent(GuiContainer parent, int bufferWidth, int bufferHeight){
 		this.parent=parent;
+		this.bufferWidth=bufferWidth;
+		this.bufferHeight=bufferHeight;
 		staticImage=ImageUtil.getBestFormat(bufferWidth, bufferHeight);
 		g=staticImage.createGraphics();
 	}

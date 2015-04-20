@@ -18,22 +18,22 @@ public class GuiImage extends GuiComponent{
 	}
 	private void calculateAdjustments(){
 		if(stretch){
-			size.width=width;
-			size.height=height;
-			location.x=x;
-			location.y=y;
+			size.width=bufferWidth;
+			size.height=bufferHeight;
+			location.x=0;
+			location.y=0;
 		}else{
-			if(Math.abs(width-buf.getWidth())>Math.abs(height-buf.getHeight())){
-				double scaleSize = height/(double)buf.getHeight();
-				size.height=height;
+			if(Math.abs(bufferWidth-buf.getWidth())>Math.abs(bufferHeight-buf.getHeight())){
+				double scaleSize = bufferHeight/(double)buf.getHeight();
+				size.height=bufferHeight;
 				size.width*=scaleSize;
 			}else{
-				double scaleSize = width/(double)buf.getWidth();
-				size.width=width;
+				double scaleSize = bufferWidth/(double)buf.getWidth();
+				size.width=bufferWidth;
 				size.height*=scaleSize;
 			}
-			location.x=(width-size.width)/2;
-			location.y=(height-size.height)/2;
+			location.x=(bufferWidth-size.width)/2;
+			location.y=(bufferHeight-size.height)/2;
 		}
 	}
 	@Override public void setSizeAndLocation(int x, int y, int width, int height){
@@ -41,8 +41,7 @@ public class GuiImage extends GuiComponent{
 		calculateAdjustments();
 	}
 	@Override public boolean isWithinBounds(Point p){
-		if(stretch)return super.isWithinBounds(p);
-		return p.x>=x+location.x&&p.y>=y+location.y&&p.x<x+location.x+size.width&&p.y<y+location.y+size.height;
+		return p.x>=x&&p.y>=y&&p.x<x+width&&p.y<y+height;
 	}
 	@Override public void dispose(){
 		super.dispose();
