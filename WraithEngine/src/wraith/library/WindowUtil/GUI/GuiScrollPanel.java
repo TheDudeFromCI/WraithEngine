@@ -2,6 +2,8 @@ package wraith.library.WindowUtil.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -40,6 +42,17 @@ public class GuiScrollPanel extends GuiComponent{
 		if(scrollPosition<0)scrollPosition=0;
 		if(scrollPosition>totalScreen.getHeight()-bufferHeight)scrollPosition=Math.max(totalScreen.getHeight()-bufferHeight, 0);
 		setNeedsRepaint();
+	}
+	@Override public void mouseClicked(MouseEvent e){
+		Point p = e.getPoint();
+		if(!isWithinBounds(p))return;
+		Point off = getOffset();
+		if(off!=null)p.y-=off.y;
+		p.y-=y;
+		p.y+=scrollPosition;
+		int index = p.y/entryHeight;
+		if(index>=entries.size())return;
+		entries.get(index).onEntryClick();
 	}
 	public void addScrollPanelEntry(ScrollPaneEntry entry){
 		entries.add(entry);
