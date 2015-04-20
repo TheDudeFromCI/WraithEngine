@@ -30,5 +30,4 @@ public class GridLayout implements GuiLayout{
 			else components.get(i).setSizeAndLocation(i%rows*childWidth+tempX, i/rows*childHeight+tempY, childWidth, childHeight);
 		}
 	}
-	public int getMaxChildren(){ return rows==0||cols==0?Integer.MAX_VALUE:rows*cols; }
 }
