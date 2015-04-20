@@ -18,7 +18,12 @@ public class GameThread{
 					long now = System.nanoTime();
 					while(isRunning){
 						while(now-time>TICK_LENGTH){
-							synchronized(tasks){ for(index=0; index<tasks.size();)if(!tasks.get(index).update())index++; }
+							synchronized(tasks){
+								for(index=0; index<tasks.size();){
+									if(!tasks.get(index).update())index++;
+									else tasks.remove(index);
+								}
+							}
 							time+=TICK_LENGTH;
 						}
 						while((now=System.nanoTime())-time<=TICK_LENGTH){
