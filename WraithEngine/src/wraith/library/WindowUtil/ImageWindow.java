@@ -1,14 +1,20 @@
 package wraith.library.WindowUtil;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import wraith.library.MiscUtil.FadeListener;
+import wraith.library.MiscUtil.FadeTimer;
 
 @SuppressWarnings("serial")
 public class ImageWindow extends JFrame{
 	private BufferedImage img;
+	private boolean fadeTimer;
+	private float fade;
 	public ImageWindow(BufferedImage image){
 		img=image;
 		init();
@@ -23,9 +29,34 @@ public class ImageWindow extends JFrame{
 		setAlwaysOnTop(true);
 		add(new JPanel(){
 			@Override public void paint(Graphics g){
+				g.setColor(getBackground());
+				g.clearRect(0, 0, getWidth(), getHeight());
+				if(fadeTimer)((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
 				g.drawImage(img, 0, 0, this);
 				g.dispose();
 			}
 		});
+	}
+	public void addFadeTimer(int fadeIn, int fadeStay, int fadeOut, int pingDelay){
+		if(this.fadeTimer)return;
+		this.fadeTimer=true;
+		final FadeTimer fadeTimer = new FadeTimer(fadeIn, fadeStay, fadeOut, pingDelay);
+		fadeTimer.addListener(new FadeListener(){
+			public void onComplete(){
+				fadeTimer.dispose();
+				dispose();
+			}
+			public void onFadeOutTick(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
+			public void onFadeInTick(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
+			public void onFadeInComplete(){ updateFadeLevel(fadeTimer.getFadeLevel()); }
+			public void onFadeOutComplete(){}
+			public void onFadeStayTick(){}
+			public void onFadeStayComplete(){}
+		});
+		fadeTimer.start();
+	}
+	private void updateFadeLevel(float fade){
+		this.fade=fade;
+		repaint();
 	}
 }

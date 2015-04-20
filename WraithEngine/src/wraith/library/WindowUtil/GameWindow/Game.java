@@ -17,6 +17,7 @@ public class Game{
 		ImageWindow imageWindow = new ImageWindow(gameDataFolder.getImageWindow());
 		imageWindow.setIconImage(icon);
 		imageWindow.setTitle(title);
+		imageWindow.addFadeTimer(40, 70, 40, 20);
 		try{ Thread.sleep(3000);
 		}catch(Exception e){}
 		imageWindow.dispose();
