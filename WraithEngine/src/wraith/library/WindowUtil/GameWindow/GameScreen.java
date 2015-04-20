@@ -99,6 +99,12 @@ public class GameScreen{
 		frame.addMouseWheelListener(listener);
 		frame.addKeyListener(listener);
 	}
+	public void removeUserInputListener(UserInputListener listener){
+		frame.removeMouseListener(listener);
+		frame.removeMouseMotionListener(listener);
+		frame.removeMouseWheelListener(listener);
+		frame.removeKeyListener(listener);
+	}
 	public void setBackgroundColor(Color color){ backgroundColor=color; }
 	public Dimension getScreenSize(){ return screenSize; }
 	public Dimension getRenderSize(){ return renderSize; }
