@@ -15,7 +15,7 @@ public abstract class GuiComponent implements UserInputListener{
 	protected int width, height;
 	private boolean disposed;
 	protected GuiContainer parent;
-	protected boolean needsRepaint;
+	protected boolean needsRepaint = true;
 	private BufferedImage staticImage;
 	private Graphics2D g;
 	public GuiComponent(GuiContainer parent, int bufferWidth, int bufferHeight){
