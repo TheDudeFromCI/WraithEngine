@@ -32,8 +32,10 @@ public abstract class GuiContainer extends GuiComponent{
 		layout=null;
 	}
 	@Override public void setRepainted(){
-		super.setRepainted();
-		for(int i = 0; i<components.size(); i++)components.get(i).setRepainted();
+		if(needsRepaint){
+			super.setRepainted();
+			for(int i = 0; i<components.size(); i++)components.get(i).setRepainted();
+		}
 	}
 	public void clearChildren(){
 		components.clear();
