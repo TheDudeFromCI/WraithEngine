@@ -21,12 +21,14 @@ public class FadeTimer{
 		timer=new Timer();
 	}
 	public void dispose(){
-		if(disposed)return;
-		disposed=true;
-		fadeListeners.clear();
-		fadeListeners=null;
-		timer.cancel();
-		timer=null;
+		synchronized(timer){
+			if(disposed)return;
+			disposed=true;
+			fadeListeners.clear();
+			fadeListeners=null;
+			timer.cancel();
+			timer=null;
+		}
 	}
 	public void start(){
 		if(started)return;
@@ -37,12 +39,15 @@ public class FadeTimer{
 		}
 		timer.scheduleAtFixedRate(new TimerTask(){
 			public void run(){
+				if(disposed)return;
 				if(isFadingIn())fadeInTick();
 				else if(isFadeStaying())stayTick();
 				else fadeOutTick();
 				if(isDone()){
-					for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
-					cancel();
+					synchronized(timer){
+						for(int i = 0; i<fadeListeners.size(); i++)fadeListeners.get(i).onComplete();
+						cancel();
+					}
 				}
 			}
 		}, pingDelay, pingDelay);
