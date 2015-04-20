@@ -23,7 +23,7 @@ public class Game{
 		screen=new GameScreen(title, icon, gameRenderer, inputListener);
 		thread=new GameThread();
 	}
-	public void setInputAdapter(UserInputListener inputListener){
+	public void setInputListener(UserInputListener inputListener){
 		this.inputListener=inputListener;
 		screen.setUserInputAdapter(inputListener);
 	}
