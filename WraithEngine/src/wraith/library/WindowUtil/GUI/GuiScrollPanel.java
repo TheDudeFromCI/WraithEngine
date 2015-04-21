@@ -35,7 +35,7 @@ public class GuiScrollPanel extends GuiComponent{
 			totalScreen=ImageUtil.getBestFormat(bufferWidth, intenedSize);
 			graphics=totalScreen.createGraphics();
 		}
-		for(int i = 0; i<entries.size(); i++)entries.get(i).renderEntry(graphics, 0, i*entryHeight, totalScreen.getWidth(), entryHeight);
+		for(int i = 0; i<entries.size(); i++)entries.get(i).renderEntry(graphics, 0, i*entryHeight, totalScreen.getWidth()-1, entryHeight-1);
 	}
 	@Override public void mouseWheelMoved(MouseWheelEvent e){
 		int move = e.getUnitsToScroll();
