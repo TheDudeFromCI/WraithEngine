@@ -27,11 +27,11 @@ public class Client{
 							if(s==null){
 								open=false;
 								clientListener.disconnected();
-								try{ socket.close();
+								try{ if(socket!=null)socket.close();
 								}catch(Exception exception){ exception.printStackTrace(); }
-								try{ in.close();
+								try{ if(in!=null)in.close();
 								}catch(Exception exception){ exception.printStackTrace(); }
-								try{ out.close();
+								try{ if(out!=null)out.close();
 								}catch(Exception exception){ exception.printStackTrace(); }
 								return;
 							}
