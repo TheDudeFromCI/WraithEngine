@@ -26,7 +26,7 @@ public class Game{
 		screen.setGameRenderer(gameRenderer);
 	}
 	public GameScreen getScreen(){ return screen; }
-	public GameDataFolder getGameDataFolder(){ return gameDataFolder; }
+	public GameDataFolder getFolder(){ return gameDataFolder; }
 	public GameThread getGameThread(){ return thread; }
 	public GameRenderer getGameRenderer(){ return gameRenderer; }
 	public int getScreenWidth(){ return screen.getRenderSize().width; }
