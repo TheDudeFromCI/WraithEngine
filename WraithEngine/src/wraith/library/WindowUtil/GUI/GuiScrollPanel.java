@@ -29,9 +29,10 @@ public class GuiScrollPanel extends GuiComponent{
 		g.drawImage(totalScreen, 0, 0, bufferWidth, panelHeight, 0, scrollPosition, bufferWidth, panelHeight+scrollPosition, null);
 	}
 	private void renderScreen(){
-		if(totalScreen==null||totalScreen.getHeight()!=entries.size()*entryHeight){
+		int intenedSize = Math.max(entries.size()*entryHeight, 1);
+		if(totalScreen==null||totalScreen.getHeight()!=intenedSize){
 			if(graphics!=null)graphics.dispose();
-			totalScreen=ImageUtil.getBestFormat(bufferWidth, entries.size()*entryHeight);
+			totalScreen=ImageUtil.getBestFormat(bufferWidth, intenedSize);
 			graphics=totalScreen.createGraphics();
 		}
 		for(int i = 0; i<entries.size(); i++)entries.get(i).renderEntry(graphics, 0, i*entryHeight, totalScreen.getWidth(), entryHeight);
