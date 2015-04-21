@@ -61,4 +61,5 @@ public class GuiScrollPanel extends GuiComponent{
 	}
 	public ScrollPaneEntry getScrollPaneEntry(int index){ return entries.get(index); }
 	public int getIndexOfEntry(ScrollPaneEntry entry){ return entries.indexOf(entry); }
+	public int getListSize(){ return entries.size(); }
 }
