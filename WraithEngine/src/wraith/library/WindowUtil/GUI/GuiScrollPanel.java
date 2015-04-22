@@ -44,7 +44,7 @@ public class GuiScrollPanel extends GuiComponent{
 		if(scrollPosition>totalScreen.getHeight()-bufferHeight)scrollPosition=Math.max(totalScreen.getHeight()-bufferHeight, 0);
 		setNeedsRepaint();
 	}
-	@Override public void mouseClicked(MouseEvent e){
+	@Override public void mouseReleased(MouseEvent e){
 		Point p = e.getPoint();
 		if(!isWithinBounds(p))return;
 		Point off = getOffset();

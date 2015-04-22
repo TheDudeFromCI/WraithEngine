@@ -13,5 +13,5 @@ public class GuiButton extends GuiImage{
 		super.dispose();
 		onClick=null;
 	}
-	@Override public void mouseClicked(MouseEvent e){ if(isWithinBounds(e.getPoint()))onClick.run(); }
+	@Override public void mouseReleased(MouseEvent e){ if(isWithinBounds(e.getPoint()))onClick.run(); }
 }
