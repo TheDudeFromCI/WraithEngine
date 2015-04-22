@@ -7,6 +7,7 @@ import wraith.library.WindowUtil.DefaultSplashScreen;
 import wraith.library.WindowUtil.SplashScreenProtocol;
 
 public class Game{
+	private String title;
 	private GameDataFolder gameDataFolder;
 	private GameScreen screen;
 	private GameThread thread;
@@ -14,21 +15,9 @@ public class Game{
 	private ArrayList<Runnable> gameStartListeners = new ArrayList();
 	public Game(final String title, File dataFolder){
 		gameDataFolder=new GameDataFolder(dataFolder);
-		final BufferedImage icon = gameDataFolder.getIcon();
-		DefaultSplashScreen splash = new DefaultSplashScreen(gameDataFolder.getImageWindow(), 40, 70, 40, 20);
-		splash.setIcon(icon);
-		splash.setTitle(title);
-		splash.addCompletionListener(new Runnable(){
-			public void run(){
-				screen=new GameScreen(title, icon, gameRenderer, null);
-				thread=new GameThread();
-				callGameStart();
-			}
-		});
-		splash.showSplash();
+		this.title=title;
 	}
-	public Game(final String title, File dataFolder, SplashScreenProtocol splash){
-		gameDataFolder=new GameDataFolder(dataFolder);
+	public void showSplash(SplashScreenProtocol splash){
 		final BufferedImage icon = gameDataFolder.getIcon();
 		splash.setIcon(icon);
 		splash.setTitle(title);
@@ -58,4 +47,5 @@ public class Game{
 	public int getRenderX(){ return screen.getRenderX(); }
 	public int getRenderY(){ return screen.getRenderY(); }
 	public void addGameStartListener(Runnable run){ gameStartListeners.add(run); }
+	public void showSplash(){ showSplash(new DefaultSplashScreen(gameDataFolder.getImageWindow(), 40, 70, 40, 20)); }
 }
