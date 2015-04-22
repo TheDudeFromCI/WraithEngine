@@ -47,4 +47,10 @@ public class TypeListener extends KeyAdapter{
 	}
 	@Override public String toString(){ return text.toString(); }
 	public void setCharacterCap(int cap){ characterCap=cap; }
+	public int getCharacterCap(){ return characterCap; }
+	public int getCarrentPosition(){ return carretPosition; }
+	public boolean isInsert(){ return insert; }
+	public void setCarretPosition(int carretPosition){ this.carretPosition=carretPosition; }
+	public void setInsert(boolean insert){ this.insert=insert; }
+	public int getLength(){ return text.length(); }
 }
