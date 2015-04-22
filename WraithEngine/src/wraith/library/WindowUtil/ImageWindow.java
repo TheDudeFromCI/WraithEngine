@@ -23,7 +23,7 @@ public class ImageWindow extends JFrame{
 	}
 	private void init(){
 		setUndecorated(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(img.getWidth(), img.getHeight());
 		setLocationRelativeTo(null);
 		setBackground(new Color(0, 0, 0, 0));
