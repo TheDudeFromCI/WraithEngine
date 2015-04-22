@@ -12,9 +12,9 @@ import wraith.library.MiscUtil.FadeTimer;
 
 @SuppressWarnings("serial")
 public class ImageWindow extends JFrame{
-	private BufferedImage img;
+	protected BufferedImage img;
 	private boolean fadeTimer;
-	private float fade;
+	protected float fade;
 	protected JPanel panel;
 	public ImageWindow(BufferedImage image){
 		img=image;
@@ -28,15 +28,7 @@ public class ImageWindow extends JFrame{
 		setLocationRelativeTo(null);
 		setBackground(new Color(0, 0, 0, 0));
 		setAlwaysOnTop(true);
-		add(panel=new JPanel(){
-			@Override public void paintComponent(Graphics g){
-				g.setColor(getBackground());
-				g.clearRect(0, 0, getWidth(), getHeight());
-				((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
-				g.drawImage(img, 0, 0, this);
-				g.dispose();
-			}
-		});
+		add(panel=createPanel());
 	}
 	public void addFadeTimer(int fadeIn, int fadeStay, int fadeOut, int pingDelay){
 		if(this.fadeTimer)return;
@@ -56,5 +48,16 @@ public class ImageWindow extends JFrame{
 	public void updateFadeLevel(float fade){
 		this.fade=fade;
 		repaint();
+	}
+	protected JPanel createPanel(){
+		return new JPanel(){
+			@Override public void paintComponent(Graphics g){
+				g.setColor(getBackground());
+				g.clearRect(0, 0, getWidth(), getHeight());
+				((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
+				g.drawImage(img, 0, 0, this);
+				g.dispose();
+			}
+		};
 	}
 }
