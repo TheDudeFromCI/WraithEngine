@@ -2,24 +2,40 @@ package wraith.library.WindowUtil.GameWindow;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import wraith.library.WindowUtil.ImageWindow;
+import wraith.library.WindowUtil.DefaultSplashScreen;
+import wraith.library.WindowUtil.SplashScreenProtocol;
 
 public class Game{
 	private GameDataFolder gameDataFolder;
 	private GameScreen screen;
 	private GameThread thread;
 	private GameRenderer gameRenderer;
-	public Game(String title, File dataFolder){
+	public Game(final String title, File dataFolder){
 		gameDataFolder=new GameDataFolder(dataFolder);
-		BufferedImage icon = gameDataFolder.getIcon();
-		ImageWindow imageWindow = new ImageWindow(gameDataFolder.getImageWindow());
-		imageWindow.setIconImage(icon);
-		imageWindow.setTitle(title);
-		imageWindow.addFadeTimer(40, 70, 40, 20);
-		try{ Thread.sleep(3000);
-		}catch(Exception e){}
-		screen=new GameScreen(title, icon, gameRenderer, null);
-		thread=new GameThread();
+		final BufferedImage icon = gameDataFolder.getIcon();
+		DefaultSplashScreen splash = new DefaultSplashScreen(gameDataFolder.getImageWindow(), 40, 70, 40, 20);
+		splash.setIcon(icon);
+		splash.setTitle(title);
+		splash.addCompletionListener(new Runnable(){
+			public void run(){
+				screen=new GameScreen(title, icon, gameRenderer, null);
+				thread=new GameThread();
+			}
+		});
+		splash.showSplash();
+	}
+	public Game(final String title, File dataFolder, SplashScreenProtocol splash){
+		gameDataFolder=new GameDataFolder(dataFolder);
+		final BufferedImage icon = gameDataFolder.getIcon();
+		splash.setIcon(icon);
+		splash.setTitle(title);
+		splash.addCompletionListener(new Runnable(){
+			public void run(){
+				screen=new GameScreen(title, icon, gameRenderer, null);
+				thread=new GameThread();
+			}
+		});
+		splash.showSplash();
 	}
 	public void setGameRenderer(GameRenderer gameRenderer){
 		this.gameRenderer=gameRenderer;
