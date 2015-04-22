@@ -15,6 +15,7 @@ public class ImageWindow extends JFrame{
 	private BufferedImage img;
 	private boolean fadeTimer;
 	private float fade;
+	protected JPanel panel;
 	public ImageWindow(BufferedImage image){
 		img=image;
 		init();
@@ -27,8 +28,8 @@ public class ImageWindow extends JFrame{
 		setLocationRelativeTo(null);
 		setBackground(new Color(0, 0, 0, 0));
 		setAlwaysOnTop(true);
-		add(new JPanel(){
-			@Override public void paint(Graphics g){
+		add(panel=new JPanel(){
+			@Override public void paintComponent(Graphics g){
 				g.setColor(getBackground());
 				g.clearRect(0, 0, getWidth(), getHeight());
 				((Graphics2D)g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, fade));
