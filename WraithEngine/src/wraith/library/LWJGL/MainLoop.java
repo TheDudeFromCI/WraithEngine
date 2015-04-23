@@ -14,6 +14,7 @@ public class MainLoop{
 	private long window;
 	private WindowInitalizer windowInitalizer;
 	private WindowInitalizer recreateInitalizer;
+	private int lastWidth, lastHeight;
 	public void create(WindowInitalizer windowInitalizer){
 		runLoop(windowInitalizer);
 		while(recreateInitalizer!=null)runLoop(recreateInitalizer);
@@ -25,11 +26,9 @@ public class MainLoop{
 	private void runLoop(WindowInitalizer windowInitalizer){
 		this.windowInitalizer=windowInitalizer;
 		recreateInitalizer=null;
-		System.out.println("Starting main loop.");
 		try{
 			init();
 			loop();
-			System.out.println("Stopping main loop.");
 			glfwDestroyWindow(window);
 			keyCallback.release();
 		}finally{
@@ -43,7 +42,9 @@ public class MainLoop{
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, windowInitalizer.resizeable?GL_TRUE:GL_FALSE);
-		window=glfwCreateWindow(windowInitalizer.width, windowInitalizer.height, windowInitalizer.windowName, NULL, NULL);
+		window=glfwCreateWindow(windowInitalizer.width, windowInitalizer.height, windowInitalizer.windowName, windowInitalizer.fullscreen?glfwGetPrimaryMonitor():NULL, NULL);
+		lastWidth=windowInitalizer.width;
+		lastHeight=windowInitalizer.height;
 		if(window==NULL)throw new RuntimeException("Failed to create the GLFW window");
 		glfwSetKeyCallback(window, keyCallback=new GLFWKeyCallback(){
 			@Override public void invoke(long window, int key, int scancode, int action, int mods){
@@ -59,10 +60,18 @@ public class MainLoop{
 	private void loop(){
 		GLContext.createFromCurrent();
 		glClearColor(windowInitalizer.clearRed, windowInitalizer.clearGreen, windowInitalizer.clearBlue, 0.0f);
+		int currentWidth, currentHeight;
 		while(glfwWindowShouldClose(window)==GL_FALSE){
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			glfwSwapBuffers(window);
+			currentWidth=GLFWvidmode.WIDTH;
+			currentHeight=GLFWvidmode.HEIGHT;
+			if(currentWidth!=lastWidth||currentHeight!=lastHeight){
+				glViewport(0, 0, currentWidth, currentHeight);
+				lastWidth=currentWidth;
+				lastHeight=currentHeight;
+			}
 			windowInitalizer.loopObjective.run();
+			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
 	}
