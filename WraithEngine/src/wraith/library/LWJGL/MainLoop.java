@@ -51,7 +51,7 @@ public class MainLoop{
 			}
 		});
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.height)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.width)/2);
+		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(windowInitalizer.vSync?1:0);
 		glfwShowWindow(window);
