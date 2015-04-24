@@ -69,9 +69,9 @@ public class MainLoop{
 			currentTime=System.nanoTime();
 			delta=(currentTime-lastTime)/1000000000f;
 			lastTime=currentTime;
-			windowInitalizer.loopObjective.update(delta);
+			windowInitalizer.loopObjective.update(delta, currentTime);
 			glPushMatrix();
-			windowInitalizer.loopObjective.render(delta);
+			windowInitalizer.loopObjective.render();
 			glPopMatrix();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
