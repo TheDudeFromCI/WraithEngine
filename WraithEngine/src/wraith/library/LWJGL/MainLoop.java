@@ -63,9 +63,9 @@ public class MainLoop{
 		long currentTime;
 		float delta;
 		windowInitalizer.loopObjective.preLoop();
+		glEnable(GL_DEPTH_TEST);
 		while(glfwWindowShouldClose(window)==GL_FALSE){
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			glEnable(GL_DEPTH_TEST);
 			currentTime=System.nanoTime();
 			delta=(currentTime-lastTime)/1000000000f;
 			lastTime=currentTime;
