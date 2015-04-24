@@ -14,7 +14,6 @@ public class MainLoop{
 	private long window;
 	private WindowInitalizer windowInitalizer;
 	private WindowInitalizer recreateInitalizer;
-	private int lastWidth, lastHeight;
 	public void create(WindowInitalizer windowInitalizer){
 		runLoop(windowInitalizer);
 		while(recreateInitalizer!=null)runLoop(recreateInitalizer);
@@ -34,17 +33,16 @@ public class MainLoop{
 		}finally{
 			glfwTerminate();
 			errorCallback.release();
+			System.exit(0);
 		}
 	}
 	private void init(){
-		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+		glfwSetErrorCallback(errorCallback=errorCallbackPrint(System.err));
 		if(glfwInit()!=GL11.GL_TRUE)throw new IllegalStateException("Unable to initialize GLFW");
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, windowInitalizer.resizeable?GL_TRUE:GL_FALSE);
 		window=glfwCreateWindow(windowInitalizer.width, windowInitalizer.height, windowInitalizer.windowName, windowInitalizer.fullscreen?glfwGetPrimaryMonitor():NULL, NULL);
-		lastWidth=windowInitalizer.width;
-		lastHeight=windowInitalizer.height;
 		if(window==NULL)throw new RuntimeException("Failed to create the GLFW window");
 		glfwSetKeyCallback(window, keyCallback=new GLFWKeyCallback(){
 			@Override public void invoke(long window, int key, int scancode, int action, int mods){
@@ -52,25 +50,29 @@ public class MainLoop{
 			}
 		});
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);
+		if(!windowInitalizer.fullscreen)glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(windowInitalizer.vSync?1:0);
 		glfwShowWindow(window);
 	}
 	private void loop(){
 		GLContext.createFromCurrent();
+		glEnable(GL_DEPTH_TEST);
 		glClearColor(windowInitalizer.clearRed, windowInitalizer.clearGreen, windowInitalizer.clearBlue, 0.0f);
-		int currentWidth, currentHeight;
+		long lastTime = System.nanoTime();
+		long currentTime;
+		float delta;
+		windowInitalizer.loopObjective.preLoop();
 		while(glfwWindowShouldClose(window)==GL_FALSE){
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			currentWidth=GLFWvidmode.WIDTH;
-			currentHeight=GLFWvidmode.HEIGHT;
-			if(currentWidth!=lastWidth||currentHeight!=lastHeight){
-				glViewport(0, 0, currentWidth, currentHeight);
-				lastWidth=currentWidth;
-				lastHeight=currentHeight;
-			}
-			windowInitalizer.loopObjective.run();
+			glEnable(GL_DEPTH_TEST);
+			currentTime=System.nanoTime();
+			delta=(currentTime-lastTime)/1000000000f;
+			lastTime=currentTime;
+			windowInitalizer.loopObjective.update(delta);
+			glPushMatrix();
+			windowInitalizer.loopObjective.render(delta);
+			glPopMatrix();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
