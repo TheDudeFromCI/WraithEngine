@@ -4,8 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 public class WorldRenderer extends RenderGroup{
 	public Camera cam;
-	public void render(float delta){
-		update(delta);
+	public void render(float delta, long time){
+		update(delta, time);
 		cam.translateInvertMatrix();
 		draw();
 	}
