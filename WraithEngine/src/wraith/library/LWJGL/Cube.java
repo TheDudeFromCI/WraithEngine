@@ -2,7 +2,7 @@ package wraith.library.LWJGL;
 
 import org.lwjgl.opengl.GL11;
 
-public class Cube extends RenderableObject3D{
+public abstract class Cube extends RenderableObject3D{
 	public boolean renderXUp, renderXDown, renderYUp, renderYDown, renderZUp, renderZDown;
 	public CubeTextures textures;
 	protected void draw(){
