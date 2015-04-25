@@ -34,10 +34,11 @@ public class MatrixUtils{
 		GL11.glMultMatrix(matrix);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
-	public static void setupOrtho(float near, float far){
+	public static void setupOrtho(float scale, float near, float far){
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(-1, 1, -1, 1, near, far);
+		scale/=2;
+		GL11.glOrtho(-scale, scale, -scale, scale, near, far);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 	private static void makeIdentity(FloatBuffer m){

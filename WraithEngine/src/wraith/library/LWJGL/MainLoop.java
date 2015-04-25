@@ -45,9 +45,7 @@ public class MainLoop{
 		window=glfwCreateWindow(windowInitalizer.width, windowInitalizer.height, windowInitalizer.windowName, windowInitalizer.fullscreen?glfwGetPrimaryMonitor():NULL, NULL);
 		if(window==NULL)throw new RuntimeException("Failed to create the GLFW window");
 		glfwSetKeyCallback(window, keyCallback=new GLFWKeyCallback(){
-			@Override public void invoke(long window, int key, int scancode, int action, int mods){
-				if(key==GLFW_KEY_ESCAPE&&action==GLFW_RELEASE)glfwSetWindowShouldClose(window, GL_TRUE);
-			}
+			@Override public void invoke(long window, int key, int scancode, int action, int mods){ windowInitalizer.loopObjective.key(window, key, action); }
 		});
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		if(!windowInitalizer.fullscreen)glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);
@@ -78,4 +76,5 @@ public class MainLoop{
 		}
 	}
 	public void dispose(){ glfwSetWindowShouldClose(window, GL_TRUE); }
+	public long getWindow(){ return window; }
 }
