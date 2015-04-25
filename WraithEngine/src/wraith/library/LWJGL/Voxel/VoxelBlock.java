@@ -2,22 +2,16 @@ package wraith.library.LWJGL.Voxel;
 
 public class VoxelBlock{
 	public final int x, y, z;
-	public final int chunkX, chunkY, chunkZ;
+	public boolean xUp, xDown, yUp, yDown, zUp, zDown;
 	private boolean hidden;
 	private VoxelChunk chunk;
-	private BlockRenderer cube;
-	public VoxelBlock(VoxelChunk chunk, int x, int y, int z, BlockRenderer blockRenderer){
+	private BlockType type;
+	public VoxelBlock(VoxelChunk chunk, int x, int y, int z, BlockType type){
 		this.x=x;
 		this.y=y;
 		this.z=z;
-		chunkX=x&7;
-		chunkY=y&7;
-		chunkZ=z&7;
 		this.chunk=chunk;
-		cube=blockRenderer;
-		cube.x=x;
-		cube.y=y;
-		cube.z=z;
+		this.type=type;
 	}
 	public void setHidden(boolean hidden){
 		if(this.hidden==hidden)return;
@@ -25,21 +19,17 @@ public class VoxelBlock{
 		if(hidden)chunk.addHidden();
 		else chunk.removeHidden();
 	}
-	public void render(){
-		if(hidden)return;
-		cube.renderObject();
-	}
 	public void hideSide(boolean xUp, boolean xDown, boolean yUp, boolean yDown, boolean zUp, boolean zDown){
 		if(!xUp&&!xDown&&!yUp&&!yDown&&!zUp&&!zDown)setHidden(true);
-		cube.renderXUp=xUp;
-		cube.renderXDown=xDown;
-		cube.renderYUp=yUp;
-		cube.renderYDown=yDown;
-		cube.renderZUp=zUp;
-		cube.renderZDown=zDown;
+		else setHidden(false);
+		this.xUp=xUp;
+		this.xDown=xDown;
+		this.yUp=yUp;
+		this.yDown=yDown;
+		this.zUp=zUp;
+		this.zDown=zDown;
 	}
-	public void update(float delta, long time){ cube.update(delta, time); }
 	public boolean isHidden(){ return hidden; }
-	public BlockRenderer getCube(){ return cube; }
+	public BlockType getType(){ return type; }
 	public VoxelChunk getChunk(){ return chunk; }
 }

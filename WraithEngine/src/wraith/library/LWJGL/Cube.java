@@ -6,40 +6,40 @@ public abstract class Cube extends RenderableObject3D{
 	public boolean renderXUp, renderXDown, renderYUp, renderYDown, renderZUp, renderZDown;
 	public CubeTextures textures;
 	private static final float[] X_UP_QUAD = {
+		0.5f, -0.5f, -0.5f,
 		0.5f, 0.5f, -0.5f,
 		0.5f, 0.5f, 0.5f,
 		0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, -0.5f
 	};
 	private static final float[] X_DOWN_QUAD = {
 		-0.5f, 0.5f, -0.5f,
-		-0.5f, 0.5f, 0.5f,
+		-0.5f, -0.5f, -0.5f,
 		-0.5f, -0.5f, 0.5f,
-		-0.5f, -0.5f, -0.5f
+		-0.5f, 0.5f, 0.5f,
 	};
 	private static final float[] Y_UP_QUAD = {
 		0.5f, 0.5f, -0.5f,
 		-0.5f, 0.5f, -0.5f,
 		-0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f
+		0.5f, 0.5f, 0.5f,
 	};
 	private static final float[] Y_DOWN_QUAD = {
 		0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, 0.5f,
 		-0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f
+		-0.5f, -0.5f, -0.5f,
 	};
 	private static final float[] Z_UP_QUAD = {
 		0.5f, 0.5f, 0.5f,
 		-0.5f, 0.5f, 0.5f,
 		-0.5f, -0.5f, 0.5f,
-		0.5f, -0.5f, 0.5f
+		0.5f, -0.5f, 0.5f,
 	};
 	private static final float[] Z_DOWN_QUAD = {
 		0.5f, 0.5f, -0.5f,
-		-0.5f, 0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
 		-0.5f, -0.5f, -0.5f,
-		0.5f, -0.5f, -0.5f
+		-0.5f, 0.5f, -0.5f,
 	};
 	public static final int X_UP_SIDE = 0;
 	public static final int X_DOWN_SIDE = 1;
@@ -47,7 +47,7 @@ public abstract class Cube extends RenderableObject3D{
 	public static final int Y_DOWN_SIDE = 3;
 	public static final int Z_UP_SIDE = 4;
 	public static final int Z_DOWN_SIDE = 5;
-	public Quad generateQuad(int side){
+	public static Quad generateQuad(int side, int x, int y, int z){
 		Quad q = null;
 		if(side==0)q=new Quad(clone(X_UP_QUAD));
 		if(side==1)q=new Quad(clone(X_DOWN_QUAD));
@@ -57,11 +57,11 @@ public abstract class Cube extends RenderableObject3D{
 		if(side==5)q=new Quad(clone(Z_DOWN_QUAD));
 		if(q!=null){
 			q.r=q.g=q.b=1;
-			shiftQuad(q);
+			shiftQuad(q, x, y, z);
 		}
 		return q;
 	}
-	private void shiftQuad(Quad q){
+	private static void shiftQuad(Quad q, int x, int y, int z){
 		q.loc[0]+=x;
 		q.loc[3]+=x;
 		q.loc[6]+=x;
