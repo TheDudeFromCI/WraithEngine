@@ -1,148 +1,83 @@
 package wraith.library.LWJGL;
 
-import org.lwjgl.opengl.GL11;
+import wraith.library.LWJGL.Voxel.Quad;
 
 public abstract class Cube extends RenderableObject3D{
 	public boolean renderXUp, renderXDown, renderYUp, renderYDown, renderZUp, renderZDown;
 	public CubeTextures textures;
-	protected void draw(){
-		if(renderXUp){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.xUp!=null){
-				textures.xUp.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glEnd();
-			}
+	private static final float[] X_UP_QUAD = {
+		0.5f, 0.5f, -0.5f,
+		0.5f, 0.5f, 0.5f,
+		0.5f, -0.5f, 0.5f,
+		0.5f, -0.5f, -0.5f
+	};
+	private static final float[] X_DOWN_QUAD = {
+		-0.5f, 0.5f, -0.5f,
+		-0.5f, 0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f,
+		-0.5f, -0.5f, -0.5f
+	};
+	private static final float[] Y_UP_QUAD = {
+		0.5f, 0.5f, -0.5f,
+		-0.5f, 0.5f, -0.5f,
+		-0.5f, 0.5f, 0.5f,
+		0.5f, 0.5f, 0.5f
+	};
+	private static final float[] Y_DOWN_QUAD = {
+		0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, 0.5f,
+		0.5f, -0.5f, 0.5f
+	};
+	private static final float[] Z_UP_QUAD = {
+		0.5f, 0.5f, 0.5f,
+		-0.5f, 0.5f, 0.5f,
+		-0.5f, -0.5f, 0.5f,
+		0.5f, -0.5f, 0.5f
+	};
+	private static final float[] Z_DOWN_QUAD = {
+		0.5f, 0.5f, -0.5f,
+		-0.5f, 0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f
+	};
+	public static final int X_UP_SIDE = 0;
+	public static final int X_DOWN_SIDE = 1;
+	public static final int Y_UP_SIDE = 2;
+	public static final int Y_DOWN_SIDE = 3;
+	public static final int Z_UP_SIDE = 4;
+	public static final int Z_DOWN_SIDE = 5;
+	public Quad generateQuad(int side){
+		Quad q = null;
+		if(side==0)q=new Quad(clone(X_UP_QUAD));
+		if(side==1)q=new Quad(clone(X_DOWN_QUAD));
+		if(side==2)q=new Quad(clone(Y_UP_QUAD));
+		if(side==3)q=new Quad(clone(Y_DOWN_QUAD));
+		if(side==4)q=new Quad(clone(Z_UP_QUAD));
+		if(side==5)q=new Quad(clone(Z_DOWN_QUAD));
+		if(q!=null){
+			q.r=q.g=q.b=1;
+			shiftQuad(q);
 		}
-		if(renderXDown){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.xDown!=null){
-				textures.xDown.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glEnd();
-			}
-		}
-		if(renderYUp){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.yUp!=null){
-				textures.yUp.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glEnd();
-			}
-		}
-		if(renderYDown){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.yDown!=null){
-				textures.yDown.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glEnd();
-			}
-		}
-		if(renderZUp){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.zUp!=null){
-				textures.zUp.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(0.5f, 0.5f, 0.5f);
-				GL11.glVertex3f(-0.5f, 0.5f, 0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, 0.5f);
-				GL11.glVertex3f(0.5f, -0.5f, 0.5f);
-				GL11.glEnd();
-			}
-		}
-		if(renderZDown){
-			GL11.glColor3f(1, 1, 1);
-			if(textures!=null&&textures.zDown!=null){
-				textures.zDown.bind();
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(0, 0);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glTexCoord2f(0, 1);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 1);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glTexCoord2f(1, 0);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glEnd();
-			}else{
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glVertex3f(0.5f, -0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, -0.5f, -0.5f);
-				GL11.glVertex3f(-0.5f, 0.5f, -0.5f);
-				GL11.glVertex3f(0.5f, 0.5f, -0.5f);
-				GL11.glEnd();
-			}
-		}
+		return q;
+	}
+	private void shiftQuad(Quad q){
+		q.loc[0]+=x;
+		q.loc[3]+=x;
+		q.loc[6]+=x;
+		q.loc[9]+=x;
+		q.loc[1]+=y;
+		q.loc[4]+=y;
+		q.loc[7]+=y;
+		q.loc[10]+=y;
+		q.loc[2]+=z;
+		q.loc[5]+=z;
+		q.loc[8]+=z;
+		q.loc[11]+=z;
+	}
+	private static float[] clone(float[] f){
+		float[] f2 = new float[f.length];
+		for(int i = 0; i<f2.length; i++)f2[i]=f[i];
+		return f2;
 	}
 }
