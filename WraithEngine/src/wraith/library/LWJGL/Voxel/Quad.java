@@ -25,6 +25,11 @@ public class Quad{
 		glTexCoord2f(1, 0);
 		glVertex3f(loc[9], loc[10], loc[11]);
 	}
+	public boolean matches(Quad q){
+		if(r!=q.r||g!=q.g||b!=q.b)return false;
+		for(int i = 0; i<12; i++)if(q.loc[i]!=loc[i])return false;
+		return true;
+	}
 	public Quad(float[] points){ loc=points; }
 	public Quad(){ loc=new float[12]; }
 }

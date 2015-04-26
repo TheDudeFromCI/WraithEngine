@@ -12,6 +12,7 @@ public class Texture{
 	private static final int BYTES_PER_PIXEL = 4;
 	public Texture(File file){ textureId=loadTexture(loadImage(file)); }
 	public void bind(){ GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId); }
+	public int getId(){ return textureId; }
 	private static int loadTexture(BufferedImage image){
 		int[] pixels = new int[image.getWidth()*image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());

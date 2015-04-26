@@ -29,6 +29,25 @@ public class VoxelBlock{
 		this.zUp=zUp;
 		this.zDown=zDown;
 	}
+	public boolean isSideShown(int side){
+		if(side==0)return xUp;
+		if(side==1)return xDown;
+		if(side==2)return yUp;
+		if(side==3)return yDown;
+		if(side==4)return zUp;
+		if(side==5)return zDown;
+		return false;
+	}
+	public void showSide(int side, boolean show){
+		if(side==0)xUp=show;
+		if(side==1)xDown=show;
+		if(side==2)yUp=show;
+		if(side==3)yDown=show;
+		if(side==4)zUp=show;
+		if(side==5)zDown=show;
+		if(!xUp&&!xDown&&!yUp&&!yDown&&!zUp&&!zDown)setHidden(true);
+		else setHidden(false);
+	}
 	public boolean isHidden(){ return hidden; }
 	public BlockType getType(){ return type; }
 	public VoxelChunk getChunk(){ return chunk; }
