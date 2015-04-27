@@ -13,6 +13,6 @@ public class WorldRenderer extends RenderGroup{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
-		cam=new Camera(fov, aspect, near, far);
+		cam=new Camera(fov, aspect, near, far, true);
 	}
 }

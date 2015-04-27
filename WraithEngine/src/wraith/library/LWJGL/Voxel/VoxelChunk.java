@@ -75,8 +75,8 @@ public class VoxelChunk{
 		open=isNeighborOpen(block, side, hideNegativeY);
 		if(open!=block.isSideShown(side)){
 			block.showSide(side, open);
-			if(open)getBatch(block.getType().getTexture(side)).addQuad(Cube.generateQuad(side, block.x, block.y, block.z));
-			else getBatch(block.getType().getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z));
+			if(open)getBatch(block.getType().getTexture(side)).addQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.getType().getRotation(side)));
+			else getBatch(block.getType().getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.getType().getRotation(side)));
 		}
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side, boolean hideNegativeY){
