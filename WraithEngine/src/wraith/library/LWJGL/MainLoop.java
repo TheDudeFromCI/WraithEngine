@@ -57,15 +57,15 @@ public class MainLoop{
 		GLContext.createFromCurrent();
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(windowInitalizer.clearRed, windowInitalizer.clearGreen, windowInitalizer.clearBlue, 0.0f);
-		long lastTime = System.nanoTime();
+		long lastTime = System.currentTimeMillis();
 		long currentTime;
 		float delta;
 		windowInitalizer.loopObjective.preLoop();
 		glEnable(GL_DEPTH_TEST);
 		while(glfwWindowShouldClose(window)==GL_FALSE){
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			currentTime=System.nanoTime();
-			delta=(currentTime-lastTime)/1000000000f;
+			currentTime=System.currentTimeMillis();
+			delta=(currentTime-lastTime)/1000f;
 			lastTime=currentTime;
 			windowInitalizer.loopObjective.update(delta, currentTime);
 			glPushMatrix();

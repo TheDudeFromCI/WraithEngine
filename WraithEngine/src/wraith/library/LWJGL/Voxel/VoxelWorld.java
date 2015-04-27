@@ -10,7 +10,7 @@ public class VoxelWorld{
 	private final ArrayList<QuadBatch> tempQuads = new ArrayList();
 	private final ArrayList<VoxelChunk> chunks = new ArrayList();
 	private final VoxelWorldListener worldListener;
-	private VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
+	public VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
 		VoxelChunk chunk = new VoxelChunk(this, chunkX, chunkY, chunkZ);
 		chunks.add(chunk);
 		worldListener.loadChunk(chunk);
