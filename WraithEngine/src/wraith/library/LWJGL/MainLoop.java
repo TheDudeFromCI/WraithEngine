@@ -67,8 +67,8 @@ public class MainLoop{
 			currentTime=System.currentTimeMillis();
 			delta=(currentTime-lastTime)/1000f;
 			lastTime=currentTime;
-			windowInitalizer.loopObjective.update(delta, currentTime);
 			glPushMatrix();
+			windowInitalizer.loopObjective.update(delta, currentTime);
 			windowInitalizer.loopObjective.render();
 			glPopMatrix();
 			glfwSwapBuffers(window);
