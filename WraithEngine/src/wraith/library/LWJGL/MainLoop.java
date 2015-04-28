@@ -11,6 +11,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class MainLoop{
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
+	private GLFWMouseButtonCallback mouseButtonCallback;
 	private long window;
 	private WindowInitalizer windowInitalizer;
 	private WindowInitalizer recreateInitalizer;
@@ -30,6 +31,7 @@ public class MainLoop{
 			loop();
 			glfwDestroyWindow(window);
 			keyCallback.release();
+			mouseButtonCallback.release();
 		}finally{
 			glfwTerminate();
 			errorCallback.release();
@@ -45,7 +47,10 @@ public class MainLoop{
 		window=glfwCreateWindow(windowInitalizer.width, windowInitalizer.height, windowInitalizer.windowName, windowInitalizer.fullscreen?glfwGetPrimaryMonitor():NULL, NULL);
 		if(window==NULL)throw new RuntimeException("Failed to create the GLFW window");
 		glfwSetKeyCallback(window, keyCallback=new GLFWKeyCallback(){
-			@Override public void invoke(long window, int key, int scancode, int action, int mods){ windowInitalizer.loopObjective.key(window, key, action); }
+			public void invoke(long window, int key, int scancode, int action, int mods){ windowInitalizer.loopObjective.key(window, key, action); }
+		});
+		glfwSetMouseButtonCallback(window, mouseButtonCallback=new GLFWMouseButtonCallback(){
+			public void invoke(long window, int button, int action, int mods){ windowInitalizer.loopObjective.mouse(window, button, action); }
 		});
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		if(!windowInitalizer.fullscreen)glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);

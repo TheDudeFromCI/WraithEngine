@@ -5,4 +5,5 @@ public interface LoopObjective{
 	public void update(float delta, long time);
 	public void render();
 	public void key(long window, int key, int action);
+	public void mouse(long window, int button, int action);
 }

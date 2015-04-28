@@ -7,9 +7,14 @@ import wraith.library.LWJGL.Texture;
 
 public class VoxelWorld{
 	private boolean needsRebatch;
+	private final boolean hidesNegativeY;
 	private final ArrayList<QuadBatch> tempQuads = new ArrayList();
 	private final ArrayList<VoxelChunk> chunks = new ArrayList();
 	private final VoxelWorldListener worldListener;
+	public VoxelWorld(VoxelWorldListener worldListener, boolean hidesNegativeY){
+		this.worldListener=worldListener;
+		this.hidesNegativeY=hidesNegativeY;
+	}
 	public VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
 		VoxelChunk chunk = new VoxelChunk(this, chunkX, chunkY, chunkZ);
 		chunks.add(chunk);
@@ -62,14 +67,14 @@ public class VoxelWorld{
 		}
 		GL11.glEnd();
 	}
-	public VoxelWorld(VoxelWorldListener worldListener){ this.worldListener=worldListener; }
 	public VoxelChunk getContainingChunk(int x, int y, int z){ return getChunk(x>>4, y>>4, z>>4, true); }
 	public VoxelChunk getContainingChunk(int x, int y, int z, boolean load){ return getChunk(x>>4, y>>4, z>>4, load); }
 	public VoxelChunk getChunk(int chunkX, int chunkY, int chunkZ){ return getChunk(chunkX, chunkY, chunkZ, true); }
 	public int getChunkCount(){ return chunks.size(); }
-	public void optimizeAll(boolean negativeY){ for(int i = 0; i<chunks.size(); i++)chunks.get(i).optimize(negativeY); }
+	public void optimizeAll(){ for(int i = 0; i<chunks.size(); i++)chunks.get(i).optimize(); }
 	public VoxelChunk getChunk(int index){ return chunks.get(index); }
 	public VoxelBlock getBlock(int x, int y, int z){ return getContainingChunk(x, y, z).getBlock(x, y, z); }
-	public VoxelBlock createBlock(int x, int y, int z, BlockType type){ return getContainingChunk(x, y, z).createBlock(x, y, z, type); }
+	public VoxelBlock setBlock(int x, int y, int z, BlockType type){ return getContainingChunk(x, y, z).setBlock(x, y, z, type); }
 	public void setNeedsRebatch(){ needsRebatch=true; }
+	public boolean hidesNegativeY(){ return hidesNegativeY; }
 }
