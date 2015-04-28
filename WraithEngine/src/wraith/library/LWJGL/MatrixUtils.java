@@ -37,7 +37,7 @@ public class MatrixUtils{
 	public static void setupOrtho(float scaleX, float scaleY, float near, float far){
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0, scaleX, 0, scaleY, near, far);
+		GL11.glOrtho(scaleX/-2, scaleX/2, scaleY/-2, scaleY/2, near, far);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 	private static void makeIdentity(FloatBuffer m){
