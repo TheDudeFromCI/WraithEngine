@@ -7,6 +7,7 @@ import wraith.library.LWJGL.Texture;
 
 public class VoxelWorld{
 	private boolean needsRebatch;
+	private VoxelChunk chunk;
 	private final ArrayList<QuadBatch> tempQuads = new ArrayList();
 	private final ArrayList<VoxelChunk> chunks = new ArrayList();
 	private final VoxelWorldListener worldListener;
@@ -16,7 +17,9 @@ public class VoxelWorld{
 		this.bounds=bounds;
 	}
 	public VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
-		VoxelChunk chunk = new VoxelChunk(this, chunkX, chunkY, chunkZ);
+		if(chunkX<bounds.chunkStartX||chunkY<bounds.chunkStartY||chunkZ<bounds.chunkStartZ)return null;
+		if(chunkX>bounds.chunkEndX||chunkY>bounds.chunkEndY||chunkZ>bounds.chunkEndZ)return null;
+		chunk=new VoxelChunk(this, chunkX, chunkY, chunkZ);
 		chunks.add(chunk);
 		worldListener.loadChunk(chunk);
 		setNeedsRebatch();
@@ -67,13 +70,19 @@ public class VoxelWorld{
 		}
 		GL11.glEnd();
 	}
+	public VoxelBlock getBlock(int x, int y, int z){
+		chunk=getContainingChunk(x, y, z);
+		return chunk==null?null:chunk.getBlock(x, y, z);
+	}
+	public VoxelBlock setBlock(int x, int y, int z, BlockType type){
+		chunk=getContainingChunk(x, y, z);
+		return chunk==null?null:chunk.setBlock(x, y, z, type);
+	}
 	public VoxelChunk getContainingChunk(int x, int y, int z){ return getChunk(x>>4, y>>4, z>>4, true); }
 	public VoxelChunk getContainingChunk(int x, int y, int z, boolean load){ return getChunk(x>>4, y>>4, z>>4, load); }
 	public VoxelChunk getChunk(int chunkX, int chunkY, int chunkZ){ return getChunk(chunkX, chunkY, chunkZ, true); }
 	public int getChunkCount(){ return chunks.size(); }
 	public void optimizeAll(){ for(int i = 0; i<chunks.size(); i++)chunks.get(i).optimize(); }
 	public VoxelChunk getChunk(int index){ return chunks.get(index); }
-	public VoxelBlock getBlock(int x, int y, int z){ return getContainingChunk(x, y, z).getBlock(x, y, z); }
-	public VoxelBlock setBlock(int x, int y, int z, BlockType type){ return getContainingChunk(x, y, z).setBlock(x, y, z, type); }
 	public void setNeedsRebatch(){ needsRebatch=true; }
 }

@@ -34,6 +34,7 @@ public class VoxelChunk{
 		return blocks[xPart][yPart][zPart];
 	}
 	public void optimize(){
+		batches.clear();
 		int x, y, z;
 		for(x=0; x<16; x++)for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[x][y][z]);
 		world.setNeedsRebatch();
@@ -135,6 +136,10 @@ public class VoxelChunk{
 		}
 		optimizeAroundBlock(subX, subY, subZ);
 		return null;
+	}
+	public void quickSetBlock(int x, int y, int z, BlockType type){
+		blocks[x&15][y&15][z&15]=new VoxelBlock(this, x, y, z, type);
+		removeHidden();
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side){
 		if(side==0)return block.x<world.bounds.endX&&getQuickBlock(block.x+1, block.y, block.z)==null;
