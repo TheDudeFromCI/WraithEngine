@@ -18,5 +18,5 @@ public abstract class Object3D{
 		GL11.glTranslatef(-x, -y, -z);
 		GL11.glScalef(sx, sy, sz);
 	}
-	public abstract void update(float delta, long time);
+	public abstract void update(double delta, double time);
 }

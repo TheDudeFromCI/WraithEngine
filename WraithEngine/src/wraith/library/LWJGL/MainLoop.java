@@ -12,6 +12,7 @@ public class MainLoop{
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
+	private GLFWCursorPosCallback cursorPosCallback;
 	private long window;
 	private WindowInitalizer windowInitalizer;
 	private WindowInitalizer recreateInitalizer;
@@ -32,6 +33,7 @@ public class MainLoop{
 			glfwDestroyWindow(window);
 			keyCallback.release();
 			mouseButtonCallback.release();
+			cursorPosCallback.release();
 		}finally{
 			glfwTerminate();
 			errorCallback.release();
@@ -52,6 +54,9 @@ public class MainLoop{
 		glfwSetMouseButtonCallback(window, mouseButtonCallback=new GLFWMouseButtonCallback(){
 			public void invoke(long window, int button, int action, int mods){ windowInitalizer.loopObjective.mouse(window, button, action); }
 		});
+		glfwSetCursorPosCallback(window, cursorPosCallback=new GLFWCursorPosCallback(){
+			public void invoke(long window, double xpos, double ypos){ windowInitalizer.loopObjective.mouseMove(window, xpos, ypos); }
+		});
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		if(!windowInitalizer.fullscreen)glfwSetWindowPos(window, (GLFWvidmode.width(vidmode)-windowInitalizer.width)/2, (GLFWvidmode.height(vidmode)-windowInitalizer.height)/2);
 		glfwMakeContextCurrent(window);
@@ -62,15 +67,15 @@ public class MainLoop{
 		GLContext.createFromCurrent();
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(windowInitalizer.clearRed, windowInitalizer.clearGreen, windowInitalizer.clearBlue, 0.0f);
-		long lastTime = System.currentTimeMillis();
-		long currentTime;
-		float delta;
+		double lastTime = 0;
+		double currentTime;
+		double delta;
 		windowInitalizer.loopObjective.preLoop();
 		glEnable(GL_DEPTH_TEST);
 		while(glfwWindowShouldClose(window)==GL_FALSE){
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			currentTime=System.currentTimeMillis();
-			delta=(currentTime-lastTime)/1000f;
+			currentTime=glfwGetTime();
+			delta=currentTime-lastTime;
 			lastTime=currentTime;
 			glPushMatrix();
 			windowInitalizer.loopObjective.update(delta, currentTime);

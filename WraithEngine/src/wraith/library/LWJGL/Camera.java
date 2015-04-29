@@ -12,7 +12,7 @@ public class Camera extends Object3D{
 		if(ortho)MatrixUtils.setupOrtho(fov, aspect, near, far);
 		else MatrixUtils.setupPerspective(fov, aspect, near, far);
 	}
-	public void update(float delta, long time){
+	public void update(double delta, double time){
 		delta*=cameraSpeed;
 		x+=delta*(goalX-x);
 		y+=delta*(goalY-y);
