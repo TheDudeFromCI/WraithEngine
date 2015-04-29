@@ -30,11 +30,13 @@ public class VoxelChunk{
 		int zPart = z&15;
 		blocks[xPart][yPart][zPart]=new VoxelBlock(this, x, y, z, type);
 		removeHidden();
+		optimizeBlock(blocks[xPart][yPart][zPart]);
 		return blocks[xPart][yPart][zPart];
 	}
 	public void optimize(){
 		int x, y, z;
 		for(x=0; x<16; x++)for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[x][y][z]);
+		world.setNeedsRebatch();
 	}
 	public void optimizeSide(int side){
 		if(side==0){
@@ -61,6 +63,7 @@ public class VoxelChunk{
 			int x, y;
 			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][0], 5);
 		}
+		world.setNeedsRebatch();
 	}
 	public void optimizeBlock(VoxelBlock block){
 		optimizeBlock(block, 0);
@@ -69,6 +72,7 @@ public class VoxelChunk{
 		optimizeBlock(block, 3);
 		optimizeBlock(block, 4);
 		optimizeBlock(block, 5);
+		world.setNeedsRebatch();
 	}
 	private void optimizeBlock(VoxelBlock block, int side){
 		if(block==null)return;
@@ -79,10 +83,7 @@ public class VoxelChunk{
 			else getBatch(block.getType().getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.getType().getRotation(side)));
 		}
 	}
-	private void removeBlock(int x, int y, int z){
-		if(blocks[x][y][z]==null)return;
-		removeBlockQuads(blocks[x][y][z]);
-		blocks[x][y][z]=null;
+	private void optimizeAroundBlock(int x, int y, int z){
 		VoxelChunk chunk;
 		if(x>0)optimizeBlock(blocks[x-1][y][z], 0);
 		else{
@@ -115,9 +116,24 @@ public class VoxelChunk{
 			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[x][y][0], 5);
 		}
 	}
+	private void removeBlock(int x, int y, int z){
+		if(blocks[x][y][z]==null)return;
+		removeBlockQuads(blocks[x][y][z]);
+		blocks[x][y][z]=null;
+	}
 	public VoxelBlock setBlock(int x, int y, int z, BlockType type){
-		removeBlock(x&15, y&15, z&15);
-		if(type!=null)return createBlock(x, y, z, type);
+		int subX = x&15;
+		int subY = y&15;
+		int subZ = z&15;
+		world.setNeedsRebatch();
+		removeBlock(subX, subY, subZ);
+		if(type!=null){
+			VoxelBlock block = createBlock(x, y, z, type);
+			optimizeBlock(block);
+			optimizeAroundBlock(subX, subY, subZ);
+			return block;
+		}
+		optimizeAroundBlock(subX, subY, subZ);
 		return null;
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side){
