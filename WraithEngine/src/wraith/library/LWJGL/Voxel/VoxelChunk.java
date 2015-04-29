@@ -10,8 +10,8 @@ public class VoxelChunk{
 	private final VoxelBlock[][][] blocks = new VoxelBlock[16][16][16];
 	public final int chunkX, chunkY, chunkZ;
 	public final int startX, startY, startZ, endX, endY, endZ;
-	public final ArrayList<QuadBatch> batches = new ArrayList(1);
-	private final VoxelWorld world;
+	final ArrayList<QuadBatch> batches = new ArrayList(1);
+	public final VoxelWorld world;
 	public VoxelChunk(VoxelWorld world, int chunkX, int chunkY, int chunkZ){
 		this.world=world;
 		this.chunkX=chunkX;
@@ -72,18 +72,18 @@ public class VoxelChunk{
 		optimizeBlock(block, 3);
 		optimizeBlock(block, 4);
 		optimizeBlock(block, 5);
-		world.setNeedsRebatch();
 	}
-	private void optimizeBlock(VoxelBlock block, int side){
+	public void optimizeBlock(VoxelBlock block, int side){
 		if(block==null)return;
 		open=isNeighborOpen(block, side);
 		if(open!=block.isSideShown(side)){
 			block.showSide(side, open);
-			if(open)getBatch(block.getType().getTexture(side)).addQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.getType().getRotation(side)));
-			else getBatch(block.getType().getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.getType().getRotation(side)));
+			if(open)getBatch(block.type.getTexture(side)).addQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.type.getRotation(side)));
+			else getBatch(block.type.getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.type.getRotation(side)));
+			world.setNeedsRebatch();
 		}
 	}
-	private void optimizeAroundBlock(int x, int y, int z){
+	public void optimizeAroundBlock(int x, int y, int z){
 		VoxelChunk chunk;
 		if(x>0)optimizeBlock(blocks[x-1][y][z], 0);
 		else{
@@ -157,11 +157,11 @@ public class VoxelChunk{
 		if(x<startX||y<startY||z<startZ||x>endX||y>endY||z>endZ)return world.getBlock(x, y, z, false);
 		return getBlock(x, y, z);
 	}
-	public void addHidden(){ hidden++; }
-	public void removeHidden(){ hidden--; }
+	void addHidden(){ hidden++; }
+	void removeHidden(){ hidden--; }
 	public VoxelBlock getBlock(int x, int y, int z){ return blocks[x&15][y&15][z&15]; }
 	public VoxelBlock getSubBlock(int x, int y, int z){ return blocks[x][y][z]; }
 	public boolean isHidden(){ return hidden==4096; }
 	public void render(){ for(QuadBatch batch : batches)batch.renderBatch(); }
-	private void removeBlockQuads(VoxelBlock block){ for(int i = 0; i<6; i++)getBatch(block.getType().getTexture(i)).removeQuad(Cube.generateQuad(i, block.x, block.y, block.z, block.getType().getRotation(i))); }
+	private void removeBlockQuads(VoxelBlock block){ for(int i = 0; i<6; i++)getBatch(block.type.getTexture(i)).removeQuad(Cube.generateQuad(i, block.x, block.y, block.z, block.type.getRotation(i))); }
 }
