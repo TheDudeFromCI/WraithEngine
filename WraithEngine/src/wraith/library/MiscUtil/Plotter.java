@@ -13,6 +13,7 @@ public class Plotter implements Plot<Vec3i>{
 	private final Vec3f max = new Vec3f();
 	private int limit;
 	private int plotted;
+	private int sideHit;
 	public Plotter(float offx, float offy, float offz, float width, float height, float depth){
 		off.set(offx, offy, offz);
 		size.set(width, height, depth);
@@ -37,12 +38,15 @@ public class Plotter implements Plot<Vec3i>{
 			if(mx<my&&mx<mz){
 				max.x+=delta.x;
 				index.x+=sign.x;
+				sideHit=sign.x>0?1:0;
 			}else if(mz<my&&mz<mx){
 				max.z+=delta.z;
 				index.z+=sign.z;
+				sideHit=sign.z>0?5:4;
 			}else{
 				max.y+=delta.y;
 				index.y+=sign.y;
+				sideHit=sign.y>0?3:2;
 			}
 		}
 		return plotted<=limit;
@@ -60,6 +64,7 @@ public class Plotter implements Plot<Vec3i>{
 		max.z=(sign.z>0)?az+size.z-pos.z:pos.z-az;
 		div(max, dir);
 	}
+	public int getSideHit(){ return sideHit; }
 	public void end(){ plotted=limit+1; }
 	public Vec3i get(){ return index; }
 	public Vec3f actual(){ return new Vec3f(index.x*size.x+off.x, index.y*size.y+off.y, index.z*size.z+off.z); }
