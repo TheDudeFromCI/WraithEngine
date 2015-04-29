@@ -7,13 +7,13 @@ import wraith.library.LWJGL.Texture;
 
 public class VoxelWorld{
 	private boolean needsRebatch;
-	private final boolean hidesNegativeY;
 	private final ArrayList<QuadBatch> tempQuads = new ArrayList();
 	private final ArrayList<VoxelChunk> chunks = new ArrayList();
 	private final VoxelWorldListener worldListener;
-	public VoxelWorld(VoxelWorldListener worldListener, boolean hidesNegativeY){
+	final VoxelWorldBounds bounds;
+	public VoxelWorld(VoxelWorldListener worldListener, VoxelWorldBounds bounds){
 		this.worldListener=worldListener;
-		this.hidesNegativeY=hidesNegativeY;
+		this.bounds=bounds;
 	}
 	public VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
 		VoxelChunk chunk = new VoxelChunk(this, chunkX, chunkY, chunkZ);
@@ -76,5 +76,4 @@ public class VoxelWorld{
 	public VoxelBlock getBlock(int x, int y, int z){ return getContainingChunk(x, y, z).getBlock(x, y, z); }
 	public VoxelBlock setBlock(int x, int y, int z, BlockType type){ return getContainingChunk(x, y, z).setBlock(x, y, z, type); }
 	public void setNeedsRebatch(){ needsRebatch=true; }
-	public boolean hidesNegativeY(){ return hidesNegativeY; }
 }

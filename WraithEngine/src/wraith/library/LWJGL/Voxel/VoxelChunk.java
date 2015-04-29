@@ -137,12 +137,12 @@ public class VoxelChunk{
 		return null;
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side){
-		if(side==0)return getQuickBlock(block.x+1, block.y, block.z)==null;
-		if(side==1)return getQuickBlock(block.x-1, block.y, block.z)==null;
-		if(side==2)return getQuickBlock(block.x, block.y+1, block.z)==null;
-		if(side==3)return (world.hidesNegativeY()?block.y>0:true)&&getQuickBlock(block.x, block.y-1, block.z)==null;
-		if(side==4)return getQuickBlock(block.x, block.y, block.z+1)==null;
-		if(side==5)return getQuickBlock(block.x, block.y, block.z-1)==null;
+		if(side==0)return block.x<world.bounds.endX&&getQuickBlock(block.x+1, block.y, block.z)==null;
+		if(side==1)return block.x>world.bounds.startX&&getQuickBlock(block.x-1, block.y, block.z)==null;
+		if(side==2)return block.y<world.bounds.endY&&getQuickBlock(block.x, block.y+1, block.z)==null;
+		if(side==3)return block.y>world.bounds.startY&&getQuickBlock(block.x, block.y-1, block.z)==null;
+		if(side==4)return block.z<world.bounds.endZ&&getQuickBlock(block.x, block.y, block.z+1)==null;
+		if(side==5)return block.z>world.bounds.startZ&&getQuickBlock(block.x, block.y, block.z-1)==null;
 		return true;
 	}
 	private QuadBatch getBatch(Texture texture){
