@@ -7,7 +7,6 @@ public class VoxelBlock{
 	boolean xUp, xDown, yUp, yDown, zUp, zDown;
 	private boolean hidden;
 	final Quad[] quads = new Quad[6];
-	final boolean[] shadowPoints = new boolean[8];
 	public final VoxelChunk chunk;
 	public final BlockType type;
 	public VoxelBlock(VoxelChunk chunk, int x, int y, int z, BlockType type){
@@ -16,7 +15,7 @@ public class VoxelBlock{
 		this.z=z;
 		this.chunk=chunk;
 		this.type=type;
-		for(int i = 0; i<6; i++)quads[i]=Cube.generateQuad(i, x, y, z, 0, new float[12]);
+		for(int i = 0; i<6; i++)quads[i]=Cube.generateQuad(i, x, y, z, 0, new float[15]);
 	}
 	private void setHidden(boolean hidden){
 		if(this.hidden==hidden)return;

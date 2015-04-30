@@ -66,11 +66,11 @@ public class VoxelChunk{
 	public void optimizeBlock(VoxelBlock block){
 		if(block==null)return;
 		optimizeBlock(block, 0, true);
-		optimizeBlock(block, 1, false);
-		optimizeBlock(block, 2, false);
-		optimizeBlock(block, 3, false);
-		optimizeBlock(block, 4, false);
-		optimizeBlock(block, 5, false);
+		optimizeBlock(block, 1, true);
+		optimizeBlock(block, 2, true);
+		optimizeBlock(block, 3, true);
+		optimizeBlock(block, 4, true);
+		optimizeBlock(block, 5, true);
 	}
 	public void optimizeBlock(VoxelBlock block, int side, boolean updateShadows){
 		if(block==null)return;
@@ -81,7 +81,7 @@ public class VoxelChunk{
 			else block.chunk.getBatch(block.type.getTexture(side)).removeQuad(block.getQuad(side));
 			world.setNeedsRebatch();
 		}
-		updateShadows(block, side, updateShadows);
+		if(updateShadows)block.quads[side].centerPoint=block.type.setupShadows(block.quads[side].colors, side, block.x, block.y, block.z);
 	}
 	private void optimizeAroundBlock(int x, int y, int z){
 		int startX = x-1;
@@ -147,8 +147,4 @@ public class VoxelChunk{
 	public VoxelBlock getSubBlock(int x, int y, int z){ return blocks[x][y][z]; }
 	public boolean isHidden(){ return hidden==4096; }
 	private void removeBlockQuads(VoxelBlock block){ for(int i = 0; i<6; i++)getBatch(block.type.getTexture(i)).removeQuad(block.getQuad(i)); }
-	private static void updateShadows(VoxelBlock block, int side, boolean findPoints){
-		if(findPoints)block.type.findShadowPoints(block.x, block.y, block.z, block.shadowPoints);
-		block.type.setupShadows(block.quads[side].colors, side, block.shadowPoints);
-	}
 }

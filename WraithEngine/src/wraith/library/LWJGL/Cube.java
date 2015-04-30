@@ -10,36 +10,42 @@ public abstract class Cube extends RenderableObject3D{
 		1, 0, 1,
 		1, 0, 0,
 		1, 1, 0,
+		1, 0.5f, 0.5f
 	};
 	private static final float[] X_DOWN_QUAD = {
 		0, 0, 0,
 		0, 0, 1,
 		0, 1, 1,
 		0, 1, 0,
+		0, 0.5f, 0.5f
 	};
 	private static final float[] Y_UP_QUAD = {
 		0, 1, 0,
 		0, 1, 1,
 		1, 1, 1,
 		1, 1, 0,
+		0.5f, 1, 0.5f
 	};
 	private static final float[] Y_DOWN_QUAD = {
 		1, 0, 1,
 		0, 0, 1,
 		0, 0, 0,
 		1, 0, 0,
+		0.5f, 0, 0.5f
 	};
 	private static final float[] Z_UP_QUAD = {
 		1, 1, 1,
 		0, 1, 1,
 		0, 0, 1,
 		1, 0, 1,
+		0.5f, 0.5f, 1
 	};
 	private static final float[] Z_DOWN_QUAD = {
 		0, 0, 0,
 		0, 1, 0,
 		1, 1, 0,
 		1, 0, 0,
+		0.5f, 0.5f, 0
 	};
 	public static final int X_UP_SIDE = 0;
 	public static final int X_DOWN_SIDE = 1;
