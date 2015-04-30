@@ -1,7 +1,6 @@
 package wraith.library.LWJGL.Voxel;
 
 import java.util.ArrayList;
-import wraith.library.LWJGL.Cube;
 import wraith.library.LWJGL.Texture;
 
 public class VoxelChunk{
@@ -24,17 +23,15 @@ public class VoxelChunk{
 		endY=startY+15;
 		endZ=startZ+15;
 	}
-	private VoxelBlock createBlock(int x, int y, int z, BlockType type){
+	public VoxelBlock createBlock(int x, int y, int z, BlockType type){
 		int xPart = x&15;
 		int yPart = y&15;
 		int zPart = z&15;
 		blocks[xPart][yPart][zPart]=new VoxelBlock(this, x, y, z, type);
 		removeHidden();
-		optimizeBlock(blocks[xPart][yPart][zPart]);
 		return blocks[xPart][yPart][zPart];
 	}
 	public void optimize(){
-		batches.clear();
 		int x, y, z;
 		for(x=0; x<16; x++)for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[x][y][z]);
 		world.setNeedsRebatch();
@@ -42,79 +39,65 @@ public class VoxelChunk{
 	public void optimizeSide(int side){
 		if(side==0){
 			int y, z;
-			for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[15][y][z], 0);
+			for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[15][y][z], 0, true);
 		}
 		if(side==1){
 			int y, z;
-			for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[0][y][z], 1);
+			for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[0][y][z], 1, true);
 		}
 		if(side==2){
 			int x, z;
-			for(x=0; x<16; x++)for(z=0; z<16; z++)optimizeBlock(blocks[x][15][z], 2);
+			for(x=0; x<16; x++)for(z=0; z<16; z++)optimizeBlock(blocks[x][15][z], 2, true);
 		}
 		if(side==3){
 			int x, z;
-			for(x=0; x<16; x++)for(z=0; z<16; z++)optimizeBlock(blocks[x][0][z], 3);
+			for(x=0; x<16; x++)for(z=0; z<16; z++)optimizeBlock(blocks[x][0][z], 3, true);
 		}
 		if(side==4){
 			int x, y;
-			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][15], 4);
+			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][15], 4, true);
 		}
 		if(side==5){
 			int x, y;
-			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][0], 5);
+			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][0], 5, true);
 		}
 		world.setNeedsRebatch();
 	}
 	public void optimizeBlock(VoxelBlock block){
-		optimizeBlock(block, 0);
-		optimizeBlock(block, 1);
-		optimizeBlock(block, 2);
-		optimizeBlock(block, 3);
-		optimizeBlock(block, 4);
-		optimizeBlock(block, 5);
-	}
-	public void optimizeBlock(VoxelBlock block, int side){
 		if(block==null)return;
-		open=isNeighborOpen(block, side);
+		optimizeBlock(block, 0, true);
+		optimizeBlock(block, 1, false);
+		optimizeBlock(block, 2, false);
+		optimizeBlock(block, 3, false);
+		optimizeBlock(block, 4, false);
+		optimizeBlock(block, 5, false);
+	}
+	public void optimizeBlock(VoxelBlock block, int side, boolean updateShadows){
+		if(block==null)return;
+		open=block.chunk.isNeighborOpen(block, side);
 		if(open!=block.isSideShown(side)){
 			block.showSide(side, open);
-			if(open)getBatch(block.type.getTexture(side)).addQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.type.getRotation(side)));
-			else getBatch(block.type.getTexture(side)).removeQuad(Cube.generateQuad(side, block.x, block.y, block.z, block.type.getRotation(side)));
+			if(open)block.chunk.getBatch(block.type.getTexture(side)).addQuad(block.getQuad(side));
+			else block.chunk.getBatch(block.type.getTexture(side)).removeQuad(block.getQuad(side));
 			world.setNeedsRebatch();
 		}
+		updateShadows(block, side, updateShadows);
 	}
-	public void optimizeAroundBlock(int x, int y, int z){
-		VoxelChunk chunk;
-		if(x>0)optimizeBlock(blocks[x-1][y][z], 0);
-		else{
-			chunk=world.getChunk(chunkX-1, chunkY, chunkZ, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[15][y][z], 0);
-		}
-		if(x<15)optimizeBlock(blocks[x+1][y][z], 1);
-		else{
-			chunk=world.getChunk(chunkX+1, chunkY, chunkZ, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[0][y][z], 1);
-		}
-		if(y>0)optimizeBlock(blocks[x][y-1][z], 2);
-		else{
-			chunk=world.getChunk(chunkX, chunkY-1, chunkZ, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[x][15][z], 2);
-		}
-		if(y<15)optimizeBlock(blocks[x][y+1][z], 3);
-		else{
-			chunk=world.getChunk(chunkX, chunkY+1, chunkZ, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[x][0][z], 3);
-		}
-		if(z>0)optimizeBlock(blocks[x][y][z-1], 4);
-		else{
-			chunk=world.getChunk(chunkX, chunkY, chunkZ-1, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[x][y][15], 4);
-		}
-		if(z<15)optimizeBlock(blocks[x][y][z+1], 5);
-		else{
-			chunk=world.getChunk(chunkX, chunkY, chunkZ+1, false);
-			if(chunk!=null)chunk.optimizeBlock(chunk.blocks[x][y][0], 5);
+	private void optimizeAroundBlock(int x, int y, int z){
+		int startX = x-1;
+		int startY = y-1;
+		int startZ = z-1;
+		int endX = x+1;
+		int endY = y+1;
+		int endZ = z+1;
+		int sx, sy, sz;
+		for(sx=startX; sx<=endX; sx++){
+			for(sy=startY; sy<=endY; sy++){
+				for(sz=startZ; sz<=endZ; sz++){
+					if(sx==x&&sy==y&&sz==z)continue;
+					optimizeBlock(getQuickBlock(sx, sy, sz));
+				}
+			}
 		}
 	}
 	private void removeBlock(int x, int y, int z){
@@ -123,23 +106,16 @@ public class VoxelChunk{
 		blocks[x][y][z]=null;
 	}
 	public VoxelBlock setBlock(int x, int y, int z, BlockType type){
-		int subX = x&15;
-		int subY = y&15;
-		int subZ = z&15;
 		world.setNeedsRebatch();
-		removeBlock(subX, subY, subZ);
+		removeBlock(x&15, y&15, z&15);
 		if(type!=null){
 			VoxelBlock block = createBlock(x, y, z, type);
 			optimizeBlock(block);
-			optimizeAroundBlock(subX, subY, subZ);
+			optimizeAroundBlock(x, y, z);
 			return block;
 		}
-		optimizeAroundBlock(subX, subY, subZ);
+		optimizeAroundBlock(x, y, z);
 		return null;
-	}
-	public void quickSetBlock(int x, int y, int z, BlockType type){
-		blocks[x&15][y&15][z&15]=new VoxelBlock(this, x, y, z, type);
-		removeHidden();
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side){
 		if(side==0)return block.x<world.bounds.endX&&getQuickBlock(block.x+1, block.y, block.z)==null;
@@ -151,11 +127,14 @@ public class VoxelChunk{
 		return true;
 	}
 	private QuadBatch getBatch(Texture texture){
-		for(QuadBatch batch : batches)if(batch.getTexture()==texture)return batch;
-		QuadBatch batch = new QuadBatch();
+		QuadBatch batch;
+		for(int i = 0; i<batches.size(); i++){
+			batch=batches.get(i);
+			if(batch.getTexture()==texture)return batch;
+		}
+		batch=new QuadBatch();
 		batch.setTexture(texture);
 		batches.add(batch);
-		world.setNeedsRebatch();
 		return batch;
 	}
 	private VoxelBlock getQuickBlock(int x, int y, int z){
@@ -167,6 +146,9 @@ public class VoxelChunk{
 	public VoxelBlock getBlock(int x, int y, int z){ return blocks[x&15][y&15][z&15]; }
 	public VoxelBlock getSubBlock(int x, int y, int z){ return blocks[x][y][z]; }
 	public boolean isHidden(){ return hidden==4096; }
-	public void render(){ for(QuadBatch batch : batches)batch.renderBatch(); }
-	private void removeBlockQuads(VoxelBlock block){ for(int i = 0; i<6; i++)getBatch(block.type.getTexture(i)).removeQuad(Cube.generateQuad(i, block.x, block.y, block.z, block.type.getRotation(i))); }
+	private void removeBlockQuads(VoxelBlock block){ for(int i = 0; i<6; i++)getBatch(block.type.getTexture(i)).removeQuad(block.getQuad(i)); }
+	private static void updateShadows(VoxelBlock block, int side, boolean findPoints){
+		if(findPoints)block.type.findShadowPoints(block.x, block.y, block.z, block.shadowPoints);
+		block.type.setupShadows(block.quads[side].colors, side, block.shadowPoints);
+	}
 }

@@ -1,9 +1,13 @@
 package wraith.library.LWJGL.Voxel;
 
+import wraith.library.LWJGL.Cube;
+
 public class VoxelBlock{
 	public final int x, y, z;
-	public boolean xUp, xDown, yUp, yDown, zUp, zDown;
+	boolean xUp, xDown, yUp, yDown, zUp, zDown;
 	private boolean hidden;
+	final Quad[] quads = new Quad[6];
+	final boolean[] shadowPoints = new boolean[8];
 	public final VoxelChunk chunk;
 	public final BlockType type;
 	public VoxelBlock(VoxelChunk chunk, int x, int y, int z, BlockType type){
@@ -12,6 +16,7 @@ public class VoxelBlock{
 		this.z=z;
 		this.chunk=chunk;
 		this.type=type;
+		for(int i = 0; i<6; i++)quads[i]=Cube.generateQuad(i, x, y, z, 0, new float[12]);
 	}
 	private void setHidden(boolean hidden){
 		if(this.hidden==hidden)return;
@@ -47,6 +52,7 @@ public class VoxelBlock{
 		if(side==5)return getBlockByOffset(0, 0, -1, load);
 		return null;
 	}
+	public Quad getQuad(int side){ return quads[side]; }
 	public VoxelBlock getBlockByOffset(int x, int y, int z, boolean load){ return chunk.world.getBlock(this.x+x, this.y+y, this.z+z, load); }
 	public boolean isHidden(){ return hidden; }
 }

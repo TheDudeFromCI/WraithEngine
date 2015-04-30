@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import wraith.library.LWJGL.Texture;
 
 public class QuadBatch{
+	private int i;
 	private Texture texture;
 	private final ArrayList<Quad> quads;
 	public void renderBatch(){
@@ -13,9 +14,17 @@ public class QuadBatch{
 		renderPart();
 		GL11.glEnd();
 	}
-	public void removeQuad(Quad q){
+	public void removeQuadLight(Quad q){
 		for(int i = 0; i<quads.size(); i++){
-			if(quads.get(i).matches(q)){
+			if(quads.get(i).matchesLight(q)){
+				quads.remove(i);
+				return;
+			}
+		}
+	}
+	public void removeQuad(Quad q){
+		for(i=0; i<quads.size(); i++){
+			if(quads.get(i)==q){
 				quads.remove(i);
 				return;
 			}
@@ -23,8 +32,9 @@ public class QuadBatch{
 	}
 	public QuadBatch(int buffer){ quads=new ArrayList(buffer); }
 	public QuadBatch(){ quads=new ArrayList(); }
-	public void renderPart(){ for(Quad q : quads)q.renderPart(); }
-	public void addQuad(Quad q){ quads.add(q); }
+	public void renderPart(){ for(i=0; i<quads.size(); i++)quads.get(i).renderPart(); }
+	public void addQuad(Quad q){ if(!quads.contains(q))quads.add(q); }
 	public void setTexture(Texture texture){ this.texture=texture; }
 	public Texture getTexture(){ return texture; }
+	public int getSize(){ return quads.size(); }
 }
