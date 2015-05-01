@@ -19,11 +19,11 @@ public class GuiComponents{
 			glTexCoord2f(0, 0);
 			glVertex3f(screenSize.width*img.x*scaleX, screenSize.height*img.y*scaleY, img.z);
 			glTexCoord2f(0, 1);
-			glVertex3f(screenSize.width*(img.x+img.w)*scaleX, screenSize.height*img.y*scaleY, img.z);
+			glVertex3f(screenSize.width*(img.x*scaleX+img.w), screenSize.height*img.y*scaleY, img.z);
 			glTexCoord2f(1, 1);
-			glVertex3f(screenSize.width*(img.x+img.w)*scaleX, screenSize.height*(img.y+img.h)*scaleY, img.z);
+			glVertex3f(screenSize.width*(img.x*scaleX+img.w), screenSize.height*(img.y*scaleY+img.h), img.z);
 			glTexCoord2f(1, 0);
-			glVertex3f(screenSize.width*img.x*scaleX, screenSize.height*(img.y+img.h)*scaleY, img.z);
+			glVertex3f(screenSize.width*img.x*scaleX, screenSize.height*(img.y*scaleY+img.h), img.z);
 			glEnd();
 		}
 	}
