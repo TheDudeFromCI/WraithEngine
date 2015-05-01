@@ -1,6 +1,10 @@
 package wraith.library.LWJGL;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -92,5 +96,26 @@ public class MatrixUtils{
 		result[0]=v1[1]*v2[2]-v1[2]*v2[1];
 		result[1]=v1[2]*v2[0]-v1[0]*v2[2];
 		result[2]=v1[0]*v2[1]-v1[1]*v2[0];
+	}
+	public static void takeScreenShot(File file, int displayWidth, int displayHeight){
+		try{
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			GL11.glReadBuffer(GL11.GL_FRONT);
+			ByteBuffer buffer = BufferUtils.createByteBuffer(displayWidth*displayHeight*4);
+			GL11.glReadPixels(0, 0, displayWidth, displayHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+			BufferedImage image = new BufferedImage(displayWidth, displayHeight, BufferedImage.TYPE_INT_RGB);
+			int x, y, i, r, g, b;
+			for(x=0; x<displayWidth; x++){
+			    for(y=0; y<displayHeight; y++){
+			        i=(x+(displayWidth*y))*4;
+			        r=buffer.get(i)&0xFF;
+			        g=buffer.get(i+1)&0xFF;
+			        b=buffer.get(i+2)&0xFF;
+			        image.setRGB(x, displayHeight-(y+1), (0xFF<<24)|(r<<16)|(g<<8)|b);
+			    }
+			}
+			ImageIO.write(image, "PNG", file);
+		}catch(Exception exception){ exception.printStackTrace(); }
 	}
 }
