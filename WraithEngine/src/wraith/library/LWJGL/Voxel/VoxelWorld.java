@@ -2,8 +2,8 @@ package wraith.library.LWJGL.Voxel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import org.lwjgl.opengl.GL11;
 import wraith.library.LWJGL.Texture;
+import static org.lwjgl.opengl.GL11.*;
 
 public class VoxelWorld{
 	private boolean needsRebatch;
@@ -17,8 +17,10 @@ public class VoxelWorld{
 		this.bounds=bounds;
 	}
 	public VoxelChunk loadChunk(int chunkX, int chunkY, int chunkZ){
-		if(chunkX<bounds.chunkStartX||chunkY<bounds.chunkStartY||chunkZ<bounds.chunkStartZ)return null;
-		if(chunkX>bounds.chunkEndX||chunkY>bounds.chunkEndY||chunkZ>bounds.chunkEndZ)return null;
+		if(bounds!=null){
+			if(chunkX<bounds.chunkStartX||chunkY<bounds.chunkStartY||chunkZ<bounds.chunkStartZ)return null;
+			if(chunkX>bounds.chunkEndX||chunkY>bounds.chunkEndY||chunkZ>bounds.chunkEndZ)return null;
+		}
 		chunk=new VoxelChunk(this, chunkX, chunkY, chunkZ);
 		chunks.add(chunk);
 		worldListener.loadChunk(chunk);
@@ -52,23 +54,33 @@ public class VoxelWorld{
 	public void render(){
 		if(needsRebatch){
 			tempQuads.clear();
-			for(VoxelChunk chunk : chunks)if(worldListener.isChunkVisible(chunk))tempQuads.addAll(chunk.batches);
+			for(int i = 0; i<chunks.size(); i++){
+				chunk=chunks.get(i);
+				if(worldListener.isChunkVisible(chunk)){
+					if(chunk.needsBatchUpdate)chunk.updateBatches();
+					tempQuads.addAll(chunk.batches);
+				}
+			}
 			tempQuads.sort(new Comparator<QuadBatch>(){
 				public int compare(QuadBatch a, QuadBatch b){ return a.getTexture()==b.getTexture()?0:a.getTexture().getId()>b.getTexture().getId()?1:-1; }
 			});
 			needsRebatch=false;
 		}
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		Texture bound = null;
 		for(QuadBatch batch : tempQuads){
 			if(bound!=batch.getTexture()){
-				if(bound!=null)GL11.glEnd();
+				if(bound!=null)glEnd();
 				bound=batch.getTexture();
 				bound.bind();
-				GL11.glBegin(GL11.GL_TRIANGLES);
 			}
 			batch.renderPart();
 		}
-		GL11.glEnd();
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 	public VoxelBlock getBlock(int x, int y, int z){
 		chunk=getContainingChunk(x, y, z);

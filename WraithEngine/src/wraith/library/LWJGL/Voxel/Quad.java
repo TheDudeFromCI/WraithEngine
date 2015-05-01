@@ -7,7 +7,7 @@ public class Quad{
 	final float[] colors;
 	final int[] texturePoints;
 	final float[] loc;
-	public boolean centerPoint;
+	boolean centerPoint;
 	public Quad(float[] points, float[] colors, int rotation){
 		loc=points;
 		this.colors=colors;

@@ -5,6 +5,7 @@ import wraith.library.LWJGL.Texture;
 
 public class VoxelChunk{
 	private boolean open;
+	boolean needsBatchUpdate;
 	private int hidden = 4096;
 	private final VoxelBlock[][][] blocks = new VoxelBlock[16][16][16];
 	public final int chunkX, chunkY, chunkZ;
@@ -34,7 +35,6 @@ public class VoxelChunk{
 	public void optimize(){
 		int x, y, z;
 		for(x=0; x<16; x++)for(y=0; y<16; y++)for(z=0; z<16; z++)optimizeBlock(blocks[x][y][z]);
-		world.setNeedsRebatch();
 	}
 	public void optimizeSide(int side){
 		if(side==0){
@@ -61,7 +61,6 @@ public class VoxelChunk{
 			int x, y;
 			for(x=0; x<16; x++)for(y=0; y<16; y++)optimizeBlock(blocks[x][y][0], 5, true);
 		}
-		world.setNeedsRebatch();
 	}
 	public void optimizeBlock(VoxelBlock block){
 		if(block==null)return;
@@ -76,12 +75,19 @@ public class VoxelChunk{
 		if(block==null)return;
 		open=block.chunk.isNeighborOpen(block, side);
 		if(open!=block.isSideShown(side)){
+			block.chunk.setNeedsRebatch();
 			block.showSide(side, open);
 			if(open)block.chunk.getBatch(block.type.getTexture(side)).addQuad(block.getQuad(side));
 			else block.chunk.getBatch(block.type.getTexture(side)).removeQuad(block.getQuad(side));
-			world.setNeedsRebatch();
 		}
-		if(updateShadows)block.quads[side].centerPoint=block.type.setupShadows(block.quads[side].colors, side, block.x, block.y, block.z);
+		if(updateShadows){
+			block.quads[side].centerPoint=block.type.setupShadows(block.quads[side].colors, side, block.x, block.y, block.z);
+			block.chunk.setNeedsRebatch();
+		}
+	}
+	private void setNeedsRebatch(){
+		needsBatchUpdate=true;
+		world.setNeedsRebatch();
 	}
 	private void optimizeAroundBlock(int x, int y, int z){
 		int startX = x-1;
@@ -106,7 +112,7 @@ public class VoxelChunk{
 		blocks[x][y][z]=null;
 	}
 	public VoxelBlock setBlock(int x, int y, int z, BlockType type){
-		world.setNeedsRebatch();
+		setNeedsRebatch();
 		removeBlock(x&15, y&15, z&15);
 		if(type!=null){
 			VoxelBlock block = createBlock(x, y, z, type);
@@ -118,12 +124,12 @@ public class VoxelChunk{
 		return null;
 	}
 	private boolean isNeighborOpen(VoxelBlock block, int side){
-		if(side==0)return block.x<world.bounds.endX&&getQuickBlock(block.x+1, block.y, block.z)==null;
-		if(side==1)return block.x>world.bounds.startX&&getQuickBlock(block.x-1, block.y, block.z)==null;
-		if(side==2)return block.y<world.bounds.endY&&getQuickBlock(block.x, block.y+1, block.z)==null;
-		if(side==3)return block.y>world.bounds.startY&&getQuickBlock(block.x, block.y-1, block.z)==null;
-		if(side==4)return block.z<world.bounds.endZ&&getQuickBlock(block.x, block.y, block.z+1)==null;
-		if(side==5)return block.z>world.bounds.startZ&&getQuickBlock(block.x, block.y, block.z-1)==null;
+		if(side==0)return (world.bounds==null||block.x<world.bounds.endX)&&getQuickBlock(block.x+1, block.y, block.z)==null;
+		if(side==1)return (world.bounds==null||block.x>world.bounds.startX)&&getQuickBlock(block.x-1, block.y, block.z)==null;
+		if(side==2)return (world.bounds==null||block.y<world.bounds.endY)&&getQuickBlock(block.x, block.y+1, block.z)==null;
+		if(side==3)return (world.bounds==null||block.y>world.bounds.startY)&&getQuickBlock(block.x, block.y-1, block.z)==null;
+		if(side==4)return (world.bounds==null||block.z<world.bounds.endZ)&&getQuickBlock(block.x, block.y, block.z+1)==null;
+		if(side==5)return (world.bounds==null||block.z>world.bounds.startZ)&&getQuickBlock(block.x, block.y, block.z-1)==null;
 		return true;
 	}
 	private QuadBatch getBatch(Texture texture){
@@ -132,14 +138,17 @@ public class VoxelChunk{
 			batch=batches.get(i);
 			if(batch.getTexture()==texture)return batch;
 		}
-		batch=new QuadBatch();
-		batch.setTexture(texture);
+		batch=new QuadBatch(texture);
 		batches.add(batch);
 		return batch;
 	}
 	private VoxelBlock getQuickBlock(int x, int y, int z){
 		if(x<startX||y<startY||z<startZ||x>endX||y>endY||z>endZ)return world.getBlock(x, y, z, false);
 		return getBlock(x, y, z);
+	}
+	void updateBatches(){
+		for(int i = 0; i<batches.size(); i++)batches.get(i).recompileBuffer();
+		needsBatchUpdate=false;
 	}
 	void addHidden(){ hidden++; }
 	void removeHidden(){ hidden--; }
