@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 public class GuiImage extends GuiComponent{
 	protected Dimension size = new Dimension();
 	protected Point location = new Point();
-	private BufferedImage buf;
+	protected BufferedImage buf;
 	private boolean stretch;
 	public GuiImage(GuiContainer parent, BufferedImage buf, boolean stretch){
 		super(parent, buf.getWidth(), buf.getHeight());
