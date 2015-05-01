@@ -1,5 +1,6 @@
 package wraith.library.WindowUtil.GUI;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,6 +27,7 @@ public abstract class GuiComponent implements UserInputListener{
 		this.bufferHeight=bufferHeight;
 		staticImage=ImageUtil.getBestFormat(bufferWidth, bufferHeight);
 		g=staticImage.createGraphics();
+		g.setBackground(new Color(0, 0, 0, 0));
 	}
 	public void setSizeAndLocation(int x, int y, int width, int height){
 		this.x=x;
