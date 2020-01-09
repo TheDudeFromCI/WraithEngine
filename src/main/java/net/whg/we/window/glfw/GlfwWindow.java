@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 import net.whg.we.window.IWindow;
