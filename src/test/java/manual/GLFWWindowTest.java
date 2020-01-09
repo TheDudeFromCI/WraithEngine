@@ -1,6 +1,7 @@
 package manual;
 
 import org.lwjgl.glfw.GLFW;
+import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.WindowSettings;
@@ -31,8 +32,13 @@ public class GLFWWindowTest
             }
         });
 
+        IScreenClearHandler screenClear = window.getRenderingEngine()
+                                                .getScreenClearHandler();
         while (running)
+        {
+            screenClear.clearScreen();
             window.pollEvents();
+        }
 
         window.dispose();
     }

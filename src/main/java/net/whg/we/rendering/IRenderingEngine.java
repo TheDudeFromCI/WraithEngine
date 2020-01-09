@@ -7,4 +7,11 @@ import net.whg.we.util.IDisposable;
  * of all visuals within the engine.
  */
 public interface IRenderingEngine extends IDisposable
-{}
+{
+    /**
+     * Gets the handler in charge of clearing the screen.
+     * 
+     * @return The handler.
+     */
+    IScreenClearHandler getScreenClearHandler();
+}
