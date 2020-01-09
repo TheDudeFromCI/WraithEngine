@@ -1,4 +1,4 @@
-package net.whg.we.window;
+package net.whg.we.rendering;
 
 import net.whg.we.util.IDisposable;
 
@@ -7,6 +7,4 @@ import net.whg.we.util.IDisposable;
  * of all visuals within the engine.
  */
 public interface IRenderingEngine extends IDisposable
-{
-
-}
+{}

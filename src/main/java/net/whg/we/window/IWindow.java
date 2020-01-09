@@ -1,5 +1,6 @@
 package net.whg.we.window;
 
+import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.util.IDisposable;
 
 /**

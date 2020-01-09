@@ -7,7 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import net.whg.we.window.IRenderingEngine;
+import net.whg.we.rendering.IRenderingEngine;
+import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowListener;
 import net.whg.we.window.WindowSettings;
@@ -153,8 +154,7 @@ public final class GlfwWindow implements IWindow
      */
     private void initRenderingEngine()
     {
-        // TODO Create render engine
-        GL.createCapabilities();
+        renderingEngine = new OpenGLRenderingEngine();
     }
 
     /**
