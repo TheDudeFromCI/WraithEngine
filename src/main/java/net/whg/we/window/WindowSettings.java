@@ -17,6 +17,35 @@ public class WindowSettings
     private int samples = 1;
 
     /**
+     * Creates a new window settings object with the default window properties
+     * assigned.
+     * <p>
+     * <ul>
+     * <li>Title: "Untitled"</li>
+     * <li>Width: 800</li>
+     * <li>Height: 600</li>
+     * <li>Fullscreen: false</li>
+     * <li>VSync: false</li>
+     * <li>Resizable: false</li>
+     * <li>Samples-Per-Pixel: 1</li>
+     * </ul>
+     */
+    public WindowSettings()
+    {}
+
+    /**
+     * Creates a new window settings container with the properties copied from
+     * another object. Useful for cloning a window settings object.
+     * 
+     * @param toClone
+     *     - The object to uuse the properties from.
+     */
+    public WindowSettings(WindowSettings toClone)
+    {
+        set(toClone);
+    }
+
+    /**
      * Gets the title property of this window settings container.
      * 
      * @return The title.
@@ -256,5 +285,23 @@ public class WindowSettings
     public float getAspectRation()
     {
         return (float) width / height;
+    }
+
+    /**
+     * Sets the properties of this window settings container to match that of
+     * another window settings container object.
+     * 
+     * @param settings
+     *     - The object to copy the settings from.
+     */
+    public void set(WindowSettings settings)
+    {
+        title = settings.title;
+        width = settings.width;
+        height = settings.height;
+        fullscreen = settings.fullscreen;
+        vsync = settings.vsync;
+        resizable = settings.resizable;
+        samples = settings.samples;
     }
 }

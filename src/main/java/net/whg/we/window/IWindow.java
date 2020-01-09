@@ -54,4 +54,12 @@ public interface IWindow extends IDisposable
      *     - The listener to remove.
      */
     void removeWindowListener(IWindowListener listener);
+
+    /**
+     * This function is used to poll events currently queued by the window. Calling
+     * this method will trigger all events and pass them to all attached window
+     * listeners. This method must be called on the main thread at the end of each
+     * frame.
+     */
+    void pollEvents();
 }

@@ -2,8 +2,8 @@ package net.whg.we.window;
 
 /**
  * The window listener object receives events from the window handler object as
- * these events occur. It is important to note that these events may not occur
- * on the main thread, and must be synchronized manually.
+ * these events occur. All events are called on the main thread during calls to
+ * the window, such as polling events.
  */
 public interface IWindowListener
 {
