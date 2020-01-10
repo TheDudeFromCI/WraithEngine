@@ -4,18 +4,20 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import net.whg.we.util.IDisposable;
 
 /**
  * A game object is a single entity which exists within the game. A game object
  * is comprised of a set of components which are used to define the object's
  * properties and behavior.
  */
-public class GameObject
+public class GameObject implements IDisposable
 {
     private final List<AbstractBehavior> behaviors = new CopyOnWriteArrayList<>();
     private final UUID uuid;
     private String name = "New GameObject";
     private boolean markedForRemoval;
+    private boolean disposed;
 
     /**
      * Creates a new empty game object with a randomized UUID.
@@ -46,6 +48,9 @@ public class GameObject
      */
     public void setName(String name)
     {
+        if (isDisposed())
+            throw new IllegalStateException("Object already disposed!");
+
         if (name == null)
             throw new IllegalArgumentException("Name cannot be null!");
 
@@ -71,6 +76,9 @@ public class GameObject
      */
     public void addBehavior(AbstractBehavior behavior)
     {
+        if (isDisposed())
+            throw new IllegalStateException("Object already disposed!");
+
         if (behavior == null)
             return;
 
@@ -90,6 +98,9 @@ public class GameObject
      */
     public void removeBehavior(AbstractBehavior behavior)
     {
+        if (isDisposed())
+            throw new IllegalStateException("Object already disposed!");
+
         if (behavior == null)
             return;
 
@@ -163,5 +174,24 @@ public class GameObject
     public int getBehaviorCount()
     {
         return behaviors.size();
+    }
+
+    @Override
+    public void dispose()
+    {
+        if (isDisposed())
+            return;
+
+        disposed = true;
+
+        for (AbstractBehavior behavior : behaviors)
+            behavior.dispose();
+        behaviors.clear();
+    }
+
+    @Override
+    public boolean isDisposed()
+    {
+        return disposed;
     }
 }
