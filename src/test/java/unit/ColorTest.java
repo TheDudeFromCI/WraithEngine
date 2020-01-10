@@ -36,8 +36,6 @@ public class ColorTest
 
         for (int i = 0; i < channels.length; i++)
         {
-            System.out.println(i);
-
             try
             {
                 if (channels[i].length == 3)
