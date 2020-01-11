@@ -1,6 +1,7 @@
 package net.whg.we.rendering.opengl;
 
 import org.lwjgl.opengl.GL;
+import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 
@@ -37,5 +38,17 @@ public class OpenGLRenderingEngine implements IRenderingEngine
     public IScreenClearHandler getScreenClearHandler()
     {
         return screenClearHandler;
+    }
+
+    @Override
+    public IMesh createMesh()
+    {
+        return new GLMesh();
+    }
+
+    @Override
+    public IShader createShader()
+    {
+        return new GLShader();
     }
 }
