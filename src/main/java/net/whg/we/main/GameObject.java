@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import net.whg.we.util.IDisposable;
+import net.whg.we.util.Transform3D;
 
 /**
  * A game object is a single entity which exists within the game. A game object
@@ -14,6 +15,7 @@ import net.whg.we.util.IDisposable;
 public class GameObject implements IDisposable
 {
     private final List<AbstractBehavior> behaviors = new CopyOnWriteArrayList<>();
+    private final Transform3D transform = new Transform3D();
     private final UUID uuid;
     private String name = "New GameObject";
     private boolean markedForRemoval;
@@ -222,5 +224,15 @@ public class GameObject implements IDisposable
 
         for (AbstractBehavior behavior : behaviors)
             behavior.onSceneChange(oldScene, scene);
+    }
+
+    /**
+     * Gets the transformation object used by this game object.
+     * 
+     * @return This object's transformation.
+     */
+    public Transform3D getTransform()
+    {
+        return transform;
     }
 }

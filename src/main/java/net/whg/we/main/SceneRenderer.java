@@ -2,6 +2,7 @@ package net.whg.we.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.whg.we.rendering.Camera;
 
 /**
  * The scene renderer is an object in charge of rendering a scene. This works by
@@ -46,10 +47,13 @@ public class SceneRenderer
     /**
      * When called, this method triggers all render behaviors in this scene renderer
      * to be rendered.
+     * 
+     * @param camera
+     *     - The camera to render the scene with.
      */
-    public void render()
+    public void render(Camera camera)
     {
         for (RenderBehavior behavior : renderedObjects)
-            behavior.render();
+            behavior.render(camera);
     }
 }

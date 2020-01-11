@@ -58,16 +58,13 @@ public class Material
         shader.bind();
     }
 
-    public void setMVProperty(Camera camera, Matrix4f matrix)
+    public void setCameraMatrix(Camera camera, Matrix4f matrix)
     {
         projectionMatrix.set(camera.getProjectionMatrix());
 
         camera.getTransform()
               .getFullMatrix(viewMatrix);
         viewMatrix.invert();
-
-        matrix.get(matrixFloatBuffer);
-        shader.setUniformMat4("_mMat", matrixFloatBuffer);
 
         mvpMatrix.set(projectionMatrix);
         mvpMatrix.mul(viewMatrix);

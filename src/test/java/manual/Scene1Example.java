@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 import net.whg.we.main.GameLoop;
 import net.whg.we.main.GameObject;
@@ -16,7 +16,6 @@ import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
-import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.VertexData;
 import net.whg.we.util.MeshLoader;
 import net.whg.we.window.IWindow;
@@ -80,12 +79,13 @@ public class Scene1Example
         Scene scene = new Scene();
         scene.addGameObject(cube);
 
-        material.setMVProperty(camera, new Matrix4f().rotateXYZ((float) (Math.PI / 5f), (float) (Math.PI / 4f), 0f));
+        cube.getTransform()
+            .setRotation(new Quaternionf(0.5f, 0.5f, 0f, 1f));
 
         GameLoop gameLoop = new GameLoop();
         gameLoop.addAction(() -> screenClear.clearScreen());
         gameLoop.addAction(() -> scene.getRenderer()
-                                      .render());
+                                      .render(camera));
         gameLoop.addAction(() -> window.pollEvents());
 
         gameLoop.addAction(() ->

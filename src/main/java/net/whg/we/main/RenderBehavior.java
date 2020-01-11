@@ -1,5 +1,7 @@
 package net.whg.we.main;
 
+import org.joml.Matrix4f;
+import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 
 /**
@@ -10,6 +12,7 @@ import net.whg.we.rendering.IMesh;
  */
 public class RenderBehavior extends AbstractBehavior
 {
+    private final Matrix4f bufferMatrix = new Matrix4f();
     private IMesh mesh;
     private Material material;
 
@@ -80,14 +83,18 @@ public class RenderBehavior extends AbstractBehavior
      * @throws IllegalStateException
      *     If this behavior was already disposed.
      */
-    void render()
+    void render(Camera camera)
     {
         if (isDisposed())
             throw new IllegalStateException("Behavior already disposed!");
 
         if (canRender())
         {
+            getGameObject().getTransform()
+                           .getFullMatrix(bufferMatrix);
+
             material.bind();
+            material.setCameraMatrix(camera, bufferMatrix);
             mesh.render();
         }
     }
