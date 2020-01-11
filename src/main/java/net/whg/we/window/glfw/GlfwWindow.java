@@ -19,7 +19,28 @@ import net.whg.we.window.WindowSettings;
  */
 public final class GlfwWindow implements IWindow
 {
-    private static boolean WINDOW_PRESENCE = false;
+    private static boolean windowState = false;
+
+    /**
+     * Sets the current state of this window.
+     * 
+     * @param open
+     *     - Wether or not this window is currently open.
+     */
+    private static void setWindowState(boolean open)
+    {
+        windowState = open;
+    }
+
+    /**
+     * Gets the current state of this window.
+     * 
+     * @return True if this window is open. False otherwise.
+     */
+    private static boolean getWindowState()
+    {
+        return windowState;
+    }
 
     private final List<IWindowListener> listeners = new CopyOnWriteArrayList<>();
     private final WindowSettings settings = new WindowSettings();
@@ -57,7 +78,7 @@ public final class GlfwWindow implements IWindow
         glfwSetErrorCallback(null).free();
 
         disposed = true;
-        WINDOW_PRESENCE = false;
+        setWindowState(false);
 
         for (IWindowListener listener : listeners)
             listener.onWindowDestroyed(this);
@@ -104,10 +125,10 @@ public final class GlfwWindow implements IWindow
      */
     private boolean doesWindowExist()
     {
-        if (WINDOW_PRESENCE)
+        if (getWindowState())
             return true;
 
-        WINDOW_PRESENCE = true;
+        setWindowState(true);
         return false;
     }
 
@@ -123,10 +144,7 @@ public final class GlfwWindow implements IWindow
         if (this.settings.isFullscreen() != settings.isFullscreen())
             return false;
 
-        if (this.settings.getSamples() != settings.getSamples())
-            return false;
-
-        return true;
+        return this.settings.getSamples() != settings.getSamples();
     }
 
     /**
