@@ -86,7 +86,10 @@ public class RenderBehavior extends AbstractBehavior
             throw new IllegalStateException("Behavior already disposed!");
 
         if (canRender())
+        {
+            material.bind();
             mesh.render();
+        }
     }
 
     @Override
@@ -120,9 +123,12 @@ public class RenderBehavior extends AbstractBehavior
         if (isDisposed())
             return;
 
-        oldScene.getRenderer()
-                .removeRenderedObject(this);
-        newScene.getRenderer()
-                .addRenderedObject(this);
+        if (oldScene != null)
+            oldScene.getRenderer()
+                    .removeRenderedObject(this);
+
+        if (newScene != null)
+            newScene.getRenderer()
+                    .addRenderedObject(this);
     }
 }

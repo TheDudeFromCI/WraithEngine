@@ -1,13 +1,14 @@
 package net.whg.we.rendering.opengl;
 
 import static org.lwjgl.opengl.GL30.*;
+import java.nio.FloatBuffer;
 import org.lwjgl.opengl.GL32;
 import net.whg.we.rendering.IShader;
 
 public class GLShader implements IShader
 {
     private final BindStates bindStates;
-    private int _shaderId;
+    private int shaderId;
     private boolean disposed;
     private boolean created;
 
@@ -19,7 +20,7 @@ public class GLShader implements IShader
     @Override
     public void bind()
     {
-        bindStates.bindShader(_shaderId);
+        bindStates.bindShader(shaderId);
     }
 
     @Override
@@ -43,10 +44,10 @@ public class GLShader implements IShader
      */
     private void destroyShader()
     {
-        if (bindStates.getBoundShader() == _shaderId)
+        if (bindStates.getBoundShader() == shaderId)
             bindStates.bindShader(0);
 
-        glDeleteProgram(_shaderId);
+        glDeleteProgram(shaderId);
     }
 
     @Override
@@ -93,17 +94,17 @@ public class GLShader implements IShader
             throw new GLException("Failed to compiled fragment shader! '" + logMessage + "'");
         }
 
-        _shaderId = glCreateProgram();
-        glAttachShader(_shaderId, vId);
+        shaderId = glCreateProgram();
+        glAttachShader(shaderId, vId);
         if (gId != -1)
-            glAttachShader(_shaderId, gId);
-        glAttachShader(_shaderId, fId);
+            glAttachShader(shaderId, gId);
+        glAttachShader(shaderId, fId);
 
-        glLinkProgram(_shaderId);
+        glLinkProgram(shaderId);
 
-        if (glGetProgrami(_shaderId, GL_LINK_STATUS) != GL_TRUE)
+        if (glGetProgrami(shaderId, GL_LINK_STATUS) != GL_TRUE)
         {
-            String logMessage = glGetProgramInfoLog(_shaderId);
+            String logMessage = glGetProgramInfoLog(shaderId);
             throw new GLException("Failed to link shader program! '" + logMessage + "'");
         }
 
@@ -111,5 +112,14 @@ public class GLShader implements IShader
         if (gId != -1)
             glDeleteShader(gId);
         glDeleteShader(fId);
+    }
+
+    @Override
+    public void setUniformMat4(String property, FloatBuffer value)
+    {
+        bind();
+
+        int loc = glGetUniformLocation(shaderId, property);
+        glUniformMatrix4fv(loc, false, value);
     }
 }

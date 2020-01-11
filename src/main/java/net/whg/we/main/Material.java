@@ -1,5 +1,9 @@
 package net.whg.we.main;
 
+import java.nio.FloatBuffer;
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
+import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IShader;
 
 /**
@@ -9,6 +13,10 @@ import net.whg.we.rendering.IShader;
 public class Material
 {
     private final IShader shader;
+    private final FloatBuffer matrixFloatBuffer;
+    private final Matrix4f projectionMatrix = new Matrix4f();
+    private final Matrix4f viewMatrix = new Matrix4f();
+    private final Matrix4f mvpMatrix = new Matrix4f();
 
     /**
      * Creates a new material object.
@@ -27,6 +35,7 @@ public class Material
             throw new IllegalArgumentException("Shader already disposed!");
 
         this.shader = shader;
+        matrixFloatBuffer = BufferUtils.createFloatBuffer(16);
     }
 
     /**
@@ -47,5 +56,23 @@ public class Material
     public void bind()
     {
         shader.bind();
+    }
+
+    public void setMVProperty(Camera camera, Matrix4f matrix)
+    {
+        projectionMatrix.set(camera.getProjectionMatrix());
+
+        camera.getTransform()
+              .getFullMatrix(viewMatrix);
+        viewMatrix.invert();
+
+        matrix.get(matrixFloatBuffer);
+        shader.setUniformMat4("_mMat", matrixFloatBuffer);
+
+        mvpMatrix.set(projectionMatrix);
+        mvpMatrix.mul(viewMatrix);
+        mvpMatrix.mul(matrix);
+        mvpMatrix.get(matrixFloatBuffer);
+        shader.setUniformMat4("_mvpMat", matrixFloatBuffer);
     }
 }

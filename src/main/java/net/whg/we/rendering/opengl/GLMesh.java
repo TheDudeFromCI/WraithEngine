@@ -105,5 +105,7 @@ public class GLMesh implements IMesh
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         glBindVertexArray(0);
+
+        created = true;
     }
 }

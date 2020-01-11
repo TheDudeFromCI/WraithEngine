@@ -17,8 +17,10 @@ public class GameLoop
      * Adds a new loop action to this game loop. When a loop action is first added,
      * all actions in this game loop are sorted based on their priority, such that,
      * actions with a lower priority are executed first and actions with a higher
-     * priority are executed last. This method does nothing if the loop action is
-     * null or is already in this game loop.
+     * priority are executed last. The sorter used is a stable sorter, allowing
+     * actions of the same priority to remain in the same order that they were added
+     * in. This method does nothing if the loop action is null or is already in this
+     * game loop.
      * <p>
      * If this game loop is currently running, modifying game loop actions applies
      * on the next frame.

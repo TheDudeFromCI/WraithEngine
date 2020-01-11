@@ -1,5 +1,6 @@
 package net.whg.we.rendering;
 
+import java.nio.FloatBuffer;
 import net.whg.we.util.IDisposable;
 
 /**
@@ -32,4 +33,14 @@ public interface IShader extends IDisposable
      *     If vertShader or fragShader is null.
      */
     void compile(String vertShader, String geoShader, String fragShader);
+
+    /**
+     * Assigns a property to this shader in the form of a 4x4 matrix.
+     * 
+     * @param property
+     *     - The property name.
+     * @param value
+     *     - The matrix values.
+     */
+    void setUniformMat4(String property, FloatBuffer value);
 }
