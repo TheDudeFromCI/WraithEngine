@@ -14,11 +14,9 @@ import java.util.Arrays;
  */
 public class ShaderAttributes implements Externalizable
 {
-    private static final int FILE_VERSION = 1;
-
-    private String[] _attribNames;
-    private int[] _attribSizes;
-    private int _count;
+    private String[] attribNames;
+    private int[] attribSizes;
+    private int count;
     private int _vertexSize;
 
     /**
@@ -39,8 +37,8 @@ public class ShaderAttributes implements Externalizable
      */
     public ShaderAttributes(int bufferSize)
     {
-        _attribNames = new String[bufferSize];
-        _attribSizes = new int[bufferSize];
+        attribNames = new String[bufferSize];
+        attribSizes = new int[bufferSize];
     }
 
     /**
@@ -50,7 +48,7 @@ public class ShaderAttributes implements Externalizable
      */
     public int getCount()
     {
-        return _count;
+        return count;
     }
 
     /**
@@ -73,10 +71,10 @@ public class ShaderAttributes implements Externalizable
      */
     public String getAttributeName(int index)
     {
-        if (index < 0 || index >= _count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + _count + ")");
+        if (index < 0 || index >= count)
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
 
-        return _attribNames[index];
+        return attribNames[index];
     }
 
     /**
@@ -88,10 +86,10 @@ public class ShaderAttributes implements Externalizable
      */
     public int getAttributeSize(int index)
     {
-        if (index < 0 || index >= _count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + _count + ")");
+        if (index < 0 || index >= count)
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
 
-        return _attribSizes[index];
+        return attribSizes[index];
     }
 
     /**
@@ -112,25 +110,25 @@ public class ShaderAttributes implements Externalizable
         if (size > 4)
             throw new IllegalArgumentException("Attribute sizes must 4 or lower!");
 
-        if (_count + 1 >= _attribNames.length)
+        if (count + 1 >= attribNames.length)
         {
-            String[] newNames = new String[_attribNames.length + 4];
+            String[] newNames = new String[attribNames.length + 4];
             int[] newSizes = new int[newNames.length];
 
-            for (int i = 0; i < _attribNames.length; i++)
+            for (int i = 0; i < attribNames.length; i++)
             {
-                newNames[i] = _attribNames[i];
-                newSizes[i] = _attribSizes[i];
+                newNames[i] = attribNames[i];
+                newSizes[i] = attribSizes[i];
             }
 
-            _attribNames = newNames;
-            _attribSizes = newSizes;
+            attribNames = newNames;
+            attribSizes = newSizes;
         }
 
-        _attribNames[_count] = name;
-        _attribSizes[_count] = size;
+        attribNames[count] = name;
+        attribSizes[count] = size;
 
-        _count++;
+        count++;
         _vertexSize += size;
     }
 
@@ -143,17 +141,17 @@ public class ShaderAttributes implements Externalizable
      */
     public void removeAttribute(int index)
     {
-        if (index < 0 || index >= _count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + _count + ")");
+        if (index < 0 || index >= count)
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
 
-        _vertexSize -= _attribSizes[index];
-        for (int i = index; i < _count; i++)
+        _vertexSize -= attribSizes[index];
+        for (int i = index; i < count; i++)
         {
-            _attribNames[i] = _attribNames[i + 1];
-            _attribSizes[i] = _attribSizes[i + 1];
+            attribNames[i] = attribNames[i + 1];
+            attribSizes[i] = attribSizes[i + 1];
         }
 
-        _count--;
+        count--;
     }
 
     /**
@@ -182,7 +180,7 @@ public class ShaderAttributes implements Externalizable
         if (index == -1)
             return -1;
 
-        return _attribSizes[index];
+        return attribSizes[index];
     }
 
     /**
@@ -196,8 +194,8 @@ public class ShaderAttributes implements Externalizable
      */
     public int indexOf(String attrib)
     {
-        for (int i = 0; i < _count; i++)
-            if (_attribNames[i].equals(attrib))
+        for (int i = 0; i < count; i++)
+            if (attribNames[i].equals(attrib))
                 return i;
         return -1;
     }
@@ -231,48 +229,37 @@ public class ShaderAttributes implements Externalizable
      */
     public int getPositionInVertex(int index)
     {
-        if (index < 0 || index >= _count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + _count + ")");
+        if (index < 0 || index >= count)
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
 
         int t = 0;
         for (int i = 0; i < index; i++)
-            t += _attribSizes[i];
+            t += attribSizes[i];
         return t;
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException
     {
-        out.writeInt(FILE_VERSION);
-        out.writeObject(_attribNames);
-        out.writeObject(_attribSizes);
+        out.writeObject(attribNames);
+        out.writeObject(attribSizes);
         out.writeInt(_vertexSize);
-        out.writeInt(_count);
+        out.writeInt(count);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
-        int fileVersion = in.readInt();
-
-        switch (fileVersion)
-        {
-            case 1:
-                _attribNames = (String[]) in.readObject();
-                _attribSizes = (int[]) in.readObject();
-                _vertexSize = in.readInt();
-                _count = in.readInt();
-                return;
-
-            default:
-                throw new IllegalStateException("Unknown file version: " + fileVersion + "!");
-        }
+        attribNames = (String[]) in.readObject();
+        attribSizes = (int[]) in.readObject();
+        _vertexSize = in.readInt();
+        count = in.readInt();
     }
 
     @Override
     public int hashCode()
     {
-        return _attribNames.hashCode() ^ _attribSizes.hashCode();
+        return attribNames.hashCode() ^ attribSizes.hashCode();
     }
 
     @Override
@@ -282,7 +269,7 @@ public class ShaderAttributes implements Externalizable
             return false;
 
         ShaderAttributes o = (ShaderAttributes) obj;
-        return _count == o._count && Arrays.equals(_attribSizes, o._attribSizes)
-                && Arrays.equals(_attribNames, o._attribNames);
+        return count == o.count && Arrays.equals(attribSizes, o.attribSizes)
+                && Arrays.equals(attribNames, o.attribNames);
     }
 }

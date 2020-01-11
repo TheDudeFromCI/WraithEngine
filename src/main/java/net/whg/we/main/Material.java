@@ -58,6 +58,15 @@ public class Material
         shader.bind();
     }
 
+    /**
+     * Assigns the model-view-projection matrix to the shader to render the next
+     * object with.
+     * 
+     * @param camera
+     *     - The camera which is rendering the scene.
+     * @param matrix
+     *     - The full transformation matrix of the object being rendered.
+     */
     public void setCameraMatrix(Camera camera, Matrix4f matrix)
     {
         projectionMatrix.set(camera.getProjectionMatrix());

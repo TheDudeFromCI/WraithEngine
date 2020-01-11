@@ -5,23 +5,21 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
- * Represents a standard, 3D variation of the transform interface.
- *
- * @author TheDudeFromCI
+ * Represents a standard tranformation object in 3D space. It is used to allow
+ * simple transformations, (position, rotation, and scale) to be used and
+ * calculated as needed into a transformation matrix.
  */
 public class Transform3D
 {
     private Transform3D parent;
 
-    // Fields
-    private Vector3f _position = new Vector3f();
-    private Quaternionf _rotation = new Quaternionf();
-    private Vector3f _size = new Vector3f(1f, 1f, 1f);
+    private Vector3f position = new Vector3f();
+    private Quaternionf rotation = new Quaternionf();
+    private Vector3f size = new Vector3f(1f, 1f, 1f);
 
-    // Temp
-    private Matrix4f _matrixBuffer = new Matrix4f();
-    private Vector3f _vectorBuffer = new Vector3f();
-    private Quaternionf _quaternionBuffer = new Quaternionf();
+    private Matrix4f matrixBuffer = new Matrix4f();
+    private Vector3f vectorBuffer = new Vector3f();
+    private Quaternionf quaternionBuffer = new Quaternionf();
 
     /**
      * Gets the position of this transform in 3D space.
@@ -30,7 +28,7 @@ public class Transform3D
      */
     public Vector3f getPosition()
     {
-        return _position;
+        return position;
     }
 
     /**
@@ -41,7 +39,7 @@ public class Transform3D
      */
     public void setPosition(Vector3f position)
     {
-        _position.set(position);
+        this.position.set(position);
     }
 
     /**
@@ -56,7 +54,7 @@ public class Transform3D
      */
     public void setPosition(float x, float y, float z)
     {
-        _position.set(x, y, z);
+        position.set(x, y, z);
     }
 
     /**
@@ -66,7 +64,7 @@ public class Transform3D
      */
     public Vector3f getSize()
     {
-        return _size;
+        return size;
     }
 
     /**
@@ -77,7 +75,7 @@ public class Transform3D
      */
     public void setSize(Vector3f size)
     {
-        _size.set(size);
+        this.size.set(size);
     }
 
     /**
@@ -88,7 +86,7 @@ public class Transform3D
      */
     public void setSize(float size)
     {
-        _size.set(size, size, size);
+        this.size.set(size, size, size);
     }
 
     /**
@@ -103,7 +101,7 @@ public class Transform3D
      */
     public void setSize(float x, float y, float z)
     {
-        _size.set(x, y, z);
+        size.set(x, y, z);
     }
 
     /**
@@ -113,7 +111,7 @@ public class Transform3D
      */
     public Quaternionf getRotation()
     {
-        return _rotation;
+        return rotation;
     }
 
     /**
@@ -124,17 +122,36 @@ public class Transform3D
      */
     public void setRotation(Quaternionf rot)
     {
-        _rotation.set(rot);
+        rotation.set(rot);
     }
 
+    /**
+     * Calculates the local matrix for this transform, and stores it in the output
+     * matrix parameter.
+     *
+     * @param out
+     *     - The matrix to store the output into.
+     */
     public void getLocalMatrix(Matrix4f out)
     {
         out.identity();
-        out.translate(_position);
-        out.rotate(_rotation);
-        out.scale(_size);
+        out.translate(position);
+        out.rotate(rotation);
+        out.scale(size);
     }
 
+    /**
+     * Calculates the full matrix for this transform and stores it in the output
+     * matrix parameter. A full transform is considered:
+     * <p>
+     * <code>out = parent * local</code>
+     * <p>
+     * for the given transforms. If this transform does not have a parent, then this
+     * method returns the local transformation matrix.
+     *
+     * @param out
+     *     - The matrix to store the output into.
+     */
     public void getFullMatrix(Matrix4f out)
     {
         if (parent == null)
@@ -143,21 +160,11 @@ public class Transform3D
             return;
         }
 
-        parent.getFullMatrix(_matrixBuffer);
-        getFullMatrix(_matrixBuffer, out);
-    }
+        parent.getFullMatrix(matrixBuffer);
+        out.set(matrixBuffer);
 
-    private void getFullMatrix(Matrix4f parent, Matrix4f out)
-    {
-        if (parent == null)
-        {
-            getLocalMatrix(out);
-            return;
-        }
-
-        out.set(parent);
-        getLocalMatrix(_matrixBuffer);
-        out.mul(_matrixBuffer);
+        getLocalMatrix(matrixBuffer);
+        out.mul(matrixBuffer);
     }
 
     /**
@@ -169,15 +176,15 @@ public class Transform3D
     public void getInverseMatrix(Matrix4f out)
     {
         out.identity();
-        out.rotate(_rotation.invert(_quaternionBuffer));
-        out.translate(_position.negate(_vectorBuffer));
-        out.scale(_size.negate(_vectorBuffer));
+        out.rotate(rotation.invert(quaternionBuffer));
+        out.translate(position.negate(vectorBuffer));
+        out.scale(size.negate(vectorBuffer));
     }
 
     @Override
     public int hashCode()
     {
-        return _position.hashCode() ^ _rotation.hashCode() ^ _size.hashCode();
+        return position.hashCode() ^ rotation.hashCode() ^ size.hashCode();
     }
 
     @Override
@@ -187,6 +194,31 @@ public class Transform3D
             return false;
 
         Transform3D o = (Transform3D) obj;
-        return _position.equals(o._position) && _rotation.equals(o._rotation) && _size.equals(o._size);
+        return position.equals(o.position) && rotation.equals(o.rotation) && size.equals(o.size);
+    }
+
+    /**
+     * Gets the parent transformation for this object. When calculating the
+     * transformation matrix, this object's transformation is influenced by the
+     * parent's transformation.
+     * 
+     * @return The parent transformation object, or null if this transformation has
+     *     no parent.
+     */
+    public Transform3D getParent()
+    {
+        return parent;
+    }
+
+    /**
+     * Assigned a new parent transformation for this object.
+     * 
+     * @param parent
+     *     - The new parent transformation object, or null to remove this
+     *     transformation's parent.
+     */
+    public void setParent(Transform3D parent)
+    {
+        this.parent = parent;
     }
 }

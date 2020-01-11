@@ -35,12 +35,15 @@ public interface IShader extends IDisposable
     void compile(String vertShader, String geoShader, String fragShader);
 
     /**
-     * Assigns a property to this shader in the form of a 4x4 matrix.
+     * Assigns a property to this shader in the form of a 4x4 matrix. May also be
+     * used to assign an array of matrix values.
      * 
      * @param property
      *     - The property name.
      * @param value
      *     - The matrix values.
+     * @throws IllegalArgumentException
+     *     If the float buffer has a length which is not an increment of 16.
      */
     void setUniformMat4(String property, FloatBuffer value);
 }
