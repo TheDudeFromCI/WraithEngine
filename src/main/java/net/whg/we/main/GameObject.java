@@ -108,6 +108,7 @@ public class GameObject implements IDisposable
             return;
 
         behaviors.remove(behavior);
+        behavior.dispose();
     }
 
     /**

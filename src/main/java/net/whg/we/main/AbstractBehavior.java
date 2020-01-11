@@ -54,7 +54,7 @@ public abstract class AbstractBehavior implements IDisposable
     }
 
     @Override
-    public boolean isDisposed()
+    public final boolean isDisposed()
     {
         return disposed;
     }
