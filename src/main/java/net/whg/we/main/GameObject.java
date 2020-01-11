@@ -18,6 +18,7 @@ public class GameObject implements IDisposable
     private String name = "New GameObject";
     private boolean markedForRemoval;
     private boolean disposed;
+    private Scene scene;
 
     /**
      * Creates a new empty game object with a randomized UUID.
@@ -187,11 +188,39 @@ public class GameObject implements IDisposable
         for (AbstractBehavior behavior : behaviors)
             behavior.dispose();
         behaviors.clear();
+
+        scene = null;
     }
 
     @Override
     public boolean isDisposed()
     {
         return disposed;
+    }
+
+    /**
+     * Gets the scene this object currently exists within.
+     * 
+     * @return The scene this object is in, or null if this object is not in a
+     *     scene.
+     */
+    public Scene getScene()
+    {
+        return scene;
+    }
+
+    /**
+     * Sets the scene this object is in.
+     * 
+     * @param scene
+     *     - The new scene this object is in.
+     */
+    void setScene(Scene scene)
+    {
+        Scene oldScene = this.scene;
+        this.scene = scene;
+
+        for (AbstractBehavior behavior : behaviors)
+            behavior.onSceneChange(oldScene, scene);
     }
 }

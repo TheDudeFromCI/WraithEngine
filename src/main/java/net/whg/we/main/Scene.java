@@ -12,6 +12,7 @@ public class Scene
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
     private final List<GameObject> public_gameObjects = Collections.unmodifiableList(gameObjects);
+    private final SceneRenderer renderer = new SceneRenderer();
 
     /**
      * Adds a new game object to this scene. This method does nothing if the game
@@ -25,6 +26,7 @@ public class Scene
         if (gameObject == null)
             return;
 
+        gameObject.setScene(this);
         if (!gameObjects.contains(gameObject))
             gameObjects.add(gameObject);
     }
@@ -41,6 +43,7 @@ public class Scene
         if (gameObject == null)
             return;
 
+        gameObject.setScene(null);
         gameObjects.remove(gameObject);
     }
 
@@ -53,7 +56,7 @@ public class Scene
     {
         for (GameObject gameObject : gameObjects)
             if (gameObject.isMarkedForRemoval())
-                gameObjects.remove(gameObject);
+                removeGameObject(gameObject);
     }
 
     /**
@@ -64,5 +67,15 @@ public class Scene
     public List<GameObject> getGameObjects()
     {
         return public_gameObjects;
+    }
+
+    /**
+     * Gets the object in charge of rendering this scene.
+     * 
+     * @return The scene renderer.
+     */
+    public SceneRenderer getRenderer()
+    {
+        return renderer;
     }
 }

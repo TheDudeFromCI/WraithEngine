@@ -43,14 +43,6 @@ public abstract class AbstractBehavior implements IDisposable
         return gameObject;
     }
 
-    /**
-     * This function is an event which is triggered when this object is first
-     * initialized. It can be used to prepare the behavior. The default
-     * implementation does nothing, and is desgined to be overriden.
-     */
-    protected void onInit()
-    {}
-
     @Override
     public final void dispose()
     {
@@ -68,11 +60,31 @@ public abstract class AbstractBehavior implements IDisposable
     }
 
     /**
+     * This function is an event which is triggered when this object is first
+     * initialized. It can be used to prepare the behavior. The default
+     * implementation does nothing, and is desgined to be overriden.
+     */
+    protected void onInit()
+    {}
+
+    /**
      * This event is triggered when a behavior object is destroyed and needs to be
      * cleaned up. This can occur when the behavior is removed from a game object,
      * or the game object is disposed. The default implementation does nothing, and
      * is desgined to be overriden.
      */
     protected void onDispose()
+    {}
+
+    /**
+     * This event is called when the game object this behavior is attached to
+     * changes scenes.
+     * 
+     * @param oldScene
+     *     - The scene the game object was previously in.
+     * @param newScene
+     *     - The new scene the game object is now in.
+     */
+    protected void onSceneChange(Scene oldScene, Scene newScene)
     {}
 }
