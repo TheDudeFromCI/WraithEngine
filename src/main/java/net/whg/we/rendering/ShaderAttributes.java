@@ -259,7 +259,7 @@ public class ShaderAttributes implements Externalizable
     @Override
     public int hashCode()
     {
-        return attribNames.hashCode() ^ attribSizes.hashCode();
+        return Arrays.hashCode(attribNames) ^ Arrays.hashCode(attribSizes);
     }
 
     @Override

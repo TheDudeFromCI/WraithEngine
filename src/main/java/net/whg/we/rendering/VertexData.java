@@ -141,7 +141,7 @@ public class VertexData implements Externalizable
     @Override
     public int hashCode()
     {
-        return data.hashCode() ^ triangles.hashCode();
+        return Arrays.hashCode(data) ^ Arrays.hashCode(triangles);
     }
 
     @Override
