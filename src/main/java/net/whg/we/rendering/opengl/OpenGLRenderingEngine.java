@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
+import net.whg.we.rendering.IShader;
 
 /**
  * This is the basic OpenGL implementation of the rendering engine. It uses
@@ -11,6 +12,7 @@ import net.whg.we.rendering.IScreenClearHandler;
  */
 public class OpenGLRenderingEngine implements IRenderingEngine
 {
+    private final BindStates bindStates = new BindStates();
     private final IScreenClearHandler screenClearHandler;
     private boolean disposed;
 
@@ -49,6 +51,6 @@ public class OpenGLRenderingEngine implements IRenderingEngine
     @Override
     public IShader createShader()
     {
-        return new GLShader();
+        return new GLShader(bindStates);
     }
 }
