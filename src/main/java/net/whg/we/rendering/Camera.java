@@ -28,7 +28,8 @@ public class Camera
      */
     private void rebuildProjectionMatrix()
     {
-        // float aspect = (float) Screen.width() / Screen.height();
+        // TODO Get actual screen size.
+
         float aspect = 4f / 3f;
 
         projectionMatrix.identity();

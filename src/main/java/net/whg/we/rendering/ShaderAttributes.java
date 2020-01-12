@@ -14,6 +14,76 @@ import java.util.Arrays;
  */
 public class ShaderAttributes implements Externalizable
 {
+    /**
+     * A simple utility method for calculating the name of an attribute in which
+     * multiple attributes of the same type are required. Such as: uv, uv2, uv3,
+     * etc.
+     * <p>
+     * Additional attributes, after the first, can also be created by using the
+     * format <code>attribute + id</code>, where id is the index of the uv coords.
+     * 
+     * @param attribute
+     *     - The attribute name.
+     * @param index
+     *     - The index of the attribute.
+     * @return The new attribute name for the given index.
+     */
+    public static String getIndexedAttribute(String attribute, int index)
+    {
+        if (index < 1)
+            throw new IllegalArgumentException("Index must be at least 1!");
+
+        if (attribute == null)
+            throw new IllegalArgumentException("Attribute cannot be null!");
+
+        if (index == 1)
+            return attribute;
+
+        return attribute + index;
+    }
+
+    /**
+     * The position attribute.
+     */
+    public static final String ATTRIB_POSITION = "pos";
+
+    /**
+     * The normal attribute.
+     */
+    public static final String ATTRIB_NORMAL = "normal";
+
+    /**
+     * The uv attribute.
+     */
+    public static final String ATTRIB_UV = "uv";
+
+    /**
+     * The color attribute.
+     */
+    public static final String ATTRIB_COLOR = "color";
+
+    /**
+     * The bone indices attribute. Used for pointing to the bones used on the
+     * vertex.
+     */
+    public static final String ATTRIB_BONE_INDICES = "bone_indices";
+
+    /**
+     * The bone weights attribute. Used for pointing to the bone weights for each
+     * corresponding bone.
+     */
+    public static final String ATTRIB_BONE_WEIGHTS = "bone_weights";
+
+    /**
+     * The tangent attribute.
+     */
+    public static final String ATTRIB_TANGENT = "tangent";
+
+    /**
+     * The bitantent attribute.
+     */
+    public static final String ATTRIB_BITANGENT = "bitangent";
+
     private String[] attribNames;
     private int[] attribSizes;
     private int count;

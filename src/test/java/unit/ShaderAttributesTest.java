@@ -1,5 +1,6 @@
 package unit;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
 import net.whg.we.rendering.ShaderAttributes;
@@ -137,5 +138,26 @@ public class ShaderAttributesTest
         Assert.assertEquals(3, attrib.getPositionInVertex(1));
         Assert.assertEquals(6, attrib.getPositionInVertex(2));
         Assert.assertEquals(8, attrib.getPositionInVertex(3));
+    }
+
+    @Test
+    public void indexedAttributeName()
+    {
+        assertEquals("uv", ShaderAttributes.getIndexedAttribute("uv", 1));
+        assertEquals("uv2", ShaderAttributes.getIndexedAttribute("uv", 2));
+        assertEquals("uv3", ShaderAttributes.getIndexedAttribute("uv", 3));
+        assertEquals("uv99", ShaderAttributes.getIndexedAttribute("uv", 99));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void indexedAttributeName_negativeIndex()
+    {
+        ShaderAttributes.getIndexedAttribute("color", -1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void indexedAttributeName_nullAttribute()
+    {
+        ShaderAttributes.getIndexedAttribute(null, 1);
     }
 }
