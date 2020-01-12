@@ -80,4 +80,14 @@ public class GameLoop
     {
         running = false;
     }
+
+    /**
+     * Gets the number of loop actions currently in this game loop.
+     * 
+     * @return The number of loop actions.
+     */
+    public int getActionCount()
+    {
+        return loopActions.size();
+    }
 }
