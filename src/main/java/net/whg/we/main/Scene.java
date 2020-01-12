@@ -26,9 +26,11 @@ public class Scene
         if (gameObject == null)
             return;
 
+        if (gameObjects.contains(gameObject))
+            return;
+
+        gameObjects.add(gameObject);
         gameObject.setScene(this);
-        if (!gameObjects.contains(gameObject))
-            gameObjects.add(gameObject);
     }
 
     /**
@@ -43,8 +45,8 @@ public class Scene
         if (gameObject == null)
             return;
 
-        gameObject.setScene(null);
         gameObjects.remove(gameObject);
+        gameObject.setScene(null);
     }
 
     /**
