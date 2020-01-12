@@ -1,7 +1,9 @@
-package net.whg.we.util;
+package net.whg.we.resource;
 
 import java.io.File;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIPropertyStore;
@@ -11,12 +13,29 @@ import org.lwjgl.assimp.Assimp;
 import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.VertexData;
 
-public final class MeshLoader
+/**
+ * The model loader is a utilty for loading 3D model file formats.
+ */
+public final class ModelLoader
 {
-    private MeshLoader()
+    private ModelLoader()
     {}
 
-    public static VertexData loadMesh(File file)
+    public static List<IResource<?>> loadScene(File file)
+    {
+        AIScene scene = loadAssimpScene(file);
+
+        List<IResource<?>> resources = new ArrayList<>();
+
+        for (int i = 0; i < scene.mNumMeshes(); i++)
+            resources.add(new VertexDataResource(loadMesh(AIMesh.create(scene.mMeshes()
+                                                                             .get(i)))));
+
+        Assimp.aiReleaseImport(scene);
+        return resources;
+    }
+
+    private static AIScene loadAssimpScene(File file)
     {
         AIPropertyStore settings = Assimp.aiCreatePropertyStore();
         Assimp.aiSetImportPropertyInteger(settings, Assimp.AI_CONFIG_PP_SLM_VERTEX_LIMIT, 65535);
@@ -32,17 +51,10 @@ public final class MeshLoader
         if (scene == null)
             throw new IllegalStateException("Failed to load scene!");
 
-        AIMesh[] meshes = new AIMesh[scene.mNumMeshes()];
-        for (int i = 0; i < meshes.length; i++)
-            meshes[i] = AIMesh.create(scene.mMeshes()
-                                           .get(i));
-
-        VertexData data = loadMesh(meshes[0]);
-        Assimp.aiReleaseImport(scene);
-        return data;
+        return scene;
     }
 
-    public static VertexData loadMesh(AIMesh mesh)
+    private static VertexData loadMesh(AIMesh mesh)
     {
         // Count mesh information
         int boneCount = mesh.mNumBones();
@@ -50,31 +62,26 @@ public final class MeshLoader
         int triCount = mesh.mNumFaces();
 
         ShaderAttributes attributes = new ShaderAttributes();
-        attributes.addAttribute("pos", 3);
-        attributes.addAttribute("normal", 3);
+        attributes.addAttribute(ShaderAttributes.ATTRIB_POSITION, 3);
+        attributes.addAttribute(ShaderAttributes.ATTRIB_NORMAL, 3);
 
         int uvCount = 0;
         while (mesh.mTextureCoords(uvCount) != null)
             uvCount++;
 
         if (mesh.mTangents() != null)
-            attributes.addAttribute("tangent", 3);
+            attributes.addAttribute(ShaderAttributes.ATTRIB_TANGENT, 3);
 
         if (mesh.mBitangents() != null)
-            attributes.addAttribute("bitangent", 3);
+            attributes.addAttribute(ShaderAttributes.ATTRIB_BITANGENT, 3);
 
-        if (uvCount > 0)
-        {
-            attributes.addAttribute("uv", 2);
-
-            for (int i = 2; i <= uvCount; i++)
-                attributes.addAttribute("uv" + i, 2);
-        }
+        for (int i = 1; i <= uvCount; i++)
+            attributes.addAttribute(ShaderAttributes.getIndexedAttribute(ShaderAttributes.ATTRIB_UV, i), 2);
 
         if (boneCount > 0)
         {
-            attributes.addAttribute("bone1", 4);
-            attributes.addAttribute("bone2", 4);
+            attributes.addAttribute(ShaderAttributes.ATTRIB_BONE_INDICES, 4);
+            attributes.addAttribute(ShaderAttributes.ATTRIB_BONE_WEIGHTS, 4);
         }
 
         // Build vertex data array
