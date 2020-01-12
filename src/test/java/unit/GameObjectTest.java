@@ -16,15 +16,7 @@ import net.whg.we.main.Scene;
 public class GameObjectTest
 {
     public class FakeBehaviorA extends AbstractBehavior
-    {
-        int disposeCalled = 0;
-
-        @Override
-        protected void onDispose()
-        {
-            disposeCalled++;
-        }
-    }
+    {}
 
     public class FakeBehaviorB extends AbstractBehavior
     {}
@@ -181,14 +173,23 @@ public class GameObjectTest
     @Test
     public void dispose_twice()
     {
-        FakeBehaviorA behavior = mock(FakeBehaviorA.class);
+        int[] calls = new int[1];
+        AbstractBehavior behavior = new AbstractBehavior()
+        {
+            @Override
+            protected void onDispose()
+            {
+                calls[0]++;
+            }
+        };
+
         GameObject go = new GameObject();
         go.addBehavior(behavior);
 
         go.dispose();
         go.dispose();
 
-        assertEquals(1, behavior.disposeCalled);
+        assertEquals(1, calls[0]);
     }
 
     @Test
