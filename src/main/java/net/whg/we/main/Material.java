@@ -69,6 +69,8 @@ public class Material
      */
     public void setCameraMatrix(Camera camera, Matrix4f matrix)
     {
+        // TODO Refactor this.
+
         projectionMatrix.set(camera.getProjectionMatrix());
 
         camera.getTransform()
