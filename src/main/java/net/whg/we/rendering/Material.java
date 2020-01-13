@@ -76,8 +76,6 @@ public class Material
      */
     public void setCameraMatrix(Camera camera, Matrix4f matrix)
     {
-        shader.bind();
-
         projectionMatrix.set(camera.getProjectionMatrix());
 
         camera.getTransform()
