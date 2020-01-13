@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/TheDudeFromCI/WraithEngine/workflows/Build/badge.svg)](https://github.com/TheDudeFromCI/WraithEngine/actions)
+[![Actions Status](https://github.com/TheDudeFromCI/WraithEngine/workflows/CI/badge.svg)](https://github.com/TheDudeFromCI/WraithEngine/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=alert_status)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=bugs)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=coverage)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
