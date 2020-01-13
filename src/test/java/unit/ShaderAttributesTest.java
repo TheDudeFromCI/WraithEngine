@@ -47,6 +47,8 @@ public class ShaderAttributesTest
         attrib.addAttribute("uv6", 2);
         attrib.addAttribute("uv7", 2);
         attrib.addAttribute("uv8", 2);
+
+        assertEquals(22, attrib.getVertexSize());
     }
 
     @Test

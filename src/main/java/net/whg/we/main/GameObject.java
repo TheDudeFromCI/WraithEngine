@@ -14,6 +14,8 @@ import net.whg.we.util.Transform3D;
  */
 public class GameObject implements IDisposable
 {
+    private static final String OBJECT_DISPOSED = "Object already disposed!";
+
     private final List<AbstractBehavior> behaviors = new CopyOnWriteArrayList<>();
     private final Transform3D transform = new Transform3D();
     private final UUID uuid;
@@ -52,7 +54,7 @@ public class GameObject implements IDisposable
     public void setName(String name)
     {
         if (isDisposed())
-            throw new IllegalStateException("Object already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         if (name == null)
             throw new IllegalArgumentException("Name cannot be null!");
@@ -80,7 +82,7 @@ public class GameObject implements IDisposable
     public void addBehavior(AbstractBehavior behavior)
     {
         if (isDisposed())
-            throw new IllegalStateException("Object already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         if (behavior == null)
             return;
@@ -102,7 +104,7 @@ public class GameObject implements IDisposable
     public void removeBehavior(AbstractBehavior behavior)
     {
         if (isDisposed())
-            throw new IllegalStateException("Object already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         if (behavior == null)
             return;

@@ -3,8 +3,6 @@ package net.whg.we.rendering;
 import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
-import net.whg.we.rendering.Camera;
-import net.whg.we.rendering.IShader;
 
 /**
  * A material is a collection of textures, properties, and a shader which are

@@ -10,6 +10,11 @@ import java.util.Arrays;
  */
 public class ShaderAttributes
 {
+    private static void indexOutOfBounds(int size, int index)
+    {
+        throw new IllegalArgumentException(String.format("Index out of bounds! Size: %d, Actual: %d", size, index));
+    }
+
     /**
      * A simple utility method for calculating the name of an attribute in which
      * multiple attributes of the same type are required. Such as: uv, uv2, uv3,
@@ -138,7 +143,7 @@ public class ShaderAttributes
     public String getAttributeName(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         return attribNames[index];
     }
@@ -153,7 +158,7 @@ public class ShaderAttributes
     public int getAttributeSize(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         return attribSizes[index];
     }
@@ -208,7 +213,7 @@ public class ShaderAttributes
     public void removeAttribute(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         vertexSize -= attribSizes[index];
         for (int i = index; i < count; i++)
@@ -296,7 +301,7 @@ public class ShaderAttributes
     public int getPositionInVertex(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         int t = 0;
         for (int i = 0; i < index; i++)
@@ -307,7 +312,12 @@ public class ShaderAttributes
     @Override
     public int hashCode()
     {
-        return Arrays.hashCode(attribNames) ^ Arrays.hashCode(attribSizes);
+        final int prime = 5647;
+
+        int value = 1;
+        value = value * prime + Arrays.hashCode(attribNames);
+        value = value * prime + Arrays.hashCode(attribSizes);
+        return value;
     }
 
     @Override

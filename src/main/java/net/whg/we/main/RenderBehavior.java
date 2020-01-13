@@ -26,7 +26,7 @@ public class RenderBehavior extends AbstractBehavior
     public void setMesh(IMesh mesh)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         this.mesh = mesh;
     }
@@ -50,7 +50,7 @@ public class RenderBehavior extends AbstractBehavior
     public void setMaterial(Material material)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         this.material = material;
     }
@@ -87,7 +87,7 @@ public class RenderBehavior extends AbstractBehavior
     void render(Camera camera)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         if (canRender())
         {
