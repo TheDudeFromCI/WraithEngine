@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * @author TheDudeFromCI
  */
-public class ShaderAttributes implements Externalizable
+public class ShaderAttributes
 {
     /**
      * A simple utility method for calculating the name of an attribute in which
@@ -87,7 +87,7 @@ public class ShaderAttributes implements Externalizable
     private String[] attribNames;
     private int[] attribSizes;
     private int count;
-    private int _vertexSize;
+    private int vertexSize;
 
     /**
      * Creates a new, empty, shader attrbutes object. This uses the initial internal
@@ -129,7 +129,7 @@ public class ShaderAttributes implements Externalizable
      */
     public int getVertexSize()
     {
-        return _vertexSize;
+        return vertexSize;
     }
 
     /**
@@ -199,7 +199,7 @@ public class ShaderAttributes implements Externalizable
         attribSizes[count] = size;
 
         count++;
-        _vertexSize += size;
+        vertexSize += size;
     }
 
     /**
@@ -214,7 +214,7 @@ public class ShaderAttributes implements Externalizable
         if (index < 0 || index >= count)
             throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
 
-        _vertexSize -= attribSizes[index];
+        vertexSize -= attribSizes[index];
         for (int i = index; i < count; i++)
         {
             attribNames[i] = attribNames[i + 1];
@@ -309,24 +309,6 @@ public class ShaderAttributes implements Externalizable
     }
 
     @Override
-    public void writeExternal(ObjectOutput out) throws IOException
-    {
-        out.writeObject(attribNames);
-        out.writeObject(attribSizes);
-        out.writeInt(_vertexSize);
-        out.writeInt(count);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-    {
-        attribNames = (String[]) in.readObject();
-        attribSizes = (int[]) in.readObject();
-        _vertexSize = in.readInt();
-        count = in.readInt();
-    }
-
-    @Override
     public int hashCode()
     {
         return Arrays.hashCode(attribNames) ^ Arrays.hashCode(attribSizes);
@@ -335,7 +317,7 @@ public class ShaderAttributes implements Externalizable
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof ShaderAttributes))
+        if (obj.getClass() != obj.getClass())
             return false;
 
         ShaderAttributes o = (ShaderAttributes) obj;

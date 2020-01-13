@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Assert;
 import org.junit.Test;
 import net.whg.we.rendering.ShaderAttributes;
@@ -159,5 +160,63 @@ public class ShaderAttributesTest
     public void indexedAttributeName_nullAttribute()
     {
         ShaderAttributes.getIndexedAttribute(null, 1);
+    }
+
+    @Test
+    public void equals_sameInstance()
+    {
+        ShaderAttributes att = new ShaderAttributes();
+
+        att.addAttribute("apple", 3);
+        att.addAttribute("caramel", 2);
+
+        assertEquals(att, att);
+    }
+
+    @Test
+    public void equals_diffInstance()
+    {
+        ShaderAttributes att1 = new ShaderAttributes();
+        ShaderAttributes att2 = new ShaderAttributes();
+
+        att1.addAttribute("red", 1);
+        att1.addAttribute("green", 4);
+
+        att2.addAttribute("red", 1);
+        att2.addAttribute("green", 4);
+
+        assertEquals(att1, att2);
+    }
+
+    @Test
+    public void equals_diffInstance_diffAttributes()
+    {
+        ShaderAttributes att1 = new ShaderAttributes();
+        ShaderAttributes att2 = new ShaderAttributes();
+
+        att1.addAttribute("red", 1);
+        att1.addAttribute("green", 1);
+
+        att2.addAttribute("red", 1);
+
+        assertNotEquals(att1, att2);
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void removeAttribute_outOfBounds_negative()
+    {
+        ShaderAttributes att = new ShaderAttributes();
+        att.addAttribute("red", 1);
+
+        att.removeAttribute(-1);
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void removeAttribute_outOfBounds_tooHigh()
+    {
+        ShaderAttributes att = new ShaderAttributes();
+        att.addAttribute("red", 1);
+
+        att.removeAttribute(2);
     }
 }
