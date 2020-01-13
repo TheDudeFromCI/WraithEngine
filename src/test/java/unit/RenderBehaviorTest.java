@@ -8,7 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
-import net.whg.we.main.Material;
+import net.whg.we.rendering.Material;
 import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.Scene;
 import net.whg.we.rendering.Camera;

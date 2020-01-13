@@ -3,6 +3,7 @@ package net.whg.we.main;
 import org.joml.Matrix4f;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
+import net.whg.we.rendering.Material;
 
 /**
  * This behavior is used as a method for rendering a mesh to the scene. When

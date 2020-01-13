@@ -1,4 +1,4 @@
-package net.whg.we.main;
+package net.whg.we.rendering;
 
 import java.nio.FloatBuffer;
 import org.joml.Matrix4f;

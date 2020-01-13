@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.junit.Test;
-import net.whg.we.main.Material;
+import net.whg.we.rendering.Material;
 import net.whg.we.rendering.IShader;
 
 public class MaterialTest
