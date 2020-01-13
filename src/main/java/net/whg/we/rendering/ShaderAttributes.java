@@ -313,7 +313,10 @@ public class ShaderAttributes
     @Override
     public boolean equals(Object obj)
     {
-        if (obj.getClass() != obj.getClass())
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
             return false;
 
         ShaderAttributes o = (ShaderAttributes) obj;
