@@ -30,10 +30,16 @@ jobs:
       - name: Build with Maven
         uses: xlui/action-maven-cli/jdk8@master
         with:
-          args: clean jacoco:prepare-agent package --file pom.xml jacoco:report sonar:sonar
+          args: -B clean jacoco:prepare-agent package --file pom.xml jacoco:report sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Show Error Logs
+        if: failure()
+        run: |
+          cat hs_err_pid*
+          rm hs_err_pid*
 
   deploy:
     name: Deploy
@@ -72,4 +78,4 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo "<settings><servers><server><id>github</id><username>${USERNAME}</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xml
-          mvn deploy
+          mvn -B deploy
