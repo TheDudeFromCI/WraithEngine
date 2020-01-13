@@ -12,7 +12,8 @@ public class ShaderAttributes
 {
     private static void indexOutOfBounds(int size, int index)
     {
-        throw new IllegalArgumentException(String.format("Index out of bounds! Size: %d, Actual: %d", size, index));
+        throw new ArrayIndexOutOfBoundsException(
+                String.format("Index out of bounds! Size: %d, Actual: %d", size, index));
     }
 
     /**
