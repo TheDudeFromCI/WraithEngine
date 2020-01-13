@@ -2,6 +2,7 @@ package unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,6 +60,6 @@ public class MaterialTest
 
         material.setCameraMatrix(camera, matrix);
 
-        verify(shader).setUniformMat4(Material.UNIFORM_MVP, any());
+        verify(shader).setUniformMat4(eq(Material.UNIFORM_MVP), any());
     }
 }
