@@ -12,7 +12,14 @@ import net.whg.we.rendering.IShader;
  */
 public class Material
 {
+    /**
+     * The shader uniform for the MVP matrix.
+     */
+    public static final String UNIFORM_MVP = "mvp";
+
     private final IShader shader;
+
+    // Temp
     private final FloatBuffer matrixFloatBuffer;
     private final Matrix4f projectionMatrix = new Matrix4f();
     private final Matrix4f viewMatrix = new Matrix4f();
@@ -60,7 +67,7 @@ public class Material
 
     /**
      * Assigns the model-view-projection matrix to the shader to render the next
-     * object with.
+     * object with. Binds the shader if not already bound.
      * 
      * @param camera
      *     - The camera which is rendering the scene.
@@ -69,7 +76,7 @@ public class Material
      */
     public void setCameraMatrix(Camera camera, Matrix4f matrix)
     {
-        // TODO Refactor this.
+        shader.bind();
 
         projectionMatrix.set(camera.getProjectionMatrix());
 
@@ -81,6 +88,6 @@ public class Material
         mvpMatrix.mul(viewMatrix);
         mvpMatrix.mul(matrix);
         mvpMatrix.get(matrixFloatBuffer);
-        shader.setUniformMat4("_mvpMat", matrixFloatBuffer);
+        shader.setUniformMat4(Material.UNIFORM_MVP, matrixFloatBuffer);
     }
 }
