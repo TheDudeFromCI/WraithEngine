@@ -56,4 +56,14 @@ public class SceneRenderer
         for (RenderBehavior behavior : renderedObjects)
             behavior.render(camera);
     }
+
+    /**
+     * Gets the number of rendered objects in this scene.
+     * 
+     * @return The number of objects being rendered.
+     */
+    public int getSize()
+    {
+        return renderedObjects.size();
+    }
 }

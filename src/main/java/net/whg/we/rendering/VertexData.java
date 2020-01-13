@@ -1,9 +1,5 @@
 package net.whg.we.rendering;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Arrays;
 
 /**
@@ -12,21 +8,11 @@ import java.util.Arrays;
  *
  * @author TheDudeFromCI
  */
-public class VertexData implements Externalizable
+public class VertexData
 {
     private float[] data;
     private short[] triangles;
     private ShaderAttributes attributes;
-
-    /**
-     * Creates a new, empty, vertex data object.
-     */
-    public VertexData()
-    {
-        // This constructor exists for externalizable to work
-
-        this(new float[0], new short[0], new ShaderAttributes());
-    }
 
     /**
      * Creates a new vertex data object based on the given input information.
@@ -42,18 +28,45 @@ public class VertexData implements Externalizable
      * @param attributes
      *     - The shader attribute object that is used to determine how vertices are
      *     layed out within the vertex float array.
+     * @throws IllegalArgumentException
+     *     If the provided data, triangles, or shader attributes does not represent
+     *     a valid data structure. (I.e too few verts, triangles out of bounds, no
+     *     shader attributes, etc.)
      */
     public VertexData(float[] data, short[] triangles, ShaderAttributes attributes)
     {
         this.data = data;
         this.triangles = triangles;
         this.attributes = attributes;
+
+        validate();
+    }
+
+    private void validate()
+    {
+        if (triangles.length % 3 != 0)
+            throw new IllegalArgumentException("Triangle array length must be a multiple of 3!");
+
+        int vertSize = attributes.getVertexSize();
+        int vertCount = triangles.length;
+
+        if (vertSize == 0)
+            throw new IllegalArgumentException("Shader attributes must contain at least one attribute!");
+
+        if (data.length != vertSize * vertCount)
+            throw new IllegalArgumentException("Data array length does not match vertex size and count! Expected: "
+                    + vertSize * vertCount + ", Actual: " + data.length);
+
+        for (short s : triangles)
+            if (s < 0 || s >= vertCount)
+                throw new IllegalArgumentException(
+                        "Triangles point to non-existant vertices! Index: " + s + ", Vertex Count: " + vertCount);
     }
 
     /**
      * Returns the array of floats used to specify vertices within this vertex data.
      * The array contains all vertices formated as specified by the shader
-     * attributes object.
+     * attributes object. This should not be modified.
      *
      * @return The array of vertices within this vertex data object.
      */
@@ -87,7 +100,8 @@ public class VertexData implements Externalizable
     /**
      * Gets an array of all triangles and the indices of the vertices they point to.
      * A single triangle is 3 consecutive indice, where each indice is a pointer to
-     * the corrosponding index of the vertex in question.
+     * the corrosponding index of the vertex in question. This should not be
+     * modified.
      *
      * @return The array of all indices within this vertex data, used to construct
      *     triangles.
@@ -117,37 +131,35 @@ public class VertexData implements Externalizable
         return data.length / getVertexSize();
     }
 
+    /**
+     * Gets the shader attributes object. This should not be modified.
+     * 
+     * @return The shader attributes object.
+     */
     public ShaderAttributes getAttributeSizes()
     {
         return attributes;
     }
 
     @Override
-    public void writeExternal(ObjectOutput out) throws IOException
-    {
-        out.writeObject(data);
-        out.writeObject(triangles);
-        out.writeObject(attributes);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-    {
-        data = (float[]) in.readObject();
-        triangles = (short[]) in.readObject();
-        attributes = (ShaderAttributes) in.readObject();
-    }
-
-    @Override
     public int hashCode()
     {
-        return Arrays.hashCode(data) ^ Arrays.hashCode(triangles);
+        final int prime = 8597;
+
+        int value = 1;
+        value = value * prime + Arrays.hashCode(data);
+        value = value * prime + Arrays.hashCode(triangles);
+        value = value * prime + attributes.hashCode();
+        return value;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof VertexData))
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
             return false;
 
         VertexData o = (VertexData) obj;

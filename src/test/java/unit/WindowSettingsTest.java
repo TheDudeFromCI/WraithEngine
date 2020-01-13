@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import net.whg.we.window.WindowSettings;
 
@@ -45,5 +46,44 @@ public class WindowSettingsTest
         assertEquals(false, settings.isVsync());
         assertEquals(false, settings.isResizable());
         assertEquals(1, settings.getSamples());
+    }
+
+    @Test
+    public void equals_sameInstance()
+    {
+        WindowSettings settings = new WindowSettings();
+        settings.setHeight(345);
+        settings.setResizable(true);
+        settings.setSamples(23);
+
+        assertEquals(settings, settings);
+    }
+
+    @Test
+    public void equals_diffInstance()
+    {
+        WindowSettings settings1 = new WindowSettings();
+        settings1.setWidth(4323);
+        settings1.setFullscreen(true);
+
+        WindowSettings settings2 = new WindowSettings();
+        settings2.setWidth(4323);
+        settings2.setFullscreen(true);
+
+        assertEquals(settings1, settings2);
+        assertEquals(settings1.hashCode(), settings2.hashCode());
+    }
+
+    @Test
+    public void notEquals_diffInstance_diffSettings()
+    {
+        WindowSettings settings1 = new WindowSettings();
+        settings1.setWidth(243);
+
+        WindowSettings settings2 = new WindowSettings();
+        settings2.setWidth(395);
+
+        assertNotEquals(settings1, settings2);
+        assertNotEquals(settings1.hashCode(), settings2.hashCode());
     }
 }

@@ -5,19 +5,21 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 import net.whg.we.main.GameLoop;
 import net.whg.we.main.GameObject;
-import net.whg.we.main.Material;
 import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.Scene;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
+import net.whg.we.rendering.Material;
 import net.whg.we.rendering.VertexData;
-import net.whg.we.util.MeshLoader;
+import net.whg.we.resource.ModelLoader;
+import net.whg.we.resource.Resource;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.WindowSettings;
@@ -51,7 +53,9 @@ public class Scene1Example
         IScreenClearHandler screenClear = window.getRenderingEngine()
                                                 .getScreenClearHandler();
 
-        VertexData cubeData = MeshLoader.loadMesh(new File("src/test/res/cube.obj"));
+        List<Resource> resources = ModelLoader.loadScene(new File("src/test/res/cube.obj"));
+        VertexData cubeData = (VertexData) resources.get(0)
+                                                    .getData();
         String vertShader =
                 new String(Files.readAllBytes(Paths.get("src/test/res/normal_shader.vert")), StandardCharsets.UTF_8);
         String fragShader =

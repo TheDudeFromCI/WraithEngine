@@ -11,6 +11,8 @@ import net.whg.we.util.IDisposable;
  */
 public abstract class AbstractBehavior implements IDisposable
 {
+    protected static final String OBJECT_DISPOSED = "Object already disposed!";
+
     private GameObject gameObject;
     private boolean disposed;
 

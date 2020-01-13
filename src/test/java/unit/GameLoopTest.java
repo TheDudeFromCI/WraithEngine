@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import net.whg.we.main.GameLoop;
@@ -36,10 +37,11 @@ public class GameLoopTest
         gameLoop.addAction(() ->
         {
             i[0]--;
-            if (i[0] <= 0)
+            if (i[0] == 0)
                 gameLoop.stop();
         });
 
         gameLoop.loop();
+        assertTrue(i[0] == 0);
     }
 }

@@ -6,9 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import java.util.List;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
@@ -175,14 +172,23 @@ public class GameObjectTest
     @Test
     public void dispose_twice()
     {
-        FakeBehaviorA behavior = mock(FakeBehaviorA.class);
+        int[] calls = new int[1];
+        AbstractBehavior behavior = new AbstractBehavior()
+        {
+            @Override
+            protected void onDispose()
+            {
+                calls[0]++;
+            }
+        };
+
         GameObject go = new GameObject();
         go.addBehavior(behavior);
 
         go.dispose();
         go.dispose();
 
-        verify(behavior, times(1)).dispose();
+        assertEquals(1, calls[0]);
     }
 
     @Test

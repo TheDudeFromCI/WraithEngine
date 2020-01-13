@@ -3,6 +3,7 @@ package net.whg.we.main;
 import org.joml.Matrix4f;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
+import net.whg.we.rendering.Material;
 
 /**
  * This behavior is used as a method for rendering a mesh to the scene. When
@@ -25,7 +26,7 @@ public class RenderBehavior extends AbstractBehavior
     public void setMesh(IMesh mesh)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         this.mesh = mesh;
     }
@@ -49,7 +50,7 @@ public class RenderBehavior extends AbstractBehavior
     public void setMaterial(Material material)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         this.material = material;
     }
@@ -86,7 +87,7 @@ public class RenderBehavior extends AbstractBehavior
     void render(Camera camera)
     {
         if (isDisposed())
-            throw new IllegalStateException("Behavior already disposed!");
+            throw new IllegalStateException(OBJECT_DISPOSED);
 
         if (canRender())
         {

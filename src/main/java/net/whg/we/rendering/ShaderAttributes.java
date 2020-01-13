@@ -1,9 +1,5 @@
 package net.whg.we.rendering;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Arrays;
 
 /**
@@ -12,12 +8,88 @@ import java.util.Arrays;
  *
  * @author TheDudeFromCI
  */
-public class ShaderAttributes implements Externalizable
+public class ShaderAttributes
 {
+    private static void indexOutOfBounds(int size, int index)
+    {
+        throw new ArrayIndexOutOfBoundsException(
+                String.format("Index out of bounds! Size: %d, Actual: %d", size, index));
+    }
+
+    /**
+     * A simple utility method for calculating the name of an attribute in which
+     * multiple attributes of the same type are required. Such as: uv, uv2, uv3,
+     * etc.
+     * <p>
+     * Additional attributes, after the first, can also be created by using the
+     * format <code>attribute + id</code>, where id is the index of the uv coords.
+     * 
+     * @param attribute
+     *     - The attribute name.
+     * @param index
+     *     - The index of the attribute.
+     * @return The new attribute name for the given index.
+     */
+    public static String getIndexedAttribute(String attribute, int index)
+    {
+        if (index < 1)
+            throw new IllegalArgumentException("Index must be at least 1!");
+
+        if (attribute == null)
+            throw new IllegalArgumentException("Attribute cannot be null!");
+
+        if (index == 1)
+            return attribute;
+
+        return attribute + index;
+    }
+
+    /**
+     * The position attribute.
+     */
+    public static final String ATTRIB_POSITION = "pos";
+
+    /**
+     * The normal attribute.
+     */
+    public static final String ATTRIB_NORMAL = "normal";
+
+    /**
+     * The uv attribute.
+     */
+    public static final String ATTRIB_UV = "uv";
+
+    /**
+     * The color attribute.
+     */
+    public static final String ATTRIB_COLOR = "color";
+
+    /**
+     * The bone indices attribute. Used for pointing to the bones used on the
+     * vertex.
+     */
+    public static final String ATTRIB_BONE_INDICES = "bone_indices";
+
+    /**
+     * The bone weights attribute. Used for pointing to the bone weights for each
+     * corresponding bone.
+     */
+    public static final String ATTRIB_BONE_WEIGHTS = "bone_weights";
+
+    /**
+     * The tangent attribute.
+     */
+    public static final String ATTRIB_TANGENT = "tangent";
+
+    /**
+     * The bitantent attribute.
+     */
+    public static final String ATTRIB_BITANGENT = "bitangent";
+
     private String[] attribNames;
     private int[] attribSizes;
     private int count;
-    private int _vertexSize;
+    private int vertexSize;
 
     /**
      * Creates a new, empty, shader attrbutes object. This uses the initial internal
@@ -59,7 +131,7 @@ public class ShaderAttributes implements Externalizable
      */
     public int getVertexSize()
     {
-        return _vertexSize;
+        return vertexSize;
     }
 
     /**
@@ -72,7 +144,7 @@ public class ShaderAttributes implements Externalizable
     public String getAttributeName(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         return attribNames[index];
     }
@@ -87,7 +159,7 @@ public class ShaderAttributes implements Externalizable
     public int getAttributeSize(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         return attribSizes[index];
     }
@@ -129,7 +201,7 @@ public class ShaderAttributes implements Externalizable
         attribSizes[count] = size;
 
         count++;
-        _vertexSize += size;
+        vertexSize += size;
     }
 
     /**
@@ -142,9 +214,9 @@ public class ShaderAttributes implements Externalizable
     public void removeAttribute(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
-        _vertexSize -= attribSizes[index];
+        vertexSize -= attribSizes[index];
         for (int i = index; i < count; i++)
         {
             attribNames[i] = attribNames[i + 1];
@@ -230,7 +302,7 @@ public class ShaderAttributes implements Externalizable
     public int getPositionInVertex(int index)
     {
         if (index < 0 || index >= count)
-            throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bounds! (Size: " + count + ")");
+            indexOutOfBounds(count, index);
 
         int t = 0;
         for (int i = 0; i < index; i++)
@@ -239,33 +311,23 @@ public class ShaderAttributes implements Externalizable
     }
 
     @Override
-    public void writeExternal(ObjectOutput out) throws IOException
-    {
-        out.writeObject(attribNames);
-        out.writeObject(attribSizes);
-        out.writeInt(_vertexSize);
-        out.writeInt(count);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-    {
-        attribNames = (String[]) in.readObject();
-        attribSizes = (int[]) in.readObject();
-        _vertexSize = in.readInt();
-        count = in.readInt();
-    }
-
-    @Override
     public int hashCode()
     {
-        return Arrays.hashCode(attribNames) ^ Arrays.hashCode(attribSizes);
+        final int prime = 5647;
+
+        int value = 1;
+        value = value * prime + Arrays.hashCode(attribNames);
+        value = value * prime + Arrays.hashCode(attribSizes);
+        return value;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof ShaderAttributes))
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
             return false;
 
         ShaderAttributes o = (ShaderAttributes) obj;
