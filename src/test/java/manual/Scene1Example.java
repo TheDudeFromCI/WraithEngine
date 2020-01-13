@@ -18,9 +18,8 @@ import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.Material;
 import net.whg.we.rendering.VertexData;
-import net.whg.we.resource.IResource;
 import net.whg.we.resource.ModelLoader;
-import net.whg.we.resource.VertexDataResource;
+import net.whg.we.resource.Resource;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.WindowSettings;
@@ -54,8 +53,9 @@ public class Scene1Example
         IScreenClearHandler screenClear = window.getRenderingEngine()
                                                 .getScreenClearHandler();
 
-        List<IResource<?>> resources = ModelLoader.loadScene(new File("src/test/res/cube.obj"));
-        VertexData cubeData = ((VertexDataResource) resources.get(0)).getData();
+        List<Resource> resources = ModelLoader.loadScene(new File("src/test/res/cube.obj"));
+        VertexData cubeData = (VertexData) resources.get(0)
+                                                    .getData();
         String vertShader =
                 new String(Files.readAllBytes(Paths.get("src/test/res/normal_shader.vert")), StandardCharsets.UTF_8);
         String fragShader =

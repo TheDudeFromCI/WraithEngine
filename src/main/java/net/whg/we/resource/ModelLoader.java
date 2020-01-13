@@ -21,15 +21,15 @@ public final class ModelLoader
     private ModelLoader()
     {}
 
-    public static List<IResource<?>> loadScene(File file)
+    public static List<Resource> loadScene(File file)
     {
         AIScene scene = loadAssimpScene(file);
 
-        List<IResource<?>> resources = new ArrayList<>();
+        List<Resource> resources = new ArrayList<>();
 
         for (int i = 0; i < scene.mNumMeshes(); i++)
-            resources.add(new VertexDataResource(loadMesh(AIMesh.create(scene.mMeshes()
-                                                                             .get(i)))));
+            resources.add(new Resource(loadMesh(AIMesh.create(scene.mMeshes()
+                                                                   .get(i)))));
 
         Assimp.aiReleaseImport(scene);
         return resources;
