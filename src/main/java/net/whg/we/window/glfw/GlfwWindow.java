@@ -61,6 +61,7 @@ public final class GlfwWindow implements IWindow
         if (doesWindowExist())
             throw new IllegalStateException("A GLFW window has already been created!");
 
+        initGlfw();
         buildWindow(settings);
         initRenderingEngine();
     }
@@ -71,17 +72,21 @@ public final class GlfwWindow implements IWindow
         if (isDisposed())
             return;
 
-        destroyWindow();
-        destroyRenderingEngine();
+        try
+        {
+            destroyWindow();
+            destroyRenderingEngine();
 
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+            glfwTerminate();
+        }
+        finally
+        {
+            disposed = true;
+            setWindowState(false);
 
-        disposed = true;
-        setWindowState(false);
-
-        for (IWindowListener listener : listeners)
-            listener.onWindowDestroyed(this);
+            for (IWindowListener listener : listeners)
+                listener.onWindowDestroyed(this);
+        }
     }
 
     @Override
@@ -175,6 +180,20 @@ public final class GlfwWindow implements IWindow
     }
 
     /**
+     * Initializes GLFW.
+     */
+    private void initGlfw()
+    {
+        if (!glfwInit())
+            throw new IllegalStateException("Unable to initialize GLFW");
+
+        try (GLFWErrorCallback callback = GLFWErrorCallback.createPrint(System.err))
+        {
+            callback.set();
+        }
+    }
+
+    /**
      * Builds a new window with the given settings. May be culled multiple times, as
      * long as the previous window is destroyed first.
      * 
@@ -184,12 +203,6 @@ public final class GlfwWindow implements IWindow
     private void buildWindow(WindowSettings settings)
     {
         this.settings.set(settings);
-
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
-
-        GLFWErrorCallback.createPrint(System.err)
-                         .set();
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);

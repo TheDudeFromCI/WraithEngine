@@ -48,14 +48,16 @@ public class VertexData
             throw new IllegalArgumentException("Triangle array length must be a multiple of 3!");
 
         int vertSize = attributes.getVertexSize();
-        int vertCount = triangles.length;
 
         if (vertSize == 0)
             throw new IllegalArgumentException("Shader attributes must contain at least one attribute!");
 
-        if (data.length != vertSize * vertCount)
-            throw new IllegalArgumentException("Data array length does not match vertex size and count! Expected: "
-                    + vertSize * vertCount + ", Actual: " + data.length);
+        if (data.length % vertSize != 0)
+            throw new IllegalArgumentException(
+                    "Data array length does not match vertex size and count! Expected: multiple of" + vertSize
+                            + ", Actual: " + data.length);
+
+        int vertCount = triangles.length;
 
         for (short s : triangles)
             if (s < 0 || s >= vertCount)

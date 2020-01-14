@@ -334,4 +334,20 @@ public class ShaderAttributes
         return count == o.count && Arrays.equals(attribSizes, o.attribSizes)
                 && Arrays.equals(attribNames, o.attribNames);
     }
+
+    @Override
+    public String toString()
+    {
+        String format = "ShaderAttributes {";
+
+        for (int i = 0; i < count; i++)
+        {
+            if (i > 0)
+                format += ", ";
+
+            format += attribNames[i] + "=" + attribSizes[i];
+        }
+
+        return format + "}";
+    }
 }

@@ -10,6 +10,8 @@ import org.lwjgl.assimp.AIPropertyStore;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.VertexData;
 
@@ -18,11 +20,14 @@ import net.whg.we.rendering.VertexData;
  */
 public final class ModelLoader
 {
+    private static final Logger logger = LoggerFactory.getLogger(ModelLoader.class);
+
     private ModelLoader()
     {}
 
     public static List<Resource> loadScene(File file)
     {
+        logger.debug("Loading model file '{}'", file);
         AIScene scene = loadAssimpScene(file);
 
         List<Resource> resources = new ArrayList<>();
@@ -65,18 +70,18 @@ public final class ModelLoader
         attributes.addAttribute(ShaderAttributes.ATTRIB_POSITION, 3);
         attributes.addAttribute(ShaderAttributes.ATTRIB_NORMAL, 3);
 
-        int uvCount = 0;
-        while (mesh.mTextureCoords(uvCount) != null)
-            uvCount++;
-
         if (mesh.mTangents() != null)
             attributes.addAttribute(ShaderAttributes.ATTRIB_TANGENT, 3);
 
         if (mesh.mBitangents() != null)
             attributes.addAttribute(ShaderAttributes.ATTRIB_BITANGENT, 3);
 
-        for (int i = 1; i <= uvCount; i++)
-            attributes.addAttribute(ShaderAttributes.getIndexedAttribute(ShaderAttributes.ATTRIB_UV, i), 2);
+        int uvCount = 0;
+        while (mesh.mTextureCoords(uvCount) != null)
+        {
+            uvCount++;
+            attributes.addAttribute(ShaderAttributes.getIndexedAttribute(ShaderAttributes.ATTRIB_UV, uvCount), 2);
+        }
 
         if (boneCount > 0)
         {
@@ -148,6 +153,7 @@ public final class ModelLoader
             triangles[index++] = (short) indices.get(2);
         }
 
+        logger.trace("Loaded mesh with {} vertices, {} triangles, and {}", vertexCount, triCount, attributes);
         return new VertexData(vertices, triangles, attributes);
     }
 }
