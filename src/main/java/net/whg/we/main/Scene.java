@@ -1,6 +1,6 @@
 package net.whg.we.main;
 
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -8,10 +8,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * A scene is used to represent the current state of the world. It is comprised
  * of a collection of game objects which populate that world.
  */
-public class Scene
+public class Scene implements Iterable<GameObject>
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
-    private final List<GameObject> public_gameObjects = Collections.unmodifiableList(gameObjects);
     private final SceneRenderer renderer = new SceneRenderer();
 
     /**
@@ -65,16 +64,6 @@ public class Scene
     }
 
     /**
-     * Gets a read-only list of all game objects currently present in this scene.
-     * 
-     * @return A list of game objects in this scene.
-     */
-    public List<GameObject> getGameObjects()
-    {
-        return public_gameObjects;
-    }
-
-    /**
      * Gets the object in charge of rendering this scene.
      * 
      * @return The scene renderer.
@@ -82,5 +71,31 @@ public class Scene
     public SceneRenderer getRenderer()
     {
         return renderer;
+    }
+
+    /**
+     * Gets the number of game objects in this scene.
+     * 
+     * @return The number of game objects.
+     */
+    public int countGameObjects()
+    {
+        return gameObjects.size();
+    }
+
+    @Override
+    public Iterator<GameObject> iterator()
+    {
+        return gameObjects.iterator();
+    }
+
+    /**
+     * Checks if this scene contains the given game object.
+     * 
+     * @return True if the given game object is in this scene. False otherwise.
+     */
+    public boolean hasGameObject(GameObject gameObject)
+    {
+        return gameObjects.contains(gameObject);
     }
 }
