@@ -2,12 +2,15 @@ package net.whg.we.window.glfw;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
+import net.whg.we.util.OutputStreamWrapper;
+import net.whg.we.util.OutputStreamWrapper.LogLevel;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowListener;
 import net.whg.we.window.WindowSettings;
@@ -187,7 +190,8 @@ public final class GlfwWindow implements IWindow
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
-        try (GLFWErrorCallback callback = GLFWErrorCallback.createPrint(System.err))
+        try (GLFWErrorCallback callback =
+                GLFWErrorCallback.createPrint(new PrintStream(new OutputStreamWrapper(LogLevel.ERROR))))
         {
             callback.set();
         }
