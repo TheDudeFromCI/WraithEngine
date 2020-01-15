@@ -1,19 +1,19 @@
 package net.whg.we.resource;
 
 import java.io.File;
-import java.nio.IntBuffer;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import org.lwjgl.assimp.AIFace;
-import org.lwjgl.assimp.AIMesh;
-import org.lwjgl.assimp.AIPropertyStore;
-import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.AIVector3D;
-import org.lwjgl.assimp.Assimp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.VertexData;
+import net.whg.we.resource.assimp.AssimpException;
+import net.whg.we.resource.assimp.IAssimp;
+import net.whg.we.resource.assimp.IAssimpMesh;
+import net.whg.we.resource.assimp.IAssimpScene;
 
 /**
  * The model loader is a utilty for loading 3D model file formats.
@@ -22,66 +22,70 @@ public final class ModelLoader
 {
     private static final Logger logger = LoggerFactory.getLogger(ModelLoader.class);
 
-    private ModelLoader()
-    {}
+    private final IAssimp assimp;
 
-    public static List<Resource> loadScene(File file)
+    public ModelLoader(final IAssimp assimp)
+    {
+        this.assimp = assimp;
+    }
+
+    /**
+     * Loads the scene within the given file as a list of resources.
+     * 
+     * @param file
+     *     - The file to load.
+     * @return A list of resources which were loaded from this file.
+     * @throws AssimpException
+     *     If the scene fails to load.
+     * @throws FileNotFoundExceptioon
+     *     If the file cannot be found.
+     * @throws IOException
+     *     If the file cannot be read.
+     */
+    public List<Resource> loadScene(final File file) throws IOException
     {
         logger.debug("Loading model file '{}'", file);
-        AIScene scene = loadAssimpScene(file);
 
-        List<Resource> resources = new ArrayList<>();
+        if (!file.exists())
+            throw new FileNotFoundException("Cannot find file: " + file);
 
-        for (int i = 0; i < scene.mNumMeshes(); i++)
-            resources.add(new Resource(loadMesh(AIMesh.create(scene.mMeshes()
-                                                                   .get(i)))));
+        if (!file.canRead())
+            throw new IOException("Cannot read file: " + file);
 
-        Assimp.aiReleaseImport(scene);
+        final IAssimpScene scene = assimp.loadScene(file);
+
+        if (scene == null)
+            throw new AssimpException("Failed to load scene!");
+
+        final List<Resource> resources = new ArrayList<>();
+
+        final int meshCount = scene.countMeshes();
+        for (int i = 0; i < meshCount; i++)
+            resources.add(loadMesh(scene.getMesh(i)));
+
+        scene.dispose();
         return resources;
     }
 
-    private static AIScene loadAssimpScene(File file)
-    {
-        AIPropertyStore settings = Assimp.aiCreatePropertyStore();
-        Assimp.aiSetImportPropertyInteger(settings, Assimp.AI_CONFIG_PP_SLM_VERTEX_LIMIT, 65535);
-
-        AIScene scene = Assimp.aiImportFile(file.toString(),
-                Assimp.aiProcess_Triangulate | Assimp.aiProcess_GenSmoothNormals | Assimp.aiProcess_FlipUVs
-                        | Assimp.aiProcess_CalcTangentSpace | Assimp.aiProcess_LimitBoneWeights
-                        | Assimp.aiProcess_SplitLargeMeshes | Assimp.aiProcess_OptimizeMeshes
-                        | Assimp.aiProcess_JoinIdenticalVertices);
-
-        Assimp.aiReleasePropertyStore(settings);
-
-        if (scene == null)
-            throw new IllegalStateException("Failed to load scene!");
-
-        return scene;
-    }
-
-    private static VertexData loadMesh(AIMesh mesh)
+    /**
+     * Loads the given Assimp mesh object.
+     */
+    private static Resource loadMesh(final IAssimpMesh mesh)
     {
         // Count mesh information
-        int boneCount = mesh.mNumBones();
-        int vertexCount = mesh.mNumVertices();
-        int triCount = mesh.mNumFaces();
+        final int boneCount = mesh.countBones();
+        final int vertexCount = mesh.countVertices();
+        final int triCount = mesh.countTriangles();
 
-        ShaderAttributes attributes = new ShaderAttributes();
+        final ShaderAttributes attributes = new ShaderAttributes();
         attributes.addAttribute(ShaderAttributes.ATTRIB_POSITION, 3);
         attributes.addAttribute(ShaderAttributes.ATTRIB_NORMAL, 3);
+        attributes.addAttribute(ShaderAttributes.ATTRIB_TANGENT, 3);
+        attributes.addAttribute(ShaderAttributes.ATTRIB_BITANGENT, 3);
 
-        if (mesh.mTangents() != null)
-            attributes.addAttribute(ShaderAttributes.ATTRIB_TANGENT, 3);
-
-        if (mesh.mBitangents() != null)
-            attributes.addAttribute(ShaderAttributes.ATTRIB_BITANGENT, 3);
-
-        int uvCount = 0;
-        while (mesh.mTextureCoords(uvCount) != null)
-        {
-            uvCount++;
-            attributes.addAttribute(ShaderAttributes.getIndexedAttribute(ShaderAttributes.ATTRIB_UV, uvCount), 2);
-        }
+        final int uvCount = mesh.countUVLayers();
+        for (int i = 1; i <= uvCount; i++)
+            attributes.addAttribute(ShaderAttributes.getIndexedAttribute(ShaderAttributes.ATTRIB_UV, i), 2);
 
         if (boneCount > 0)
         {
@@ -89,71 +93,44 @@ public final class ModelLoader
             attributes.addAttribute(ShaderAttributes.ATTRIB_BONE_WEIGHTS, 4);
         }
 
-        // Build vertex data array
         int index = 0;
-        float[] vertices = new float[vertexCount * attributes.getVertexSize()];
+        final float[] vertices = new float[vertexCount * attributes.getVertexSize()];
         for (int v = 0; v < vertexCount; v++)
         {
-            // Get position data
-            AIVector3D pos = mesh.mVertices()
-                                 .get(v);
-            vertices[index++] = pos.x();
-            vertices[index++] = pos.y();
-            vertices[index++] = pos.z();
+            mesh.getVertexPosition(vertices, index, v);
+            index += 3;
 
-            // Get normal data
-            AIVector3D normal = mesh.mNormals()
-                                    .get(v);
-            vertices[index++] = normal.x();
-            vertices[index++] = normal.y();
-            vertices[index++] = normal.z();
+            mesh.getVertexNormal(vertices, index, v);
+            index += 3;
 
-            if (mesh.mTangents() != null)
+            mesh.getVertexTangent(vertices, index, v);
+            index += 3;
+
+            mesh.getVertexBitangent(vertices, index, v);
+            index += 3;
+
+            for (int uv = 0; uv < uvCount; uv++)
             {
-                AIVector3D tangent = mesh.mTangents()
-                                         .get(v);
-                vertices[index++] = tangent.x();
-                vertices[index++] = tangent.y();
-                vertices[index++] = tangent.z();
+                mesh.getVertexUV(vertices, index, v, uv);
+                index += 2;
             }
 
-            if (mesh.mBitangents() != null)
-            {
-                AIVector3D bitangent = mesh.mBitangents()
-                                           .get(v);
-                vertices[index++] = bitangent.x();
-                vertices[index++] = bitangent.y();
-                vertices[index++] = bitangent.z();
-            }
-
-            for (int texIndex = 0; texIndex < uvCount; texIndex++)
-            {
-                AIVector3D uv = mesh.mTextureCoords(texIndex)
-                                    .get(v);
-                vertices[index++] = uv.x();
-                vertices[index++] = uv.y();
-            }
-
-            // Add bone weight buffer, if needed
             if (boneCount > 0)
                 index += 8;
         }
 
-        // Build triangle data array
+        final short[] triangles = new short[triCount * 3];
+
         index = 0;
-        short[] triangles = new short[triCount * 3];
         for (int f = 0; f < triCount; f++)
         {
-            // Get vertex indices
-            AIFace face = mesh.mFaces()
-                              .get(f);
-            IntBuffer indices = face.mIndices();
-            triangles[index++] = (short) indices.get(0);
-            triangles[index++] = (short) indices.get(1);
-            triangles[index++] = (short) indices.get(2);
+            mesh.getTriangle(triangles, index, f);
+            index += 3;
         }
 
         logger.trace("Loaded mesh with {} vertices, {} triangles, and {}", vertexCount, triCount, attributes);
-        return new VertexData(vertices, triangles, attributes);
+        logger.trace("Vertices: {}", Arrays.toString(vertices));
+        logger.trace("Triangles: {}", Arrays.toString(triangles));
+        return new Resource(new VertexData(vertices, triangles, attributes));
     }
 }

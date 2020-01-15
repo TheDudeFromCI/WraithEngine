@@ -48,7 +48,12 @@ public final class UserControlsUpdater implements IWindowListener
         this.window = window;
 
         if (this.window != null)
+        {
             this.window.addWindowListener(this);
+
+            WindowSettings settings = this.window.getProperties();
+            Screen.updateWindowSize(settings.getWidth(), settings.getHeight());
+        }
     }
 
     @Override

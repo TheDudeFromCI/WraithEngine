@@ -12,6 +12,7 @@ import net.whg.we.main.GameLoop;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.Scene;
+import net.whg.we.main.UserControlsUpdater;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IScreenClearHandler;
@@ -20,6 +21,8 @@ import net.whg.we.rendering.Material;
 import net.whg.we.rendering.VertexData;
 import net.whg.we.resource.ModelLoader;
 import net.whg.we.resource.Resource;
+import net.whg.we.resource.assimp.AssimpAPI;
+import net.whg.we.resource.assimp.IAssimp;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.WindowSettings;
@@ -50,10 +53,15 @@ public class Scene1Example
             }
         });
 
+        UserControlsUpdater.bind(window);
+
         IScreenClearHandler screenClear = window.getRenderingEngine()
                                                 .getScreenClearHandler();
 
-        List<Resource> resources = ModelLoader.loadScene(new File("src/test/res/cube.obj"));
+        IAssimp assimp = new AssimpAPI();
+        ModelLoader modelLoader = new ModelLoader(assimp);
+
+        List<Resource> resources = modelLoader.loadScene(new File("src/test/res/cube.obj"));
         VertexData cubeData = (VertexData) resources.get(0)
                                                     .getData();
         String vertShader =
