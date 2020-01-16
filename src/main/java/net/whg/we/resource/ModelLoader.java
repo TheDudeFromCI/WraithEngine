@@ -37,7 +37,7 @@ public final class ModelLoader
      * @return A list of resources which were loaded from this file.
      * @throws AssimpException
      *     If the scene fails to load.
-     * @throws FileNotFoundExceptioon
+     * @throws FileNotFoundException
      *     If the file cannot be found.
      * @throws IOException
      *     If the file cannot be read.
