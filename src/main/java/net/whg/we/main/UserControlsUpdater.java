@@ -75,25 +75,37 @@ public final class UserControlsUpdater implements IWindowListener
 
     @Override
     public void onMouseMove(IWindow window, float newX, float newY)
-    {}
+    {
+        Input.setMousePos(newX, newY);
+    }
 
     @Override
     public void onKeyPressed(IWindow window, int keyCode)
-    {}
+    {
+        Input.setKeyState(keyCode, true);
+    }
 
     @Override
     public void onKeyReleased(IWindow window, int keyCode)
-    {}
+    {
+        Input.setKeyState(keyCode, false);
+    }
 
     @Override
     public void onMousePressed(IWindow window, int mouseButton)
-    {}
+    {
+        Input.setMouseButtonState(mouseButton, true);
+    }
 
     @Override
     public void onMouseReleased(IWindow window, int mouseButton)
-    {}
+    {
+        Input.setMouseButtonState(mouseButton, false);
+    }
 
     @Override
     public void onMouseWheel(IWindow window, float scrollX, float scrollY)
-    {}
+    {
+        Input.setScrollWheelDelta(scrollY);
+    }
 }

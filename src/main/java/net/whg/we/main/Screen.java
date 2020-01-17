@@ -5,7 +5,7 @@ package net.whg.we.main;
  * various information about the state of the game screen, as well as modidy the
  * screen in certain ways.
  */
-public class Screen
+public final class Screen
 {
     private static int width;
     private static int height;
@@ -54,4 +54,7 @@ public class Screen
     {
         return (float) width / height;
     }
+
+    private Screen()
+    {}
 }
