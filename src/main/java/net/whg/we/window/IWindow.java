@@ -63,4 +63,11 @@ public interface IWindow extends IDisposable
      * frame.
      */
     void pollEvents();
+
+    /**
+     * Gets the ID of the window.
+     * 
+     * @return The active window ID, or -1 if this window is disposed.
+     */
+    long getWindowId();
 }

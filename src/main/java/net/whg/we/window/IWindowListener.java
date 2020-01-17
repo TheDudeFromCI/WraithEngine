@@ -8,15 +8,26 @@ package net.whg.we.window;
 public interface IWindowListener
 {
     /**
-     * Called when the settings of a window have been updated in any way. This
-     * includes actions such as requesting a title update, or toggling fullscreen.
-     * This event is also called if the user forces an update to occur, such as by
-     * resizing the window.
+     * Called when the settings of a window have been updated from inside
+     * WraithEngine. This includes actions such as requesting a title update, or
+     * toggling fullscreen.
      * 
      * @param window
      *     - The window which was updated.
      */
     void onWindowUpdated(IWindow window);
+
+    /**
+     * Called when the window is resized.
+     * 
+     * @param window
+     *     - The window which was resized.
+     * @param width
+     *     - The new window width.
+     * @param height
+     *     - The new window height.
+     */
+    void onWindowResized(IWindow window, int width, int height);
 
     /**
      * Called when the window has been disposed. This is called after the disposing

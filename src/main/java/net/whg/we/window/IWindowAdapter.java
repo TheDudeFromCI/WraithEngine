@@ -35,6 +35,10 @@ public abstract class IWindowAdapter implements IWindowListener
     {}
 
     @Override
+    public void onWindowResized(IWindow window, int width, int height)
+    {}
+
+    @Override
     public void onWindowUpdated(IWindow window)
     {}
 }

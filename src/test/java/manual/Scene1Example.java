@@ -26,7 +26,9 @@ import net.whg.we.resource.assimp.IAssimp;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.WindowSettings;
+import net.whg.we.window.glfw.GlfwApi;
 import net.whg.we.window.glfw.GlfwWindow;
+import net.whg.we.window.glfw.IGlfw;
 
 public class Scene1Example
 {
@@ -34,8 +36,10 @@ public class Scene1Example
 
     public static void main(String[] args) throws IOException
     {
+        IGlfw glfw = new GlfwApi();
+
         WindowSettings windowSettings = new WindowSettings();
-        IWindow window = new GlfwWindow(windowSettings);
+        IWindow window = new GlfwWindow(glfw, windowSettings);
 
         window.addWindowListener(new IWindowAdapter()
         {

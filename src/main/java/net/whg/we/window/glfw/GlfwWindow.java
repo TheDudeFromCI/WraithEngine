@@ -1,17 +1,14 @@
 package net.whg.we.window.glfw;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.*;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 import net.whg.we.util.OutputStreamWrapper;
 import net.whg.we.util.OutputStreamWrapper.LogLevel;
 import net.whg.we.window.IWindow;
+import net.whg.we.window.IWindowAdapter;
 import net.whg.we.window.IWindowListener;
 import net.whg.we.window.WindowSettings;
 
@@ -22,7 +19,7 @@ import net.whg.we.window.WindowSettings;
  */
 public final class GlfwWindow implements IWindow
 {
-    private static boolean windowState = false;
+    private static volatile boolean windowState = false;
 
     /**
      * Sets the current state of this window.
@@ -30,7 +27,7 @@ public final class GlfwWindow implements IWindow
      * @param open
      *     - Wether or not this window is currently open.
      */
-    private static void setWindowState(boolean open)
+    private synchronized void setWindowState(boolean open)
     {
         windowState = open;
     }
@@ -47,6 +44,7 @@ public final class GlfwWindow implements IWindow
 
     private final List<IWindowListener> listeners = new CopyOnWriteArrayList<>();
     private final WindowSettings settings = new WindowSettings();
+    private final IGlfw glfw;
     private boolean disposed;
     private IRenderingEngine renderingEngine;
     private long windowId;
@@ -59,14 +57,26 @@ public final class GlfwWindow implements IWindow
      * @throws IllegalStateException
      *     If another GLFW already exists and has not yet been disposed.
      */
-    public GlfwWindow(WindowSettings settings)
+    public GlfwWindow(IGlfw glfw, WindowSettings settings)
     {
         if (doesWindowExist())
             throw new IllegalStateException("A GLFW window has already been created!");
 
+        this.glfw = glfw;
+
         initGlfw();
         buildWindow(settings);
         initRenderingEngine();
+
+        addWindowListener(new IWindowAdapter()
+        {
+            @Override
+            public void onWindowResized(IWindow window, int width, int height)
+            {
+                settings.setWidth(width);
+                settings.setHeight(height);
+            }
+        });
     }
 
     @Override
@@ -80,7 +90,7 @@ public final class GlfwWindow implements IWindow
             destroyWindow();
             destroyRenderingEngine();
 
-            glfwTerminate();
+            glfw.terminate();
         }
         finally
         {
@@ -161,7 +171,7 @@ public final class GlfwWindow implements IWindow
      */
     private void destroyWindow()
     {
-        glfwDestroyWindow(windowId);
+        glfw.destroyWindow(windowId);
     }
 
     /**
@@ -187,14 +197,8 @@ public final class GlfwWindow implements IWindow
      */
     private void initGlfw()
     {
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
-
-        try (GLFWErrorCallback callback =
-                GLFWErrorCallback.createPrint(new PrintStream(new OutputStreamWrapper(LogLevel.ERROR))))
-        {
-            callback.set();
-        }
+        glfw.init();
+        glfw.setErrorCallback(new PrintStream(new OutputStreamWrapper(LogLevel.ERROR)));
     }
 
     /**
@@ -208,28 +212,19 @@ public final class GlfwWindow implements IWindow
     {
         this.settings.set(settings);
 
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, settings.isResizable() ? GLFW_TRUE : GLFW_FALSE);
-        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_SAMPLES, settings.getSamples());
-        glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+        glfw.setWindowHints(settings.isResizable(), 3, 3, settings.getSamples());
+        windowId = glfw.createWindow(settings.getWidth(), settings.getHeight(), settings.getTitle(),
+                settings.isFullscreen());
 
-        windowId = glfwCreateWindow(settings.getWidth(), settings.getHeight(), settings.getTitle(),
-                settings.isFullscreen() ? glfwGetPrimaryMonitor() : NULL, NULL);
-        if (windowId == NULL)
-            throw new GLFWException("Failed to create GLFW window!");
-
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(windowId, (vidmode.width() - settings.getWidth()) / 2,
-                (vidmode.height() - settings.getHeight()) / 2);
+        int[] screenSize = glfw.getScreenSize();
+        glfw.setWindowPosition(windowId, (screenSize[0] - settings.getWidth()) / 2,
+                (screenSize[1] - settings.getHeight()) / 2);
 
         createCallbacks();
-        glfwMakeContextCurrent(windowId);
-        glfwSwapInterval(settings.isVsync() ? 1 : 0);
-        glfwShowWindow(windowId);
+
+        glfw.setContextThread(windowId);
+        glfw.setVSync(settings.isVsync() ? 1 : 0);
+        glfw.showWindow(windowId);
     }
 
     /**
@@ -238,76 +233,13 @@ public final class GlfwWindow implements IWindow
      */
     private void createCallbacks()
     {
-        createMouseCallbacks();
-        createKeyboardCallbacks();
-        createWindowCallbacks();
-    }
+        glfw.addMousePosListener(this, listeners);
+        glfw.addMouseButtonListener(this, listeners);
+        glfw.addMouseWheelListener(this, listeners);
 
-    /**
-     * This method is used to attach all mouse-based events to the window object.
-     */
-    private void createMouseCallbacks()
-    {
-        glfwSetCursorPosCallback(windowId, (window, xpos, ypos) ->
-        {
-            for (IWindowListener listener : listeners)
-                listener.onMouseMove(this, (float) xpos, (float) ypos);
-        });
+        glfw.addKeyListener(this, listeners);
 
-        glfwSetMouseButtonCallback(windowId, (window, button, action, mods) ->
-        {
-            if (action == GLFW_PRESS)
-            {
-                for (IWindowListener listener : listeners)
-                    listener.onMousePressed(this, button);
-            }
-            else if (action == GLFW_RELEASE)
-            {
-                for (IWindowListener listener : listeners)
-                    listener.onMouseReleased(this, button);
-            }
-        });
-
-        glfwSetScrollCallback(windowId, (window, xoff, yoff) ->
-        {
-            for (IWindowListener listener : listeners)
-                listener.onMouseWheel(this, (float) xoff, (float) yoff);
-        });
-    }
-
-    /**
-     * This method is used to attach all keyboard-based events to the window object.
-     */
-    private void createKeyboardCallbacks()
-    {
-        glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) ->
-        {
-            if (action == GLFW_PRESS)
-            {
-                for (IWindowListener listener : listeners)
-                    listener.onKeyPressed(this, key);
-            }
-            else if (action == GLFW_RELEASE)
-            {
-                for (IWindowListener listener : listeners)
-                    listener.onKeyReleased(this, key);
-            }
-        });
-    }
-
-    /**
-     * This method is used to attach all window-based events to the window object.
-     */
-    private void createWindowCallbacks()
-    {
-        glfwSetWindowSizeCallback(windowId, (window, width, height) ->
-        {
-            settings.setWidth(width);
-            settings.setHeight(height);
-
-            for (IWindowListener listener : listeners)
-                listener.onWindowUpdated(this);
-        });
+        glfw.addWindowResizeListener(this, listeners);
     }
 
     /**
@@ -323,26 +255,26 @@ public final class GlfwWindow implements IWindow
                           .equals(settings.getTitle()))
         {
             this.settings.setTitle(settings.getTitle());
-            glfwSetWindowTitle(windowId, settings.getTitle());
+            glfw.setWindowTitle(windowId, settings.getTitle());
         }
 
         if (this.settings.getWidth() != settings.getWidth() || this.settings.getHeight() != settings.getHeight())
         {
             this.settings.setWidth(settings.getWidth());
             this.settings.setHeight(settings.getHeight());
-            glfwSetWindowSize(windowId, settings.getWidth(), settings.getHeight());
+            glfw.setWindowSize(windowId, settings.getWidth(), settings.getHeight());
         }
 
         if (this.settings.isVsync() != settings.isVsync())
         {
             this.settings.setVsync(settings.isVsync());
-            glfwSwapInterval(settings.isVsync() ? 1 : 0);
+            glfw.setVSync(settings.isVsync() ? 1 : 0);
         }
 
         if (this.settings.isResizable() != settings.isResizable())
         {
             this.settings.setResizable(settings.isResizable());
-            glfwSetWindowAttrib(windowId, GLFW_RESIZABLE, settings.isResizable() ? GLFW_TRUE : GLFW_FALSE);
+            glfw.setWindowResizable(windowId, settings.isResizable());
         }
     }
 
@@ -368,13 +300,22 @@ public final class GlfwWindow implements IWindow
     @Override
     public void pollEvents()
     {
-        glfwSwapBuffers(windowId);
-        glfwPollEvents();
+        glfw.swapBuffers(windowId);
+        glfw.pollEvents();
 
-        if (glfwWindowShouldClose(windowId))
+        if (glfw.shouldWindowClose(windowId))
         {
             for (IWindowListener listener : listeners)
                 listener.onWindowRequestClose(this);
         }
+    }
+
+    @Override
+    public long getWindowId()
+    {
+        if (isDisposed())
+            return -1;
+
+        return windowId;
     }
 }

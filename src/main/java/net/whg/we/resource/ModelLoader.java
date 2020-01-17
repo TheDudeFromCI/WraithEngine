@@ -44,7 +44,7 @@ public final class ModelLoader
      */
     public List<Resource> loadScene(final File file) throws IOException
     {
-        logger.debug("Loading model file '{}'", file);
+        logger.info("Loading model file '{}'", file);
 
         if (!file.exists())
             throw new FileNotFoundException("Cannot find file: " + file);
@@ -128,9 +128,7 @@ public final class ModelLoader
             index += 3;
         }
 
-        logger.trace("Loaded mesh with {} vertices, {} triangles, and {}", vertexCount, triCount, attributes);
-        logger.trace("Vertices: {}", Arrays.toString(vertices));
-        logger.trace("Triangles: {}", Arrays.toString(triangles));
+        logger.debug("Loaded mesh with {} vertices, {} triangles, and {}", vertexCount, triCount, attributes);
         return new Resource(new VertexData(vertices, triangles, attributes));
     }
 }

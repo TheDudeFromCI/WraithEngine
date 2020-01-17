@@ -60,7 +60,13 @@ public final class UserControlsUpdater implements IWindowListener
     public void onWindowUpdated(IWindow window)
     {
         WindowSettings settings = window.getProperties();
-        Screen.updateWindowSize(settings.getWidth(), settings.getHeight());
+        onWindowResized(window, settings.getWidth(), settings.getHeight());
+    }
+
+    @Override
+    public void onWindowResized(IWindow window, int width, int height)
+    {
+        Screen.updateWindowSize(width, height);
     }
 
     @Override
