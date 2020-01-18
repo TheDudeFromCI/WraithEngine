@@ -15,10 +15,12 @@ import net.whg.we.main.Scene;
 import net.whg.we.main.UserControlsUpdater;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
+import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.Material;
 import net.whg.we.rendering.VertexData;
+import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 import net.whg.we.resource.ModelLoader;
 import net.whg.we.resource.Resource;
 import net.whg.we.resource.assimp.AssimpAPI;
@@ -37,9 +39,10 @@ public class Scene1Example
     public static void main(String[] args) throws IOException
     {
         IGlfw glfw = new GlfwApi();
+        IRenderingEngine renderingEngine = new OpenGLRenderingEngine();
 
         WindowSettings windowSettings = new WindowSettings();
-        IWindow window = new GlfwWindow(glfw, windowSettings);
+        IWindow window = new GlfwWindow(glfw, renderingEngine, windowSettings);
 
         window.addWindowListener(new IWindowAdapter()
         {

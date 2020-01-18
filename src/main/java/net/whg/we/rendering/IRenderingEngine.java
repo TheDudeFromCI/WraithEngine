@@ -9,6 +9,11 @@ import net.whg.we.util.IDisposable;
 public interface IRenderingEngine extends IDisposable
 {
     /**
+     * Initializes this rendering engine.
+     */
+    void init();
+
+    /**
      * Gets the handler in charge of clearing the screen.
      * 
      * @return The handler.

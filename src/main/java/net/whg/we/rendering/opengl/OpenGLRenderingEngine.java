@@ -14,10 +14,11 @@ import net.whg.we.rendering.IShader;
 public class OpenGLRenderingEngine implements IRenderingEngine
 {
     private final BindStates bindStates = new BindStates();
-    private final IScreenClearHandler screenClearHandler;
+    private IScreenClearHandler screenClearHandler;
     private boolean disposed;
 
-    public OpenGLRenderingEngine()
+    @Override
+    public void init()
     {
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
