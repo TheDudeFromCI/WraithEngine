@@ -14,6 +14,7 @@
         <sonar.projectKey>TheDudeFromCI_WraithEngine</sonar.projectKey>
         <sonar.organization>thedudefromci</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.exclusions>**/main/java/net/whg/we/external/*.java</sonar.exclusions>
     </properties>
 
     <distributionManagement>

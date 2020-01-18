@@ -1,4 +1,4 @@
-package net.whg.we.window.glfw;
+package net.whg.we.external;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowListener;
+import net.whg.we.window.glfw.GLFWException;
+import net.whg.we.window.glfw.IGlfw;
 
 /**
  * This class acts as the bridge between GLFW and WraithEngine.

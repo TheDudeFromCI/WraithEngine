@@ -1,4 +1,4 @@
-package net.whg.we.resource.assimp;
+package net.whg.we.external;
 
 import java.io.File;
 import java.nio.IntBuffer;
@@ -8,6 +8,9 @@ import org.lwjgl.assimp.AIPropertyStore;
 import org.lwjgl.assimp.AIScene;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
+import net.whg.we.resource.assimp.IAssimp;
+import net.whg.we.resource.assimp.IAssimpMesh;
+import net.whg.we.resource.assimp.IAssimpScene;
 
 /**
  * An implementation of the Assimp loading API.
