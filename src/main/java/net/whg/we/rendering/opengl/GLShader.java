@@ -8,6 +8,8 @@ import net.whg.we.rendering.RawShaderCode;
 
 public class GLShader implements IShader
 {
+    private static final String SHADER_DISPOSED = "Shader already disposed!";
+
     private final Map<String, Integer> uniforms = new HashMap<>();
     private final IOpenGL opengl;
     private final BindStates bindStates;
@@ -33,7 +35,7 @@ public class GLShader implements IShader
     public void bind()
     {
         if (isDisposed())
-            throw new IllegalStateException("Shader already disposed!");
+            throw new IllegalStateException(SHADER_DISPOSED);
 
         if (!created)
             throw new IllegalStateException("Shader not yet compiled!");
@@ -48,9 +50,7 @@ public class GLShader implements IShader
             return;
 
         disposed = true;
-
-        if (created)
-            destroyShader();
+        destroyShader();
     }
 
     @Override
@@ -64,6 +64,9 @@ public class GLShader implements IShader
      */
     private void destroyShader()
     {
+        if (!created)
+            return;
+
         if (bindStates.getBoundShader() == shaderId)
             bindStates.bindShader(0);
 
@@ -74,7 +77,7 @@ public class GLShader implements IShader
     public void compile(RawShaderCode shaderCode)
     {
         if (isDisposed())
-            throw new IllegalStateException("Shader already disposed!");
+            throw new IllegalStateException(SHADER_DISPOSED);
 
         if (shaderCode == null)
             throw new IllegalArgumentException("Shader code cannot be null!");
@@ -110,7 +113,7 @@ public class GLShader implements IShader
     public void setUniformMat4(String property, FloatBuffer value)
     {
         if (isDisposed())
-            throw new IllegalStateException("Shader already disposed!");
+            throw new IllegalStateException(SHADER_DISPOSED);
 
         bind();
 

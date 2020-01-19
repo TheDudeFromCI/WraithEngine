@@ -338,16 +338,20 @@ public class ShaderAttributes
     @Override
     public String toString()
     {
-        String format = "ShaderAttributes {";
+        StringBuilder sb = new StringBuilder();
+        sb.append("ShaderAttributes {");
 
         for (int i = 0; i < count; i++)
         {
             if (i > 0)
-                format += ", ";
+                sb.append(", ");
 
-            format += attribNames[i] + "=" + attribSizes[i];
+            sb.append(attribNames[i]);
+            sb.append('=');
+            sb.append(attribSizes[i]);
         }
 
-        return format + "}";
+        sb.append('}');
+        return sb.toString();
     }
 }

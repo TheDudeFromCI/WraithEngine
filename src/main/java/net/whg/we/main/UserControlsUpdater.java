@@ -97,7 +97,9 @@ public final class UserControlsUpdater implements IWindowListener
 
     @Override
     public void onWindowRequestClose(IWindow window)
-    {}
+    {
+        // Nothing to do.
+    }
 
     @Override
     public void onMouseMove(IWindow window, float newX, float newY)

@@ -56,23 +56,23 @@ public class OutputStreamWrapper extends OutputStream
         switch (logLevel)
         {
             case TRACE:
-                logger.trace(buffer.toString());
+                logger.trace("{}", buffer);
                 break;
 
             case DEBUG:
-                logger.debug(buffer.toString());
+                logger.debug("{}", buffer);
                 break;
 
             case INFO:
-                logger.info(buffer.toString());
+                logger.info("{}", buffer);
                 break;
 
             case WARN:
-                logger.warn(buffer.toString());
+                logger.warn("{}", buffer);
                 break;
 
             case ERROR:
-                logger.error(buffer.toString());
+                logger.error("{}", buffer);
                 break;
         }
 
@@ -83,5 +83,22 @@ public class OutputStreamWrapper extends OutputStream
     public void close() throws IOException
     {
         flush();
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) throws IOException
+    {
+        String line = new String(b, off, len);
+
+        int index;
+        while ((index = line.indexOf('\n')) > -1)
+        {
+            buffer.append(line.substring(0, index));
+            flush();
+
+            line = line.substring(index + 1);
+        }
+
+        buffer.append(line);
     }
 }

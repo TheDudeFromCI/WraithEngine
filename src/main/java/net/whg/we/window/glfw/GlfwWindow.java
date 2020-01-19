@@ -18,7 +18,7 @@ import net.whg.we.window.WindowSettings;
  */
 public final class GlfwWindow implements IWindow
 {
-    private static volatile GlfwWindow window;
+    private static GlfwWindow window;
 
     /**
      * Sets the current active window.

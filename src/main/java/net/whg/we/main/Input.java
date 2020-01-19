@@ -25,8 +25,10 @@ public final class Input
     private static boolean[] lastKeyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
     private static boolean[] mouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
     private static boolean[] lastMouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
-    private static float mouseX, mouseY;
-    private static float lastMouseX, lastMouseY;
+    private static float mouseX;
+    private static float mouseY;
+    private static float lastMouseX;
+    private static float lastMouseY;
     private static float scrollWheelDelta;
 
     /**
