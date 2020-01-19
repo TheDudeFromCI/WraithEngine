@@ -32,6 +32,12 @@ public class GLShader implements IShader
     @Override
     public void bind()
     {
+        if (isDisposed())
+            throw new IllegalStateException("Shader already disposed!");
+
+        if (!created)
+            throw new IllegalStateException("Shader not yet compiled!");
+
         bindStates.bindShader(shaderId);
     }
 
@@ -42,7 +48,9 @@ public class GLShader implements IShader
             return;
 
         disposed = true;
-        destroyShader();
+
+        if (created)
+            destroyShader();
     }
 
     @Override
@@ -65,6 +73,9 @@ public class GLShader implements IShader
     @Override
     public void compile(RawShaderCode shaderCode)
     {
+        if (isDisposed())
+            throw new IllegalStateException("Shader already disposed!");
+
         if (shaderCode == null)
             throw new IllegalArgumentException("Shader code cannot be null!");
 
@@ -98,6 +109,9 @@ public class GLShader implements IShader
     @Override
     public void setUniformMat4(String property, FloatBuffer value)
     {
+        if (isDisposed())
+            throw new IllegalStateException("Shader already disposed!");
+
         bind();
 
         int loc = getUniform(property);

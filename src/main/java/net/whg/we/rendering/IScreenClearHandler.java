@@ -17,6 +17,8 @@ public interface IScreenClearHandler
 
     /**
      * Sets what color should be used to clear the screen with.
+     * <p>
+     * Default value is the color black.
      * 
      * @param color
      *     - The color to clear the screen with, or null to disable clearing the
@@ -26,6 +28,8 @@ public interface IScreenClearHandler
 
     /**
      * Sets whether or not depth should be cleared.
+     * <p>
+     * Default value is true.
      * 
      * @param clearDepth
      *     - Whether or not depth should be cleared.

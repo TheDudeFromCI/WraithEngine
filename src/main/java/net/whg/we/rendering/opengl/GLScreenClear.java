@@ -23,6 +23,9 @@ public class GLScreenClear implements IScreenClearHandler
     @Override
     public void clearScreen()
     {
+        if (clearColor == null && !clearDepth)
+            return;
+
         opengl.clearScreen(clearColor != null, clearDepth);
     }
 

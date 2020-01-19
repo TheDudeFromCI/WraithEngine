@@ -34,7 +34,7 @@ public class OpenGLRenderingEngine implements IRenderingEngine
         opengl.setCullingMode(cullingMode);
         opengl.setDepthTesting(depthTesting);
 
-        screenClearHandler.setClearColor(new Color(0.2f, 0.4f, 0.8f));
+        screenClearHandler.setClearColor(new Color(0f, 0f, 0f));
         screenClearHandler.setClearDepth(true);
     }
 
