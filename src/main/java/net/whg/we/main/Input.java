@@ -1,5 +1,7 @@
 package net.whg.we.main;
 
+import java.util.Arrays;
+
 /**
  * This input class is a reference for the current key and mouse states for the
  * focused window. This can be used to check for mouse inputs and key presses as
@@ -26,6 +28,25 @@ public final class Input
     private static float mouseX, mouseY;
     private static float lastMouseX, lastMouseY;
     private static float scrollWheelDelta;
+
+    /**
+     * Clear all data stored in this class, resetting it to default settings. Any
+     * keys or buttons currently held are assumed unpressed. Mouse position is
+     * assumed to be at 0, 0.
+     */
+    public static void clear()
+    {
+        Arrays.fill(keyStates, false);
+        Arrays.fill(lastKeyStates, false);
+        Arrays.fill(mouseButtons, false);
+        Arrays.fill(lastMouseButtons, false);
+
+        mouseX = 0f;
+        mouseY = 0f;
+        lastMouseX = 0f;
+        lastMouseY = 0f;
+        scrollWheelDelta = 0f;
+    }
 
     /**
      * Assigns a new state to a given key.
@@ -194,7 +215,7 @@ public final class Input
      */
     public static boolean isMouseButtonJustDown(final int button)
     {
-        return mouseButtons[button] && !mouseButtons[button];
+        return mouseButtons[button] && !lastMouseButtons[button];
     }
 
     /**
@@ -207,7 +228,7 @@ public final class Input
      */
     public static boolean isMouseButtonJustUp(final int button)
     {
-        return !mouseButtons[button] && mouseButtons[button];
+        return !mouseButtons[button] && lastMouseButtons[button];
     }
 
     /**
