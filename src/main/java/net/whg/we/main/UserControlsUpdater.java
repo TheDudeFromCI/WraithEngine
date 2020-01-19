@@ -26,6 +26,16 @@ public final class UserControlsUpdater implements IWindowListener
         updater.setWindow(window);
     }
 
+    /**
+     * Gets the window which the updater is currently bound to.
+     * 
+     * @return The window, or null if no window is bound.
+     */
+    public static IWindow getBoundWindow()
+    {
+        return updater.getWindow();
+    }
+
     private IWindow window;
 
     private UserControlsUpdater()
@@ -54,6 +64,16 @@ public final class UserControlsUpdater implements IWindowListener
             WindowSettings settings = this.window.getProperties();
             Screen.updateWindowSize(settings.getWidth(), settings.getHeight());
         }
+    }
+
+    /**
+     * Gets the window which this updater is currently bound to.
+     * 
+     * @return The window, or null if no window is bound.
+     */
+    private IWindow getWindow()
+    {
+        return window;
     }
 
     @Override
