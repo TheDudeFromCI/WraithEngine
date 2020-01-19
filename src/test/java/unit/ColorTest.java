@@ -34,6 +34,7 @@ public class ColorTest
         float[][] channels = new float[][] {{0.7f, -0.1f, 0.6f}, {-0.24f, -0.1f, 0.26f}, {10.24f, 0.51f, 0.216f},
                 {0.24f, 0.1f, 20.26f}, {0.24f, 5.1f, -0.26f}, {0.1f, 0.2f, 0.3f, -1f}, {0.4f, 0.5f, 0.6f, 100f}};
 
+        int captures = 0;
         for (int i = 0; i < channels.length; i++)
         {
             try
@@ -46,7 +47,11 @@ public class ColorTest
                 throw new RuntimeException();
             }
             catch (IllegalArgumentException e)
-            {}
+            {
+                captures++;
+            }
         }
+
+        assertEquals(channels.length, captures);
     }
 }

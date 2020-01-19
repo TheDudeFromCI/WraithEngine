@@ -1,6 +1,7 @@
 package net.whg.we.rendering;
 
 import org.joml.Matrix4f;
+import net.whg.we.main.Screen;
 import net.whg.we.util.Transform3D;
 
 /**
@@ -28,9 +29,7 @@ public class Camera
      */
     private void rebuildProjectionMatrix()
     {
-        // TODO Get actual screen size.
-
-        float aspect = 4f / 3f;
+        float aspect = Screen.getAspect();
 
         projectionMatrix.identity();
         projectionMatrix.perspective(fov, aspect, nearClip, farClip);

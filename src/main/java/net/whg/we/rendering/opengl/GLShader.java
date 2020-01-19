@@ -1,25 +1,45 @@
 package net.whg.we.rendering.opengl;
 
-import static org.lwjgl.opengl.GL30.*;
 import java.nio.FloatBuffer;
-import org.lwjgl.opengl.GL32;
+import java.util.HashMap;
+import java.util.Map;
 import net.whg.we.rendering.IShader;
+import net.whg.we.rendering.RawShaderCode;
 
 public class GLShader implements IShader
 {
+    private static final String SHADER_DISPOSED = "Shader already disposed!";
+
+    private final Map<String, Integer> uniforms = new HashMap<>();
+    private final IOpenGL opengl;
     private final BindStates bindStates;
     private int shaderId;
     private boolean disposed;
     private boolean created;
 
-    GLShader(BindStates bindStates)
+    /**
+     * Creates a new OpenGL shader object.
+     * 
+     * @param bindStates
+     *     - The container for binding GPU states.
+     * @param opengl
+     *     - The OpenGL instance.
+     */
+    GLShader(BindStates bindStates, IOpenGL opengl)
     {
         this.bindStates = bindStates;
+        this.opengl = opengl;
     }
 
     @Override
     public void bind()
     {
+        if (isDisposed())
+            throw new IllegalStateException(SHADER_DISPOSED);
+
+        if (!created)
+            throw new IllegalStateException("Shader not yet compiled!");
+
         bindStates.bindShader(shaderId);
     }
 
@@ -44,82 +64,60 @@ public class GLShader implements IShader
      */
     private void destroyShader()
     {
+        if (!created)
+            return;
+
         if (bindStates.getBoundShader() == shaderId)
             bindStates.bindShader(0);
 
-        glDeleteProgram(shaderId);
+        opengl.deleteShaderProgram(shaderId);
     }
 
     @Override
-    public void compile(String vertShader, String geoShader, String fragShader)
+    public void compile(RawShaderCode shaderCode)
     {
+        if (isDisposed())
+            throw new IllegalStateException(SHADER_DISPOSED);
+
+        if (shaderCode == null)
+            throw new IllegalArgumentException("Shader code cannot be null!");
+
         if (created)
             destroyShader();
 
         created = true;
 
-        int vId = glCreateShader(GL_VERTEX_SHADER);
-        int gId = -1;
-        if (geoShader != null && !geoShader.isEmpty())
-            gId = glCreateShader(GL32.GL_GEOMETRY_SHADER);
-        int fId = glCreateShader(GL_FRAGMENT_SHADER);
+        int vId = opengl.createVertexShader(shaderCode.getVertexShader());
+        int fId = opengl.createFragementShader(shaderCode.getFragmentShader());
+        shaderId = opengl.createShaderProgram();
 
-        glShaderSource(vId, vertShader);
-        glCompileShader(vId);
+        opengl.attachShaderProgram(shaderId, vId);
+        opengl.attachShaderProgram(shaderId, fId);
+        opengl.linkShader(shaderId);
 
-        if (glGetShaderi(vId, GL_COMPILE_STATUS) != GL_TRUE)
-        {
-            String logMessage = glGetShaderInfoLog(vId);
-            throw new GLException("Failed to compiled vertex shader! '" + logMessage + "'");
-        }
+        opengl.deleteShader(vId);
+        opengl.deleteShader(fId);
+    }
 
-        if (gId != -1)
-        {
-            glShaderSource(gId, geoShader);
-            glCompileShader(gId);
+    private int getUniform(String uniform)
+    {
+        if (uniforms.containsKey(uniform))
+            return uniforms.get(uniform);
 
-            if (glGetShaderi(gId, GL_COMPILE_STATUS) != GL_TRUE)
-            {
-                String logMessage = glGetShaderInfoLog(gId);
-                throw new GLException("Failed to compiled geometry shader! '" + logMessage + "'");
-            }
-        }
-
-        glShaderSource(fId, fragShader);
-        glCompileShader(fId);
-
-        if (glGetShaderi(fId, GL_COMPILE_STATUS) != GL_TRUE)
-        {
-            String logMessage = glGetShaderInfoLog(fId);
-            throw new GLException("Failed to compiled fragment shader! '" + logMessage + "'");
-        }
-
-        shaderId = glCreateProgram();
-        glAttachShader(shaderId, vId);
-        if (gId != -1)
-            glAttachShader(shaderId, gId);
-        glAttachShader(shaderId, fId);
-
-        glLinkProgram(shaderId);
-
-        if (glGetProgrami(shaderId, GL_LINK_STATUS) != GL_TRUE)
-        {
-            String logMessage = glGetProgramInfoLog(shaderId);
-            throw new GLException("Failed to link shader program! '" + logMessage + "'");
-        }
-
-        glDeleteShader(vId);
-        if (gId != -1)
-            glDeleteShader(gId);
-        glDeleteShader(fId);
+        int loc = opengl.getUniformLocation(shaderId, uniform);
+        uniforms.put(uniform, loc);
+        return loc;
     }
 
     @Override
     public void setUniformMat4(String property, FloatBuffer value)
     {
+        if (isDisposed())
+            throw new IllegalStateException(SHADER_DISPOSED);
+
         bind();
 
-        int loc = glGetUniformLocation(shaderId, property);
-        glUniformMatrix4fv(loc, false, value);
+        int loc = getUniform(property);
+        opengl.setUniformMat4(loc, value);
     }
 }

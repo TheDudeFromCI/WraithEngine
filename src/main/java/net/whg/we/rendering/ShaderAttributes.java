@@ -295,7 +295,7 @@ public class ShaderAttributes
      * Gets the starting position of this attribute within the vertex, based on the
      * sizes of all previous attributes.
      *
-     * @param attributeIndex
+     * @param index
      *     - The index of the attribute.
      * @return The position within the vertex of this attribute.
      */
@@ -333,5 +333,25 @@ public class ShaderAttributes
         ShaderAttributes o = (ShaderAttributes) obj;
         return count == o.count && Arrays.equals(attribSizes, o.attribSizes)
                 && Arrays.equals(attribNames, o.attribNames);
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ShaderAttributes {");
+
+        for (int i = 0; i < count; i++)
+        {
+            if (i > 0)
+                sb.append(", ");
+
+            sb.append(attribNames[i]);
+            sb.append('=');
+            sb.append(attribSizes[i]);
+        }
+
+        sb.append('}');
+        return sb.toString();
     }
 }

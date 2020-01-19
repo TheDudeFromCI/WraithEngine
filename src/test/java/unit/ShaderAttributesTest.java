@@ -87,6 +87,20 @@ public class ShaderAttributesTest
         attrib.addAttribute("pos", -1);
     }
 
+    @Test
+    public void getAttributeName()
+    {
+        ShaderAttributes attrib = new ShaderAttributes();
+
+        attrib.addAttribute("pos", 3);
+        attrib.addAttribute("normal", 3);
+        attrib.addAttribute("uv", 2);
+
+        assertEquals("pos", attrib.getAttributeName(0));
+        assertEquals("normal", attrib.getAttributeName(1));
+        assertEquals("uv", attrib.getAttributeName(2));
+    }
+
     @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void getNegativeAttribName()
     {
@@ -141,6 +155,57 @@ public class ShaderAttributesTest
         Assert.assertEquals(3, attrib.getPositionInVertex(1));
         Assert.assertEquals(6, attrib.getPositionInVertex(2));
         Assert.assertEquals(8, attrib.getPositionInVertex(3));
+    }
+
+    @Test
+    public void getPositionInVertex_name()
+    {
+        ShaderAttributes attrib = new ShaderAttributes(4);
+
+        attrib.addAttribute("pos", 3);
+        attrib.addAttribute("normal", 3);
+        attrib.addAttribute("uv1", 2);
+        attrib.addAttribute("uv2", 2);
+
+        Assert.assertEquals(0, attrib.getPositionInVertex("pos"));
+        Assert.assertEquals(3, attrib.getPositionInVertex("normal"));
+        Assert.assertEquals(6, attrib.getPositionInVertex("uv1"));
+        Assert.assertEquals(8, attrib.getPositionInVertex("uv2"));
+    }
+
+    @Test
+    public void getPositionInVertex_name_doesntExist()
+    {
+        ShaderAttributes attrib = new ShaderAttributes(4);
+
+        attrib.addAttribute("pos", 3);
+        attrib.addAttribute("normal", 3);
+        attrib.addAttribute("uv1", 2);
+        attrib.addAttribute("uv2", 2);
+
+        Assert.assertEquals(-1, attrib.getPositionInVertex("tangent"));
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void getPositionInVertex_outOfBounds_low()
+    {
+        ShaderAttributes attrib = new ShaderAttributes(4);
+
+        attrib.addAttribute("pos", 3);
+        attrib.addAttribute("normal", 3);
+
+        attrib.getPositionInVertex(-1);
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void getPositionInVertex_outOfBounds_high()
+    {
+        ShaderAttributes attrib = new ShaderAttributes(4);
+
+        attrib.addAttribute("pos", 3);
+        attrib.addAttribute("normal", 3);
+
+        attrib.getPositionInVertex(6);
     }
 
     @Test

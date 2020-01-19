@@ -18,8 +18,6 @@ public class Transform3D
     private Vector3f size = new Vector3f(1f, 1f, 1f);
 
     private Matrix4f matrixBuffer = new Matrix4f();
-    private Vector3f vectorBuffer = new Vector3f();
-    private Quaternionf quaternionBuffer = new Quaternionf();
 
     /**
      * Gets the position of this transform in 3D space.
@@ -167,20 +165,6 @@ public class Transform3D
         out.mul(matrixBuffer);
     }
 
-    /**
-     * Calculates the inverse of this local matrix.
-     *
-     * @param out
-     *     - The matrix to write the output to.
-     */
-    public void getInverseMatrix(Matrix4f out)
-    {
-        out.identity();
-        out.rotate(rotation.invert(quaternionBuffer));
-        out.translate(position.negate(vectorBuffer));
-        out.scale(size.negate(vectorBuffer));
-    }
-
     @Override
     public int hashCode()
     {
@@ -190,7 +174,10 @@ public class Transform3D
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Transform3D))
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
             return false;
 
         Transform3D o = (Transform3D) obj;

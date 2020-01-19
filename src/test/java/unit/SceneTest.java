@@ -1,8 +1,8 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.util.List;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.Scene;
@@ -13,12 +13,10 @@ public class SceneTest
     public void addGameObjects()
     {
         Scene scene = new Scene();
-        assertEquals(0, scene.getGameObjects()
-                             .size());
+        assertEquals(0, scene.countGameObjects());
 
         scene.addGameObject(new GameObject());
-        assertEquals(1, scene.getGameObjects()
-                             .size());
+        assertEquals(1, scene.countGameObjects());
     }
 
     @Test
@@ -31,9 +29,8 @@ public class SceneTest
         scene.addGameObject(go);
         scene.addGameObject(null);
 
-        List<GameObject> list = scene.getGameObjects();
-        assertEquals(1, list.size());
-        assertEquals(go, list.get(0));
+        assertEquals(1, scene.countGameObjects());
+        assertTrue(scene.hasGameObject(go));
     }
 
     @Test
@@ -45,8 +42,7 @@ public class SceneTest
         scene.addGameObject(go);
         scene.removeGameObject(go);
 
-        List<GameObject> list = scene.getGameObjects();
-        assertEquals(0, list.size());
+        assertEquals(0, scene.countGameObjects());
     }
 
     @Test
@@ -66,10 +62,29 @@ public class SceneTest
 
         scene.cullGameObjects();
 
-        List<GameObject> list = scene.getGameObjects();
-        assertEquals(3, list.size());
-        assertTrue(list.contains(go1));
-        assertTrue(list.contains(go3));
-        assertTrue(list.contains(go4));
+        assertEquals(3, scene.countGameObjects());
+        assertTrue(scene.hasGameObject(go1));
+        assertFalse(scene.hasGameObject(go2));
+        assertTrue(scene.hasGameObject(go3));
+        assertTrue(scene.hasGameObject(go4));
+    }
+
+    @Test
+    public void gameObject_iterator()
+    {
+        Scene scene = new Scene();
+
+        GameObject[] go = new GameObject[4];
+        for (int i = 0; i < go.length; i++)
+        {
+            go[i] = new GameObject();
+            scene.addGameObject(go[i]);
+        }
+
+        int index = 0;
+        for (GameObject g : scene)
+            assertEquals(go[index++], g);
+
+        assertEquals(4, index);
     }
 }

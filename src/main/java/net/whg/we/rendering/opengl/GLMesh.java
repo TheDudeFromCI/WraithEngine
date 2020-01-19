@@ -1,6 +1,5 @@
 package net.whg.we.rendering.opengl;
 
-import static org.lwjgl.opengl.GL30.*;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import org.lwjgl.BufferUtils;
@@ -10,12 +9,28 @@ import net.whg.we.rendering.VertexData;
 
 public class GLMesh implements IMesh
 {
+    private final IOpenGL opengl;
+    private final BindStates bindStates;
     private int vboId;
     private int vaoId;
     private int indexId;
     private int indexCount;
     private boolean disposed;
     private boolean created;
+
+    /**
+     * Creates a new OpenGL mesh object.
+     * 
+     * @param bindStates
+     *     - The container for binding GPU states.
+     * @param opengl
+     *     - The OpenGL instance.
+     */
+    GLMesh(BindStates bindStates, IOpenGL opengl)
+    {
+        this.bindStates = bindStates;
+        this.opengl = opengl;
+    }
 
     @Override
     public void dispose()
@@ -27,9 +42,15 @@ public class GLMesh implements IMesh
 
         if (created)
         {
-            glDeleteBuffers(vboId);
-            glDeleteBuffers(indexId);
-            glDeleteVertexArrays(vaoId);
+            if (bindStates.getBoundVao() == vaoId)
+                bindStates.bindVao(0);
+
+            if (bindStates.getBoundBuffer() == indexId)
+                bindStates.bindBuffer(true, 0);
+
+            opengl.deleteBuffer(vboId);
+            opengl.deleteBuffer(indexId);
+            opengl.deleteVertexArray(vaoId);
         }
     }
 
@@ -48,13 +69,9 @@ public class GLMesh implements IMesh
         if (!created)
             return;
 
-        glBindVertexArray(vaoId);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
+        bindStates.bindVao(vaoId);
+        bindStates.bindBuffer(true, indexId);
+        opengl.drawElements(indexCount);
     }
 
     @Override
@@ -71,20 +88,17 @@ public class GLMesh implements IMesh
         indexBuffer.put(vertexData.getTriangles());
         indexBuffer.flip();
 
-        indexCount = vertexData.getTriangles().length;
-
-        if (created)
-            glBindVertexArray(vaoId);
-        else
+        if (!created)
         {
-            vaoId = glGenVertexArrays();
-            glBindVertexArray(vaoId);
-
-            vboId = glGenBuffers();
+            vaoId = opengl.generateVertexArray();
+            vboId = opengl.generateBuffer();
+            indexId = opengl.generateBuffer();
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+        bindStates.bindVao(vaoId);
+
+        bindStates.bindBuffer(false, vboId);
+        opengl.uploadBufferData(vertexBuffer);
 
         int stride = vertexData.getVertexByteSize();
         int offset = 0;
@@ -92,20 +106,14 @@ public class GLMesh implements IMesh
         ShaderAttributes attributes = vertexData.getAttributeSizes();
         for (int i = 0; i < attributes.getCount(); i++)
         {
-            glVertexAttribPointer(i, attributes.getAttributeSize(i), GL_FLOAT, false, stride, offset);
-            glEnableVertexAttribArray(i);
+            opengl.setVertexAttributePointer(i, attributes.getAttributeSize(i), stride, offset);
             offset += attributes.getAttributeSize(i) * 4;
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        indexId = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
+        bindStates.bindBuffer(true, indexId);
+        opengl.uploadBufferData(indexBuffer);
 
         created = true;
+        indexCount = vertexData.getTriangles().length;
     }
 }
