@@ -167,20 +167,6 @@ public class Transform3D
         out.mul(matrixBuffer);
     }
 
-    /**
-     * Calculates the inverse of this local matrix.
-     *
-     * @param out
-     *     - The matrix to write the output to.
-     */
-    public void getInverseMatrix(Matrix4f out)
-    {
-        out.identity();
-        out.rotate(rotation.invert(quaternionBuffer));
-        out.translate(position.negate(vectorBuffer));
-        out.scale(size.negate(vectorBuffer));
-    }
-
     @Override
     public int hashCode()
     {
