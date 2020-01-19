@@ -18,8 +18,6 @@ public class Transform3D
     private Vector3f size = new Vector3f(1f, 1f, 1f);
 
     private Matrix4f matrixBuffer = new Matrix4f();
-    private Vector3f vectorBuffer = new Vector3f();
-    private Quaternionf quaternionBuffer = new Quaternionf();
 
     /**
      * Gets the position of this transform in 3D space.
