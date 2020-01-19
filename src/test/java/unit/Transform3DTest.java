@@ -1,5 +1,7 @@
 package unit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -186,5 +188,50 @@ public class Transform3DTest
         mat2.scale(4f);
 
         Assert.assertEquals(mat2, mat);
+    }
+
+    @Test
+    public void equals_sameInstance()
+    {
+        Transform3D t = new Transform3D();
+        t.setPosition(1, 2, 4);
+        t.setSize(13f);
+
+        assertEquals(t, t);
+        assertEquals(t.hashCode(), t.hashCode());
+    }
+
+    @Test
+    public void equals_diffInstance()
+    {
+        Transform3D t1 = new Transform3D();
+        t1.setPosition(1, 2, 4);
+        t1.setRotation(new Quaternionf(4, 3, 2, 1));
+        t1.setSize(13f);
+
+        Transform3D t2 = new Transform3D();
+        t2.setPosition(1, 2, 4);
+        t2.setRotation(new Quaternionf(4, 3, 2, 1));
+        t2.setSize(13f);
+
+        assertEquals(t1, t2);
+        assertEquals(t1.hashCode(), t2.hashCode());
+    }
+
+    @Test
+    public void equals_diffInstance_diffProperties()
+    {
+        Transform3D t1 = new Transform3D();
+        t1.setPosition(1, 2, 4);
+        t1.setRotation(new Quaternionf(4, 3, 30, 1));
+        t1.setSize(13f);
+
+        Transform3D t2 = new Transform3D();
+        t2.setPosition(1, 2, 4);
+        t2.setRotation(new Quaternionf(4, 3, 2, 1));
+        t2.setSize(13f);
+
+        assertNotEquals(t1, t2);
+        assertNotEquals(t1.hashCode(), t2.hashCode());
     }
 }

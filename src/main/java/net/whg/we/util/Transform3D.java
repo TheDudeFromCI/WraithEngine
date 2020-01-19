@@ -190,7 +190,10 @@ public class Transform3D
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Transform3D))
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
             return false;
 
         Transform3D o = (Transform3D) obj;
