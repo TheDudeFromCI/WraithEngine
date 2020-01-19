@@ -34,4 +34,20 @@ public interface IRenderingEngine extends IDisposable
      * @return A new shader object.
      */
     IShader createShader();
+
+    /**
+     * Sets the depth testing state to use when rendering objects.
+     * 
+     * @param depthTesting
+     *     - Whether or not depth testing should be used.
+     */
+    void setDepthTesting(boolean depthTesting);
+
+    /**
+     * Sets the culling mode to use when rendering triangles.
+     * 
+     * @param cullingMode
+     *     - The new culling mode.
+     */
+    void setCullingMode(CullingMode cullingMode);
 }

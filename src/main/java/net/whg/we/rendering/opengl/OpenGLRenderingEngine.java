@@ -1,11 +1,11 @@
 package net.whg.we.rendering.opengl;
 
-import static org.lwjgl.opengl.GL30.*;
-import org.lwjgl.opengl.GL;
+import net.whg.we.rendering.CullingMode;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
+import net.whg.we.util.Color;
 
 /**
  * This is the basic OpenGL implementation of the rendering engine. It uses
@@ -13,27 +13,39 @@ import net.whg.we.rendering.IShader;
  */
 public class OpenGLRenderingEngine implements IRenderingEngine
 {
-    private final BindStates bindStates = new BindStates();
-    private IScreenClearHandler screenClearHandler;
+    private final IOpenGL opengl;
+    private final BindStates bindStates;
+    private final IScreenClearHandler screenClearHandler;
+    private boolean depthTesting = true;
+    private CullingMode cullingMode = CullingMode.BACK_FACING;
     private boolean disposed;
+
+    public OpenGLRenderingEngine(IOpenGL opengl)
+    {
+        this.opengl = opengl;
+        bindStates = new BindStates(opengl);
+        screenClearHandler = new GLScreenClear(opengl);
+    }
 
     @Override
     public void init()
     {
-        GL.createCapabilities();
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        opengl.init();
+        opengl.setCullingMode(cullingMode);
+        opengl.setDepthTesting(depthTesting);
 
-        screenClearHandler = new GLScreenClear();
+        screenClearHandler.setClearColor(new Color(0.2f, 0.4f, 0.8f));
+        screenClearHandler.setClearDepth(true);
     }
 
     @Override
     public void dispose()
     {
-        GL.destroy();
+        if (isDisposed())
+            return;
+
         disposed = true;
+        opengl.dispose();
     }
 
     @Override
@@ -51,12 +63,32 @@ public class OpenGLRenderingEngine implements IRenderingEngine
     @Override
     public IMesh createMesh()
     {
-        return new GLMesh();
+        return new GLMesh(bindStates, opengl);
     }
 
     @Override
     public IShader createShader()
     {
-        return new GLShader(bindStates);
+        return new GLShader(bindStates, opengl);
+    }
+
+    @Override
+    public void setDepthTesting(boolean depthTesting)
+    {
+        if (this.depthTesting == depthTesting)
+            return;
+
+        this.depthTesting = depthTesting;
+        opengl.setDepthTesting(depthTesting);
+    }
+
+    @Override
+    public void setCullingMode(CullingMode cullingMode)
+    {
+        if (this.cullingMode == cullingMode)
+            return;
+
+        this.cullingMode = cullingMode;
+        opengl.setCullingMode(cullingMode);
     }
 }

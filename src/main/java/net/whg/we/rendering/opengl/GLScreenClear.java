@@ -1,32 +1,29 @@
 package net.whg.we.rendering.opengl;
 
-import org.lwjgl.opengl.GL11;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.util.Color;
 
 public class GLScreenClear implements IScreenClearHandler
 {
+    private final IOpenGL opengl;
     private Color clearColor;
     private boolean clearDepth;
 
-    GLScreenClear()
+    /**
+     * Creates a new GLScreenClear object.
+     * 
+     * @param opengl
+     *     - The OpenGL instance to send screen clear requests to.
+     */
+    GLScreenClear(IOpenGL opengl)
     {
-        setClearColor(new Color(0.2f, 0.4f, 0.8f));
-        setClearDepth(true);
+        this.opengl = opengl;
     }
 
     @Override
     public void clearScreen()
     {
-        int mask = 0;
-
-        if (clearColor != null)
-            mask |= GL11.GL_COLOR_BUFFER_BIT;
-
-        if (clearDepth)
-            mask |= GL11.GL_DEPTH_BUFFER_BIT;
-
-        GL11.glClear(mask);
+        opengl.clearScreen(clearColor != null, clearDepth);
     }
 
     @Override
@@ -35,7 +32,8 @@ public class GLScreenClear implements IScreenClearHandler
         this.clearColor = clearColor;
 
         if (clearColor != null)
-            GL11.glClearColor(clearColor.getRed(), clearColor.getGreen(), clearColor.getBlue(), clearColor.getAlpha());
+            opengl.setClearColor(clearColor.getRed(), clearColor.getGreen(), clearColor.getBlue(),
+                    clearColor.getAlpha());
     }
 
     @Override

@@ -19,20 +19,17 @@ public interface IShader extends IDisposable
 
     /**
      * Used to compile or re-compile this shader with a new shader program. As a
-     * shader program is comprised of a vertex shader, a geometry shader, and a
-     * fragment shader, providing these three components to the shader can be used
-     * to compile the shader with.
+     * shader program is comprised of a vertex shader and a fragment shader,
+     * providing these two components to the shader can be used to compile the
+     * shader with. Additional shaders may be added to the pipeline if the
+     * underlaying rendering engine supports it.
      * 
-     * @param vertShader
-     *     - The vertex shader in GLSL code.
-     * @param geoShader
-     *     - The geometry shader in GLSL code, or null to not use a geometry shader.
-     * @param fragShader
-     *     - The fragment shader in GLSL code.
+     * @param shaderCode
+     *     - The shader code to send to the rendering engine, to compile.
      * @throws IllegalArgumentException
-     *     If vertShader or fragShader is null.
+     *     If shader code object is null.
      */
-    void compile(String vertShader, String geoShader, String fragShader);
+    void compile(RawShaderCode shaderCode);
 
     /**
      * Assigns a property to this shader in the form of a 4x4 matrix. May also be
