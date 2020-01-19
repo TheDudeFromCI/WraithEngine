@@ -295,7 +295,7 @@ public class ShaderAttributes
      * Gets the starting position of this attribute within the vertex, based on the
      * sizes of all previous attributes.
      *
-     * @param attributeIndex
+     * @param index
      *     - The index of the attribute.
      * @return The position within the vertex of this attribute.
      */
