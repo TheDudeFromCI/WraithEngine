@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import net.whg.we.util.Color;
 
@@ -53,5 +54,34 @@ public class ColorTest
         }
 
         assertEquals(channels.length, captures);
+    }
+
+    @Test
+    public void equals_sameInstance()
+    {
+        Color a = new Color(0.5f, 0.15f, 0.8f);
+
+        assertEquals(a, a);
+        assertEquals(a.hashCode(), a.hashCode());
+    }
+
+    @Test
+    public void equals_diffInstance()
+    {
+        Color a = new Color(0.5f, 0.15f, 0.8f);
+        Color b = new Color(0.5f, 0.15f, 0.8f);
+
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void equals_diffInstance_diffData()
+    {
+        Color a = new Color(0.5f, 0.15f, 0.8f);
+        Color b = new Color(0.2f, 0.3f, 0.4f);
+
+        assertNotEquals(a, b);
+        assertNotEquals(a.hashCode(), b.hashCode());
     }
 }
