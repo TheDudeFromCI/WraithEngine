@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import net.whg.we.util.IDisposable;
-import net.whg.we.util.Transform3D;
+import net.whg.we.main.Transform3D;
 
 /**
  * A game object is a single entity which exists within the game. A game object

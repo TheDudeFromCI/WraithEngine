@@ -5,7 +5,7 @@ import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 /**
  * This is the basic OpenGL implementation of the rendering engine. It uses

@@ -1,4 +1,4 @@
-package net.whg.we.util;
+package net.whg.we.rendering;
 
 /**
  * The color object is used to store an RGBA color in a float-based data

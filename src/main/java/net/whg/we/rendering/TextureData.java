@@ -1,6 +1,6 @@
 package net.whg.we.rendering;
 
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 /**
  * A texture data object is an uncompiled collection of data which is used to

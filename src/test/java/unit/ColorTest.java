@@ -3,7 +3,7 @@ package unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 public class ColorTest
 {

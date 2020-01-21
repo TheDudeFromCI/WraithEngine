@@ -1,4 +1,4 @@
-package net.whg.we.util;
+package net.whg.we.main;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

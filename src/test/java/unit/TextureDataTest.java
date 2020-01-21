@@ -6,7 +6,7 @@ import net.whg.we.rendering.TextureData;
 import net.whg.we.rendering.TextureData.NormalMapMode;
 import net.whg.we.rendering.TextureData.SampleMode;
 import net.whg.we.rendering.TextureData.WrapMode;
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 public class TextureDataTest
 {
