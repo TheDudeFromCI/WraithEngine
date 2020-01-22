@@ -165,8 +165,12 @@ public class GLTexture implements ITexture
             return;
 
         disposed = true;
-        unbind();
-        opengl.deleteTexture(textureId);
+
+        if (created)
+        {
+            unbind();
+            opengl.deleteTexture(textureId);
+        }
     }
 
     /**
