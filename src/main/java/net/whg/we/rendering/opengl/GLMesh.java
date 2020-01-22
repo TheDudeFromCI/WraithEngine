@@ -116,4 +116,10 @@ public class GLMesh implements IMesh
         created = true;
         indexCount = vertexData.getTriangles().length;
     }
+
+    @Override
+    public boolean isCreated()
+    {
+        return created;
+    }
 }

@@ -120,4 +120,10 @@ public class GLShader implements IShader
         int loc = getUniform(property);
         opengl.setUniformMat4(loc, value);
     }
+
+    @Override
+    public boolean isCreated()
+    {
+        return created;
+    }
 }

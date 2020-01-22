@@ -1,13 +1,11 @@
 package net.whg.we.rendering;
 
-import net.whg.we.util.IDisposable;
-
 /**
  * A mesh is a collection of vertices and indices which make up a triangle mesh
  * on the graphics card. A mesh is used to trigger a draw-call to the graphics
  * card to render the given mesh with the currently bound material.
  */
-public interface IMesh extends IDisposable
+public interface IMesh extends IRenderResource
 {
     /**
      * This is used to call for the mesh to be rendered. If this mesh has not yet

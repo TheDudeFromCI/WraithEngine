@@ -1,6 +1,7 @@
 package net.whg.we.external;
 
 import static org.lwjgl.opengl.GL30.*;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import org.lwjgl.opengl.GL;
@@ -283,5 +284,76 @@ public class OpenGLApi implements IOpenGL
     {
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, size, GL_FLOAT, false, stride, offset);
+    }
+
+    @Override
+    public void bindTextureSlot(int slot)
+    {
+        glActiveTexture(GL_TEXTURE0 + slot);
+    }
+
+    @Override
+    public void bindTexture(int textureId)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
+    @Override
+    public int generateTexture()
+    {
+        return glGenTextures();
+    }
+
+    @Override
+    public void deleteTexture(int textureId)
+    {
+        glDeleteTextures(textureId);
+    }
+
+    @Override
+    public void setTexture2DClampWrapMode()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    }
+
+    @Override
+    public void setTexture2DRepeatWrapMode()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+
+    @Override
+    public void uploadTexture2DDataRGBA8(ByteBuffer pixels, int width, int height)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    }
+
+    @Override
+    public void generateTexture2DMipmaps()
+    {
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
+    @Override
+    public void setTexture2DNearestInterpolation()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    @Override
+    public void setTexture2DBilinearInterpolation()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+
+    @Override
+    public void setTexture2DTrilinearpolation()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 }

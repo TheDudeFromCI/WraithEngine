@@ -4,7 +4,7 @@ package net.whg.we.rendering;
  * A texture represents any image file which exists on the GPU and is used
  * within materials in order to render them.
  */
-public interface ITexture
+public interface ITexture extends IRenderResource
 {
     /**
      * Binds this texture to the given texture slot.

@@ -1,7 +1,6 @@
 package net.whg.we.rendering;
 
 import java.nio.FloatBuffer;
-import net.whg.we.util.IDisposable;
 
 /**
  * A shader is used to determine how an object should be rendered to the screen.
@@ -9,7 +8,7 @@ import net.whg.we.util.IDisposable;
  * manipulate vertices into a renderable form. Shaders are also used to apply
  * effects to objects such as textures and lighting.
  */
-public interface IShader extends IDisposable
+public interface IShader extends IRenderResource
 {
     /**
      * When called, this shader is bound to the graphics card, if not already bound,

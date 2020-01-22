@@ -1,5 +1,6 @@
 package net.whg.we.rendering.opengl;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import net.whg.we.rendering.CullingMode;
@@ -235,4 +236,83 @@ public interface IOpenGL
      *     - The offset, in bytes, of the attribute.
      */
     void setVertexAttributePointer(int index, int size, int stride, int offset);
+
+    /**
+     * Binds a texture slot.
+     * 
+     * @param slot
+     *     - The slot to bind.
+     */
+    void bindTextureSlot(int slot);
+
+    /**
+     * Binds a texture to the active texture slot.
+     * 
+     * @param textureId
+     *     - The ID of the texture to bind.
+     */
+    void bindTexture(int textureId);
+
+    /**
+     * Creates a new texture object in virtual memory.
+     * 
+     * @return The ID of the newly created texture.
+     */
+    int generateTexture();
+
+    /**
+     * Deletes a texture object.
+     * 
+     * @param textureId
+     *     - The ID of the texture to delete.
+     */
+    void deleteTexture(int textureId);
+
+    /**
+     * Sets the currently bound texture, as a 2D texture, to use the clamping wrap
+     * mode.
+     */
+    void setTexture2DClampWrapMode();
+
+    /**
+     * Sets the currently bound texture, as a 2D texture, to use the repeating wrap
+     * mode.
+     */
+    void setTexture2DRepeatWrapMode();
+
+    /**
+     * Uploads the given texture data to the currently bound texture, as a 2D
+     * texture, in the RGBA8 format.
+     * 
+     * @param pixels
+     *     - The pixel data to upload.
+     * @param width
+     *     - The width of the texture.
+     * @param height
+     *     - The height of the texture.
+     */
+    void uploadTexture2DDataRGBA8(ByteBuffer pixels, int width, int height);
+
+    /**
+     * Generates mipmaps for the currently bound texture, as a 2D texture.
+     */
+    void generateTexture2DMipmaps();
+
+    /**
+     * Sets the interpolation mode for the currently bound texture, as a 2D texture,
+     * to use nearest neighbor.
+     */
+    void setTexture2DNearestInterpolation();
+
+    /**
+     * Sets the interpolation mode for the currently bound texture, as a 2D texture,
+     * to use bilinear.
+     */
+    void setTexture2DBilinearInterpolation();
+
+    /**
+     * Sets the interpolation mode for the currently bound texture, as a 2D texture,
+     * to use trilinear.
+     */
+    void setTexture2DTrilinearpolation();
 }

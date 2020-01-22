@@ -18,6 +18,7 @@ import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.Scene;
 import net.whg.we.main.UserControlsUpdater;
 import net.whg.we.rendering.Camera;
+import net.whg.we.rendering.Color;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
@@ -70,6 +71,7 @@ public class Scene1Example
 
         IScreenClearHandler screenClear = window.getRenderingEngine()
                                                 .getScreenClearHandler();
+        screenClear.setClearColor(new Color(0.15f, 0.15f, 0.15f));
 
         ModelLoader modelLoader = new ModelLoader(assimp);
 
