@@ -50,4 +50,11 @@ public interface IRenderingEngine extends IDisposable
      *     - The new culling mode.
      */
     void setCullingMode(CullingMode cullingMode);
+
+    /**
+     * Creates a new texture object which can have pixel data uploaded to it.
+     * 
+     * @return A new texture object.
+     */
+    ITexture createTexture();
 }

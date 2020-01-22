@@ -1,8 +1,12 @@
 package net.whg.we.rendering.opengl;
 
 import java.nio.ByteBuffer;
+import org.lwjgl.BufferUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.whg.we.rendering.ITexture;
 import net.whg.we.rendering.TextureData;
+import net.whg.we.rendering.TextureData.SampleMode;
 
 /**
  * This class is the OpenGL implementation of the texture object.
@@ -10,6 +14,7 @@ import net.whg.we.rendering.TextureData;
 public class GLTexture implements ITexture
 {
     private static final String TEXTURE_DISPOSED = "Texture has already been disposed!";
+    private static final Logger logger = LoggerFactory.getLogger(GLTexture.class);
 
     private final IOpenGL opengl;
     private final BindStates bindStates;
@@ -54,19 +59,17 @@ public class GLTexture implements ITexture
     private ByteBuffer getPixelData(TextureData textureData)
     {
         int pixelCount = textureData.getWidth() * textureData.getHeight();
-        ByteBuffer pixels = ByteBuffer.allocate(pixelCount * 4);
+        ByteBuffer pixels = BufferUtils.createByteBuffer(pixelCount * 4);
 
-        byte[] pixelColor = new byte[4];
         for (int y = 0; y < textureData.getHeight(); y++)
         {
             for (int x = 0; x < textureData.getWidth(); x++)
             {
                 int color = textureData.getPixel(x, y);
-                pixelColor[0] = (byte) ((color >> 16) & 0xFF);
-                pixelColor[1] = (byte) ((color >> 8) & 0xFF);
-                pixelColor[2] = (byte) (color & 0xFF);
-                pixelColor[3] = (byte) ((color >> 24) & 0xFF);
-                pixels.put(pixelColor);
+                pixels.put((byte) ((color >> 16) & 0xFF));
+                pixels.put((byte) ((color >> 8) & 0xFF));
+                pixels.put((byte) (color & 0xFF));
+                pixels.put((byte) ((color >> 24) & 0xFF));
             }
         }
 
@@ -105,14 +108,23 @@ public class GLTexture implements ITexture
      */
     private void updateSampling(TextureData textureData)
     {
-        switch (textureData.getSampleMode())
+        SampleMode sampleMode = textureData.getSampleMode();
+
+        if (sampleMode == SampleMode.TRILINEAR && !textureData.hasMipmap())
+        {
+            sampleMode = SampleMode.BILINEAR;
+            logger.warn("Texture uploaded with Sample mode TRILINEAR, but mipmaps "
+                    + "disabled. Setting sampling mode to BILINEAR.");
+        }
+
+        switch (sampleMode)
         {
             case NEAREST:
-                opengl.setTexture2DNearestInterpolation();
+                opengl.setTexture2DNearestInterpolation(textureData.hasMipmap());
                 break;
 
             case BILINEAR:
-                opengl.setTexture2DBilinearInterpolation();
+                opengl.setTexture2DBilinearInterpolation(textureData.hasMipmap());
                 break;
 
             case TRILINEAR:
@@ -125,25 +137,25 @@ public class GLTexture implements ITexture
     }
 
     @Override
-    public void update(TextureData textureData)
+    public void update(TextureData data)
     {
         if (isDisposed())
             throw new IllegalStateException(TEXTURE_DISPOSED);
-
-        ByteBuffer pixels = getPixelData(textureData);
 
         if (!created)
             textureId = opengl.generateTexture();
 
         bindStates.bindTexture(textureId, 0);
 
-        updateWrapping(textureData);
-        opengl.uploadTexture2DDataRGBA8(pixels, textureData.getWidth(), textureData.getHeight());
+        opengl.uploadTexture2DDataRGBA8(getPixelData(data), data.getWidth(), data.getHeight());
 
-        if (textureData.hasMipmap())
+        updateWrapping(data);
+        updateSampling(data);
+
+        if (data.hasMipmap())
             opengl.generateTexture2DMipmaps();
 
-        updateSampling(textureData);
+        created = true;
     }
 
     @Override

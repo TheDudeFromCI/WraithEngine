@@ -131,4 +131,10 @@ public class Color
 
         return Math.abs(blue - other.blue) < epsilon;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Color [alpha=" + alpha + ", blue=" + blue + ", green=" + green + ", red=" + red + "]";
+    }
 }

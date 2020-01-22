@@ -12,7 +12,7 @@ public interface ITexture extends IRenderResource
      * @param slot
      *     - The texture slot to bind this texture to.
      * @throws InvalidArgumentException
-     *     If the slot is less than 0 or more than 24.
+     *     If the slot is less than 0 or more than 23.
      */
     void bind(int slot);
 

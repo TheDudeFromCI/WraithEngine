@@ -5,6 +5,7 @@ import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
+import net.whg.we.rendering.ITexture;
 import net.whg.we.rendering.Color;
 
 /**
@@ -90,5 +91,11 @@ public class OpenGLRenderingEngine implements IRenderingEngine
 
         this.cullingMode = cullingMode;
         opengl.setCullingMode(cullingMode);
+    }
+
+    @Override
+    public ITexture createTexture()
+    {
+        return new GLTexture(opengl, bindStates);
     }
 }

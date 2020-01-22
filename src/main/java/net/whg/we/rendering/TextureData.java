@@ -10,7 +10,11 @@ import net.whg.we.rendering.Color;
  * <p>
  * Internally, texture data objects store color data as an int array, allowing
  * for compact storage, and quick access. As such, it is much quicker to access
- * and modify data using this format. Pixels are stored in the format ARGB.
+ * and modify data using this format. Pixels are stored in the format ARGB. It's
+ * also worth noting that texture data is stored in sRGB color space. If
+ * non-sRGB color space is desired, this conversion occurs as the texture is
+ * being uploaded to the GPU. Direct samples to this texture data object must
+ * manually convert these color values.
  */
 public class TextureData
 {

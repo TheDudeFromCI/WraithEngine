@@ -301,18 +301,34 @@ public interface IOpenGL
     /**
      * Sets the interpolation mode for the currently bound texture, as a 2D texture,
      * to use nearest neighbor.
+     * 
+     * @param mipmap
+     *     - Whether or not the given texture uses mipmaps.
      */
-    void setTexture2DNearestInterpolation();
+    void setTexture2DNearestInterpolation(boolean mipmap);
 
     /**
      * Sets the interpolation mode for the currently bound texture, as a 2D texture,
      * to use bilinear.
+     * 
+     * @param mipmap
+     *     - Whether or not the given texture uses mipmaps.
      */
-    void setTexture2DBilinearInterpolation();
+    void setTexture2DBilinearInterpolation(boolean mipmap);
 
     /**
      * Sets the interpolation mode for the currently bound texture, as a 2D texture,
      * to use trilinear.
      */
     void setTexture2DTrilinearpolation();
+
+    /**
+     * Sets the value of a uniform as an int.
+     * 
+     * @param location
+     *     - The location of the uniform in the currently bound shader.
+     * @param value
+     *     - The int value.
+     */
+    void setUniformInt(int location, int value);
 }
