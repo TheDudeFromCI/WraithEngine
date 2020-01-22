@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import org.joml.Quaternionf;
-import org.lwjgl.glfw.GLFW;
 import net.whg.we.external.AssimpAPI;
 import net.whg.we.external.GlfwApi;
 import net.whg.we.external.OpenGLApi;
@@ -18,17 +17,23 @@ import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.Scene;
 import net.whg.we.main.UserControlsUpdater;
 import net.whg.we.rendering.Camera;
+import net.whg.we.rendering.Color;
+import net.whg.we.rendering.CullingMode;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.IShader;
+import net.whg.we.rendering.ITexture;
 import net.whg.we.rendering.Material;
 import net.whg.we.rendering.RawShaderCode;
+import net.whg.we.rendering.TextureData;
 import net.whg.we.rendering.VertexData;
+import net.whg.we.rendering.TextureData.SampleMode;
 import net.whg.we.rendering.opengl.IOpenGL;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 import net.whg.we.resource.ModelLoader;
 import net.whg.we.resource.Resource;
+import net.whg.we.resource.TextureLoader;
 import net.whg.we.resource.assimp.IAssimp;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowAdapter;
@@ -38,38 +43,20 @@ import net.whg.we.window.glfw.IGlfw;
 
 public class Scene1Example
 {
-    private static boolean running = true;
-
     public static void main(String[] args) throws IOException
     {
         IGlfw glfw = new GlfwApi();
-        IOpenGL opengl = new OpenGLApi();
+        IOpenGL opengl = new OpenGLApi(true);
         IAssimp assimp = new AssimpAPI();
 
         IRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
         WindowSettings windowSettings = new WindowSettings();
         IWindow window = new GlfwWindow(glfw, renderingEngine, windowSettings);
 
-        window.addWindowListener(new IWindowAdapter()
-        {
-            @Override
-            public void onKeyReleased(IWindow window, int keyCode)
-            {
-                if (keyCode == GLFW.GLFW_KEY_ESCAPE)
-                    running = false;
-            }
-
-            @Override
-            public void onWindowRequestClose(IWindow window)
-            {
-                running = false;
-            }
-        });
-
         UserControlsUpdater.bind(window);
 
-        IScreenClearHandler screenClear = window.getRenderingEngine()
-                                                .getScreenClearHandler();
+        IScreenClearHandler screenClear = renderingEngine.getScreenClearHandler();
+        screenClear.setClearColor(new Color(0.15f, 0.15f, 0.15f));
 
         ModelLoader modelLoader = new ModelLoader(assimp);
 
@@ -85,14 +72,22 @@ public class Scene1Example
         camera.getTransform()
               .setPosition(0, 0, 5);
 
-        IMesh mesh = window.getRenderingEngine()
-                           .createMesh();
+        IMesh mesh = renderingEngine.createMesh();
         mesh.update(cubeData);
 
-        IShader shader = window.getRenderingEngine()
-                               .createShader();
+        IShader shader = renderingEngine.createShader();
         shader.compile(new RawShaderCode(vertShader, fragShader));
+
+        TextureData textureData = TextureLoader.loadTexture(new File("src/test/res/grass.png"));
+        textureData.setSampleMode(SampleMode.NEAREST);
+        textureData.setMipmap(true);
+        ITexture texture = renderingEngine.createTexture();
+        texture.update(textureData);
+
+        renderingEngine.setCullingMode(CullingMode.NONE);
+
         Material material = new Material(shader);
+        material.setTextures(new ITexture[] {texture}, new String[] {"diffuse"});
 
         GameObject cube = new GameObject();
         RenderBehavior renderer = new RenderBehavior();
@@ -110,33 +105,46 @@ public class Scene1Example
 
         gameLoop.addAction(() ->
         {
-            if (!Input.isMouseButtonDown(0))
-                return;
+            if (Input.isMouseButtonDown(0))
+            {
+                final float s = 0.01f;
+                float dx = Input.getMouseDeltaX() * s;
+                float dy = Input.getMouseDeltaY() * s;
 
-            final float s = 0.01f;
-            float dx = Input.getMouseDeltaX() * s;
-            float dy = Input.getMouseDeltaY() * s;
+                cube.getTransform()
+                    .getRotation()
+                    .rotateX(dy)
+                    .rotateY(dx);
+            }
 
-            cube.getTransform()
-                .getRotation()
-                .rotateX(dy)
-                .rotateY(dx);
+            if (Input.getScrollWheelDelta() != 0)
+            {
+                cube.getTransform()
+                    .setSize(cube.getTransform()
+                                 .getSize().x
+                            * (float) Math.pow(1.1f, -Input.getScrollWheelDelta()));
+            }
         });
         gameLoop.addAction(() -> screenClear.clearScreen());
         gameLoop.addAction(() -> scene.getRenderer()
                                       .render(camera));
         gameLoop.addAction(() -> Input.endFrame());
         gameLoop.addAction(() -> window.pollEvents());
-        gameLoop.addAction(() ->
+
+        window.addWindowListener(new IWindowAdapter()
         {
-            if (!running)
+            @Override
+            public void onWindowRequestClose(IWindow window)
+            {
                 gameLoop.stop();
+            }
         });
 
         gameLoop.loop();
 
         mesh.dispose();
         shader.dispose();
+        texture.dispose();
 
         window.dispose();
     }

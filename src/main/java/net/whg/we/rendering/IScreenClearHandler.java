@@ -1,6 +1,6 @@
 package net.whg.we.rendering;
 
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 /**
  * A screen clear handler is a rendering-specific operation which allows for the

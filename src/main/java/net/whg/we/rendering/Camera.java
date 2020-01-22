@@ -2,7 +2,7 @@ package net.whg.we.rendering;
 
 import org.joml.Matrix4f;
 import net.whg.we.main.Screen;
-import net.whg.we.util.Transform3D;
+import net.whg.we.main.Transform3D;
 
 /**
  * The camera is the object in charge of determing the projection and view

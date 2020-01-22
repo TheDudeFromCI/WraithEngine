@@ -10,7 +10,7 @@ import org.junit.Test;
 import net.whg.we.rendering.IScreenClearHandler;
 import net.whg.we.rendering.opengl.IOpenGL;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 public class GLScreenClearTest
 {

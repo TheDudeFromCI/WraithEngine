@@ -3,12 +3,15 @@ package net.whg.we.rendering.opengl;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.RawShaderCode;
 
 public class GLShader implements IShader
 {
     private static final String SHADER_DISPOSED = "Shader already disposed!";
+    private static final Logger logger = LoggerFactory.getLogger(GLShader.class);
 
     private final Map<String, Integer> uniforms = new HashMap<>();
     private final IOpenGL opengl;
@@ -83,7 +86,12 @@ public class GLShader implements IShader
             throw new IllegalArgumentException("Shader code cannot be null!");
 
         if (created)
+        {
+            logger.info("Recompiling shader.");
             destroyShader();
+        }
+        else
+            logger.info("Compiling shader.");
 
         created = true;
 
@@ -97,6 +105,8 @@ public class GLShader implements IShader
 
         opengl.deleteShader(vId);
         opengl.deleteShader(fId);
+
+        logger.debug("Compiled shader with ID: {}", shaderId);
     }
 
     private int getUniform(String uniform)
@@ -110,14 +120,32 @@ public class GLShader implements IShader
     }
 
     @Override
-    public void setUniformMat4(String property, FloatBuffer value)
+    public void setUniformMat4(String uniform, FloatBuffer value)
     {
         if (isDisposed())
             throw new IllegalStateException(SHADER_DISPOSED);
 
         bind();
 
-        int loc = getUniform(property);
+        int loc = getUniform(uniform);
         opengl.setUniformMat4(loc, value);
+    }
+
+    @Override
+    public boolean isCreated()
+    {
+        return created;
+    }
+
+    @Override
+    public void setUniformInt(String uniform, int value)
+    {
+        if (isDisposed())
+            throw new IllegalStateException(SHADER_DISPOSED);
+
+        bind();
+
+        int loc = getUniform(uniform);
+        opengl.setUniformInt(loc, value);
     }
 }

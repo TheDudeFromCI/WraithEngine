@@ -1,4 +1,4 @@
-package net.whg.we.util;
+package net.whg.we.rendering;
 
 /**
  * The color object is used to store an RGBA color in a float-based data
@@ -91,5 +91,53 @@ public class Color
     public float getAlpha()
     {
         return alpha;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) Math.floor(alpha * 10000);
+        result = prime * result + (int) Math.floor(red * 10000);
+        result = prime * result + (int) Math.floor(green * 10000);
+        result = prime * result + (int) Math.floor(blue * 10000);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        Color other = (Color) obj;
+
+        final float epsilon = 0.0001f;
+        if (Math.abs(alpha - other.alpha) >= epsilon)
+            return false;
+
+        if (Math.abs(red - other.red) >= epsilon)
+            return false;
+
+        if (Math.abs(green - other.green) >= epsilon)
+            return false;
+
+        return Math.abs(blue - other.blue) < epsilon;
+    }
+
+    @Override
+    public String toString()
+    {
+        if (Math.abs(alpha - 1f) < 0.0001f)
+            return String.format("Color(%s, %s, %s)", red, green, blue);
+
+        return String.format("Color(%s, %s, %s, %s)", red, green, blue, alpha);
     }
 }

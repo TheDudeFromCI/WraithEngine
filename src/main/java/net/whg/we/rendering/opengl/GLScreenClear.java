@@ -1,7 +1,7 @@
 package net.whg.we.rendering.opengl;
 
 import net.whg.we.rendering.IScreenClearHandler;
-import net.whg.we.util.Color;
+import net.whg.we.rendering.Color;
 
 public class GLScreenClear implements IScreenClearHandler
 {

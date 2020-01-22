@@ -1,77 +1,43 @@
 package net.whg.we.external;
 
 import static org.lwjgl.opengl.GL30.*;
+import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL45;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.lwjgl.opengl.GLUtil;
 import net.whg.we.rendering.CullingMode;
 import net.whg.we.rendering.opengl.GLException;
 import net.whg.we.rendering.opengl.IOpenGL;
+import net.whg.we.util.OutputStreamWrapper;
+import net.whg.we.util.OutputStreamWrapper.LogLevel;
 
 /**
  * The implementation of the OpenGL api.
  */
 public class OpenGLApi implements IOpenGL
 {
-    private static final Logger logger = LoggerFactory.getLogger(OpenGLApi.class);
+    private boolean debugMode;
 
     /**
-     * This is a debug utility for finding OpenGL errors. This is a bit slow, so
-     * only use for debugging purposes.
-     * <p>
-     * This method can be used by placing various calls to this method throughout
-     * newly edited areas with a given state tag. These errors will be logged to the
-     * console while running, allowing the developer to narrow down on the
-     * problematic area. This method checks for the all OpenGL errors which occured
-     * before this method call, meaning it is useful to place it after a set of
-     * related actions. These method calls should be removed after debugging.
-     * 
-     * @param state
-     *     - The state tag which should be written to the console.
+     * Creates a new OpenGL API bridge instance.
      */
-    public static void checkForErrors(String state)
+    public OpenGLApi()
     {
-        int error;
-        while ((error = glGetError()) != GL_NO_ERROR)
-        {
-            String errorName;
+        this(false);
+    }
 
-            switch (error)
-            {
-                case GL_INVALID_ENUM:
-                    errorName = "Invalid Enum";
-                    break;
-                case GL_INVALID_VALUE:
-                    errorName = "Invalid Value";
-                    break;
-                case GL_INVALID_OPERATION:
-                    errorName = "Invalid Operation";
-                    break;
-                case GL_STACK_OVERFLOW:
-                    errorName = "Stack Overflow";
-                    break;
-                case GL_STACK_UNDERFLOW:
-                    errorName = "Stack Underflow";
-                    break;
-                case GL_OUT_OF_MEMORY:
-                    errorName = "Out of Memory";
-                    break;
-                case GL_INVALID_FRAMEBUFFER_OPERATION:
-                    errorName = "Invalid Framebuffer Operation";
-                    break;
-                case GL45.GL_CONTEXT_LOST:
-                    errorName = "Context Lost";
-                    break;
-                default:
-                    errorName = "Unknown Error";
-                    break;
-            }
-
-            logger.error("OpenGL Error Detected! {} ({})", errorName, state);
-        }
+    /**
+     * Creates a new OpenGL API bridge instance.
+     * 
+     * @param debugMode
+     *     - Whether or not to enable debug mode. Provides useful debugging
+     *     messages, but may be slower.
+     */
+    public OpenGLApi(boolean debugMode)
+    {
+        this.debugMode = debugMode;
     }
 
     @Override
@@ -82,8 +48,8 @@ public class OpenGLApi implements IOpenGL
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int i = 0; i < 10; i++)
-            glEnableVertexAttribArray(i);
+        if (debugMode)
+            GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStreamWrapper(LogLevel.DEBUG)));
     }
 
     @Override
@@ -283,5 +249,90 @@ public class OpenGLApi implements IOpenGL
     {
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, size, GL_FLOAT, false, stride, offset);
+    }
+
+    @Override
+    public void bindTextureSlot(int slot)
+    {
+        glActiveTexture(GL_TEXTURE0 + slot);
+    }
+
+    @Override
+    public void bindTexture(int textureId)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
+    @Override
+    public int generateTexture()
+    {
+        return glGenTextures();
+    }
+
+    @Override
+    public void deleteTexture(int textureId)
+    {
+        glDeleteTextures(textureId);
+    }
+
+    @Override
+    public void setTexture2DClampWrapMode()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    }
+
+    @Override
+    public void setTexture2DRepeatWrapMode()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    }
+
+    @Override
+    public void uploadTexture2DDataRGBA8(ByteBuffer pixels, int width, int height)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    }
+
+    @Override
+    public void generateTexture2DMipmaps()
+    {
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+
+    @Override
+    public void setTexture2DNearestInterpolation(boolean mipmaps)
+    {
+        if (mipmaps)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        else
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    @Override
+    public void setTexture2DBilinearInterpolation(boolean mipmaps)
+    {
+        if (mipmaps)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        else
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+
+    @Override
+    public void setTexture2DTrilinearpolation()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+
+    @Override
+    public void setUniformInt(int location, int value)
+    {
+        glUniform1i(location, value);
     }
 }

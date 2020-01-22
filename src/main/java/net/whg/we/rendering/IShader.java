@@ -1,7 +1,6 @@
 package net.whg.we.rendering;
 
 import java.nio.FloatBuffer;
-import net.whg.we.util.IDisposable;
 
 /**
  * A shader is used to determine how an object should be rendered to the screen.
@@ -9,7 +8,7 @@ import net.whg.we.util.IDisposable;
  * manipulate vertices into a renderable form. Shaders are also used to apply
  * effects to objects such as textures and lighting.
  */
-public interface IShader extends IDisposable
+public interface IShader extends IRenderResource
 {
     /**
      * When called, this shader is bound to the graphics card, if not already bound,
@@ -32,15 +31,25 @@ public interface IShader extends IDisposable
     void compile(RawShaderCode shaderCode);
 
     /**
-     * Assigns a property to this shader in the form of a 4x4 matrix. May also be
+     * Assigns a uniform to this shader in the form of a 4x4 matrix. May also be
      * used to assign an array of matrix values.
      * 
-     * @param property
-     *     - The property name.
+     * @param uniform
+     *     - The uniform name.
      * @param value
      *     - The matrix values.
      * @throws IllegalArgumentException
      *     If the float buffer has a length which is not an increment of 16.
      */
-    void setUniformMat4(String property, FloatBuffer value);
+    void setUniformMat4(String uniform, FloatBuffer value);
+
+    /**
+     * Assigns a uniform to this shader in the form of an int.
+     * 
+     * @param uniform
+     *     - The uniform name.
+     * @param value
+     *     - The value to assign.
+     */
+    void setUniformInt(String uniform, int value);
 }
