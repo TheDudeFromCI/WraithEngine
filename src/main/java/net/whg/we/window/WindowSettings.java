@@ -211,12 +211,13 @@ public class WindowSettings
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (fullscreen ? 1231 : 1237);
+        result = prime * result + width;
         result = prime * result + height;
         result = prime * result + samples;
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + title.hashCode();
         result = prime * result + (vsync ? 1231 : 1237);
-        result = prime * result + width;
+        result = prime * result + (resizable ? 1231 : 1237);
+        result = prime * result + (fullscreen ? 1231 : 1237);
         return result;
     }
 
@@ -282,7 +283,7 @@ public class WindowSettings
      * 
      * @return The aspect ratio.
      */
-    public float getAspectRation()
+    public float getAspectRatio()
     {
         return (float) width / height;
     }
@@ -303,5 +304,21 @@ public class WindowSettings
         vsync = settings.vsync;
         resizable = settings.resizable;
         samples = settings.samples;
+    }
+
+    /**
+     * Sets the width and the height of this window.
+     * 
+     * @param width
+     *     - The new width.
+     * @param height
+     *     - The new height.
+     * @see {@link #setWidth(int)}
+     * @see {@link #setHeight(int)}
+     */
+    public void setSize(int width, int height)
+    {
+        setWidth(width);
+        setHeight(height);
     }
 }
