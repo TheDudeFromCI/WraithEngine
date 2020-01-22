@@ -135,6 +135,9 @@ public class Color
     @Override
     public String toString()
     {
-        return "Color [alpha=" + alpha + ", blue=" + blue + ", green=" + green + ", red=" + red + "]";
+        if (Math.abs(alpha - 1f) < 0.0001f)
+            return String.format("Color(%s, %s, %s)", red, green, blue);
+
+        return String.format("Color(%s, %s, %s, %s)", red, green, blue, alpha);
     }
 }

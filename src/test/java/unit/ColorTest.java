@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import net.whg.we.rendering.Color;
@@ -83,5 +84,35 @@ public class ColorTest
 
         assertNotEquals(a, b);
         assertNotEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void equals_diffInstance_diffData2()
+    {
+        assertNotEquals(new Color(0.1f, 0.2f, 0.3f, 0.4f), new Color(0.1f, 0.2f, 0.3f, 0.5f));
+        assertNotEquals(new Color(0.1f, 0.2f, 0.3f, 0.4f), new Color(0.1f, 0.2f, 0.5f, 0.4f));
+        assertNotEquals(new Color(0.1f, 0.2f, 0.3f, 0.4f), new Color(0.1f, 0.5f, 0.3f, 0.4f));
+        assertNotEquals(new Color(0.1f, 0.2f, 0.3f, 0.4f), new Color(0.5f, 0.2f, 0.3f, 0.4f));
+
+        assertFalse(new Color(0f, 0f, 0f).equals(null));
+        assertFalse(new Color(0f, 0f, 0f).equals(new Object()));
+    }
+
+    @Test
+    public void toString_noAlpha()
+    {
+        Color c = new Color(0.2f, 0.4f, 0.8f);
+        String target = "Color(0.2, 0.4, 0.8)";
+
+        assertEquals(target, c.toString());
+    }
+
+    @Test
+    public void toString_withAlpha()
+    {
+        Color c = new Color(0.2f, 0.4f, 0.8f, 0.5f);
+        String target = "Color(0.2, 0.4, 0.8, 0.5)";
+
+        assertEquals(target, c.toString());
     }
 }
