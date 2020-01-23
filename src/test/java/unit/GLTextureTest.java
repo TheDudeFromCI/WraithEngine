@@ -91,6 +91,17 @@ public class GLTextureTest
     }
 
     @Test(expected = IllegalStateException.class)
+    public void bind_notCreated()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        ITexture texture = renderingEngine.createTexture();
+        texture.bind(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
     public void update_isDisposed()
     {
         IOpenGL opengl = opengl();
