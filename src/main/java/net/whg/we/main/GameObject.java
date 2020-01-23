@@ -12,7 +12,7 @@ import net.whg.we.util.IDisposable;
  * is comprised of a set of components which are used to define the object's
  * properties and behavior.
  */
-public class GameObject implements IDisposable
+public final class GameObject implements IDisposable
 {
     private static final String OBJECT_DISPOSED = "Object already disposed!";
 

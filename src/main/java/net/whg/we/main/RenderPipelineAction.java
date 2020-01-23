@@ -70,4 +70,10 @@ public class RenderPipelineAction implements IPipelineAction
     {
         return renderedObjectsReadOnly;
     }
+
+    @Override
+    public int getPriority()
+    {
+        return 3000;
+    }
 }

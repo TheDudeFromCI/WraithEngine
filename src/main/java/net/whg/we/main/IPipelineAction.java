@@ -8,6 +8,19 @@ package net.whg.we.main;
  * Within a pipeline action, objects are selected based solely on attached
  * behavors, where a single behavior may be in multiple actions at once, and a
  * game object may have behaviors which interact with different actions.
+ * <p>
+ * Pipeline actions should also override the default priority level for loop
+ * actions to ensure pipeline actions occur in the desired order. Default
+ * priorities are:
+ * <ul>
+ * <li><i>Physics Updates</i> at <strong>-1000</strong></li>
+ * <li><i>Updates</i> at <strong>0</strong></li>
+ * <li><i>Animation Updates</i> at <strong>1000</strong></li>
+ * <li><i>Late Updates</i> at <strong>2000</strong></li>
+ * <li><i>Rendering Solids</i> at <strong>3000</strong></li>
+ * <li><i>Rendering Transparents</i> at <strong>3250</strong></li>
+ * <li><i>Dispose GameObjects</i> at <strong>4000</strong></li>
+ * </ul>
  */
 public interface IPipelineAction extends ILoopAction
 {

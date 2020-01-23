@@ -70,4 +70,10 @@ public class RenderPipelineActionTest
 
         verify(mesh, never()).render();
     }
+
+    @Test
+    public void ensureCorrectPriority()
+    {
+        assertEquals(3000, new RenderPipelineAction().getPriority());
+    }
 }
