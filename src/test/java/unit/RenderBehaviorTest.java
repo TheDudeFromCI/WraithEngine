@@ -10,6 +10,7 @@ import org.junit.Test;
 import net.whg.we.main.GameObject;
 import net.whg.we.rendering.Material;
 import net.whg.we.main.RenderBehavior;
+import net.whg.we.main.RenderPipelineAction;
 import net.whg.we.main.Scene;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
@@ -74,8 +75,10 @@ public class RenderBehaviorTest
         go.addBehavior(behavior);
         scene.addGameObject(go);
 
-        scene.getRenderer()
-             .render(new Camera());
+        RenderPipelineAction renderPipeline = new RenderPipelineAction();
+        renderPipeline.setCamera(new Camera());
+        renderPipeline.enableBehavior(behavior);
+        renderPipeline.run();
 
         verify(shader).bind();
         verify(mesh).render();
@@ -96,8 +99,10 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        scene.getRenderer()
-             .render(new Camera());
+        RenderPipelineAction renderPipeline = new RenderPipelineAction();
+        renderPipeline.setCamera(new Camera());
+        renderPipeline.enableBehavior(behavior);
+        renderPipeline.run();
 
         verify(shader).bind();
         verify(mesh).render();
@@ -116,8 +121,10 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        scene.getRenderer()
-             .render(new Camera());
+        RenderPipelineAction renderPipeline = new RenderPipelineAction();
+        renderPipeline.setCamera(new Camera());
+        renderPipeline.enableBehavior(behavior);
+        renderPipeline.run();
 
         verify(shader, never()).bind();
     }
@@ -134,8 +141,10 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        scene.getRenderer()
-             .render(new Camera());
+        RenderPipelineAction renderPipeline = new RenderPipelineAction();
+        renderPipeline.setCamera(new Camera());
+        renderPipeline.enableBehavior(behavior);
+        renderPipeline.run();
 
         verify(mesh, never()).render();
     }
@@ -156,61 +165,5 @@ public class RenderBehaviorTest
         assertTrue(behavior.isDisposed());
         assertNull(behavior.getMesh());
         assertNull(behavior.getMaterial());
-    }
-
-    @Test
-    public void dispose_onDispose_removeFromSceneRenderer()
-    {
-        IMesh mesh = mock(IMesh.class);
-        IShader shader = mock(IShader.class);
-        Material material = new Material(shader);
-        Scene scene = new Scene();
-        GameObject go = new GameObject();
-
-        RenderBehavior behavior = new RenderBehavior();
-        behavior.setMesh(mesh);
-        behavior.setMaterial(material);
-        go.addBehavior(behavior);
-        scene.addGameObject(go);
-
-        assertEquals(1, scene.getRenderer()
-                             .getSize());
-
-        behavior.dispose();
-        assertEquals(0, scene.getRenderer()
-                             .getSize());
-    }
-
-    @Test
-    public void changeScene_moveRenderer()
-    {
-        GameObject go = new GameObject();
-        RenderBehavior behavior = new RenderBehavior();
-        go.addBehavior(behavior);
-
-        Scene scene1 = new Scene();
-        Scene scene2 = new Scene();
-        assertEquals(0, scene1.getRenderer()
-                              .getSize());
-        assertEquals(0, scene2.getRenderer()
-                              .getSize());
-
-        scene1.addGameObject(go);
-        assertEquals(1, scene1.getRenderer()
-                              .getSize());
-        assertEquals(0, scene2.getRenderer()
-                              .getSize());
-
-        scene2.addGameObject(go);
-        assertEquals(0, scene1.getRenderer()
-                              .getSize());
-        assertEquals(1, scene2.getRenderer()
-                              .getSize());
-
-        scene2.removeGameObject(go);
-        assertEquals(0, scene1.getRenderer()
-                              .getSize());
-        assertEquals(0, scene2.getRenderer()
-                              .getSize());
     }
 }

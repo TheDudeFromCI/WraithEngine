@@ -1,5 +1,6 @@
 package net.whg.we.main;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -130,6 +131,16 @@ public class GameObject implements IDisposable
                 return behavior;
 
         return null;
+    }
+
+    /**
+     * Gets a list of all behaviors on this game object.
+     * 
+     * @return A new list containing all behaviors on this game object.
+     */
+    public List<AbstractBehavior> getBehaviors()
+    {
+        return new ArrayList<>(behaviors);
     }
 
     /**

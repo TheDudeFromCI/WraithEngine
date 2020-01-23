@@ -1,17 +1,17 @@
 package net.whg.we.main;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.whg.we.util.IObjectContainer;
 
 /**
  * A scene is used to represent the current state of the world. It is comprised
  * of a collection of game objects which populate that world.
  */
-public class Scene implements Iterable<GameObject>
+public class Scene implements IObjectContainer<GameObject>
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
-    private final SceneRenderer renderer = new SceneRenderer();
+    private final List<IPipelineAction> pipelineActions = new CopyOnWriteArrayList<>();
 
     /**
      * Adds a new game object to this scene. This method does nothing if the game
@@ -47,55 +47,68 @@ public class Scene implements Iterable<GameObject>
         if (gameObject == null)
             return;
 
+        if (!gameObjects.contains(gameObject))
+            return;
+
         gameObjects.remove(gameObject);
         gameObject.setScene(null);
     }
 
-    /**
-     * This method iterates over all game objects in the scene and removes all game
-     * objects which are currently marked for removal. This is usually called at the
-     * end of a frame to remove and clean up game objects.
-     */
-    public void cullGameObjects()
-    {
-        for (GameObject gameObject : gameObjects)
-            if (gameObject.isMarkedForRemoval())
-                removeGameObject(gameObject);
-    }
-
-    /**
-     * Gets the object in charge of rendering this scene.
-     * 
-     * @return The scene renderer.
-     */
-    public SceneRenderer getRenderer()
-    {
-        return renderer;
-    }
-
-    /**
-     * Gets the number of game objects in this scene.
-     * 
-     * @return The number of game objects.
-     */
-    public int countGameObjects()
+    @Override
+    public int getSize()
     {
         return gameObjects.size();
     }
 
     @Override
-    public Iterator<GameObject> iterator()
+    public GameObject getObjectAt(int index)
     {
-        return gameObjects.iterator();
+        return gameObjects.get(index);
     }
 
     /**
-     * Checks if this scene contains the given game object.
+     * Adds a new pipeline action to this scene. This will also trigger the
+     * enableBehavior method for each behavior within this scene. This method does
+     * nothing if the action is null or is already in this scene.
      * 
-     * @return True if the given game object is in this scene. False otherwise.
+     * @param action
+     *     - The action to add.
      */
-    public boolean hasGameObject(GameObject gameObject)
+    public void addPipelineAction(IPipelineAction action)
     {
-        return gameObjects.contains(gameObject);
+        if (action == null)
+            return;
+
+        if (pipelineActions.contains(action))
+            return;
+
+        pipelineActions.add(action);
+
+        for (GameObject go : gameObjects)
+            for (AbstractBehavior behavior : go.getBehaviors())
+                action.enableBehavior(behavior);
+    }
+
+    /**
+     * Removes a pipeline action from this scene. This will also trigger the
+     * disableBehavior method for each behavior within this scene. The method does
+     * nothing if the action is null or is not in this scene.
+     * 
+     * @param action
+     *     - The action to remove.
+     */
+    public void removePipelineAction(IPipelineAction action)
+    {
+        if (action == null)
+            return;
+
+        if (!pipelineActions.contains(action))
+            return;
+
+        pipelineActions.remove(action);
+
+        for (GameObject go : gameObjects)
+            for (AbstractBehavior behavior : go.getBehaviors())
+                action.disableBehavior(behavior);
     }
 }

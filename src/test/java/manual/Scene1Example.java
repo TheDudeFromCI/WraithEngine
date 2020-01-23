@@ -126,8 +126,8 @@ public class Scene1Example
             }
         });
         gameLoop.addAction(() -> screenClear.clearScreen());
-        gameLoop.addAction(() -> scene.getRenderer()
-                                      .render(camera));
+        // gameLoop.addAction(() -> scene.getRenderer()
+        // .render(camera));
         gameLoop.addAction(() -> Input.endFrame());
         gameLoop.addAction(() -> window.pollEvents());
 
