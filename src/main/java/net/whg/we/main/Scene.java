@@ -31,9 +31,6 @@ public class Scene
         if (gameObjects.contains(gameObject))
             return;
 
-        if (gameObject.getScene() != null)
-            gameObject.getScene().gameObjects.remove(gameObject);
-
         gameObjects.add(gameObject);
         gameObject.setScene(this);
 

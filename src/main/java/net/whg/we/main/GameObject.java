@@ -93,6 +93,9 @@ public class GameObject implements IDisposable
 
         behavior.init(this);
         behaviors.add(behavior);
+
+        if (scene != null)
+            scene.triggerEnableBehavior(behavior);
     }
 
     /**
@@ -109,6 +112,9 @@ public class GameObject implements IDisposable
 
         if (behavior == null)
             return;
+
+        if (scene != null)
+            scene.triggerDisableBehavior(behavior);
 
         behaviors.remove(behavior);
         behavior.dispose();
@@ -199,13 +205,13 @@ public class GameObject implements IDisposable
         if (isDisposed())
             return;
 
-        disposed = true;
-
         for (AbstractBehavior behavior : behaviors)
-            behavior.dispose();
-        behaviors.clear();
+            removeBehavior(behavior);
 
-        scene = null;
+        if (scene != null)
+            scene.removeGameObject(this);
+
+        disposed = true;
     }
 
     @Override
@@ -233,6 +239,12 @@ public class GameObject implements IDisposable
      */
     void setScene(Scene scene)
     {
+        if (this.scene == scene)
+            return;
+
+        if (this.scene != null)
+            this.scene.removeGameObject(this);
+
         Scene oldScene = this.scene;
         this.scene = scene;
 

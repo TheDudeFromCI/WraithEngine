@@ -1,8 +1,11 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
@@ -141,6 +144,11 @@ public class SceneTest
         verify(action).enableBehavior(b2);
         verify(action).enableBehavior(b3);
         verify(action).enableBehavior(b4);
+
+        verify(action, never()).disableBehavior(b1);
+        verify(action, never()).disableBehavior(b2);
+        verify(action, never()).disableBehavior(b3);
+        verify(action, never()).disableBehavior(b4);
     }
 
     @Test
@@ -195,5 +203,96 @@ public class SceneTest
         verify(action).disableBehavior(b2);
         verify(action).disableBehavior(b3);
         verify(action).disableBehavior(b4);
+    }
+
+    @Test
+    public void addBehavior_existingGameObject()
+    {
+        GameObject go = new GameObject();
+        Scene scene = new Scene();
+        scene.addGameObject(go);
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+
+        AbstractBehavior b = mock(AbstractBehavior.class);
+        go.addBehavior(b);
+
+        verify(action).enableBehavior(b);
+        verify(action, never()).disableBehavior(b);
+    }
+
+    @Test
+    public void removeBehavior_existingGameObject()
+    {
+        GameObject go = new GameObject();
+        Scene scene = new Scene();
+        scene.addGameObject(go);
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+
+        AbstractBehavior b = mock(AbstractBehavior.class);
+        go.addBehavior(b);
+
+        go.removeBehavior(b);
+
+        verify(action).disableBehavior(b);
+    }
+
+    @Test
+    public void changeScene_transferPipelineBehaviors()
+    {
+        Scene scene1 = new Scene();
+        Scene scene2 = new Scene();
+
+        GameObject go = new GameObject();
+        scene1.addGameObject(go);
+
+        AbstractBehavior behavior = mock(AbstractBehavior.class);
+        go.addBehavior(behavior);
+
+        IPipelineAction action1 = mock(IPipelineAction.class);
+        scene1.addPipelineAction(action1);
+
+        IPipelineAction action2 = mock(IPipelineAction.class);
+        scene2.addPipelineAction(action2);
+
+        reset(behavior);
+        reset(action1);
+        reset(action2);
+
+        scene2.addGameObject(go);
+
+        assertFalse(scene1.gameObjects()
+                          .contains(go));
+        assertTrue(scene2.gameObjects()
+                         .contains(go));
+
+        assertEquals(scene2, go.getScene());
+
+        verify(action1).disableBehavior(behavior);
+        verify(action2).enableBehavior(behavior);
+
+        verify(action1, never()).enableBehavior(behavior);
+        verify(action2, never()).disableBehavior(behavior);
+    }
+
+    @Test
+    public void disposeGameObject_removedBehaviors()
+    {
+        GameObject go = new GameObject();
+        Scene scene = new Scene();
+        scene.addGameObject(go);
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+
+        AbstractBehavior b = mock(AbstractBehavior.class);
+        go.addBehavior(b);
+
+        go.dispose();
+
+        verify(action).disableBehavior(b);
     }
 }
