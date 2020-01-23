@@ -1,6 +1,7 @@
 package net.whg.we.main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.whg.we.rendering.Camera;
 
@@ -11,6 +12,7 @@ import net.whg.we.rendering.Camera;
 public class RenderPipelineAction implements IPipelineAction
 {
     private final List<RenderBehavior> renderedObjects = new ArrayList<>();
+    private final List<RenderBehavior> renderedObjectsReadOnly = Collections.unmodifiableList(renderedObjects);
     private Camera camera;
 
     @Override
@@ -58,15 +60,14 @@ public class RenderPipelineAction implements IPipelineAction
         return camera;
     }
 
-    @Override
-    public int getSize()
+    /**
+     * Gets a read-only list of render behaviors currently maintained by this
+     * action.
+     * 
+     * @return A list of render behaviors.
+     */
+    public List<RenderBehavior> renderBehaviors()
     {
-        return renderedObjects.size();
-    }
-
-    @Override
-    public RenderBehavior getObjectAt(int index)
-    {
-        return renderedObjects.get(index);
+        return renderedObjectsReadOnly;
     }
 }

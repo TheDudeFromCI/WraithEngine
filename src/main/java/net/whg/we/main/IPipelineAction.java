@@ -1,7 +1,5 @@
 package net.whg.we.main;
 
-import net.whg.we.util.IObjectContainer;
-
 /**
  * A pipeline action is a large factory object which is used to control how
  * objects within a scene should behave. These actions usually control groups of
@@ -11,7 +9,7 @@ import net.whg.we.util.IObjectContainer;
  * behavors, where a single behavior may be in multiple actions at once, and a
  * game object may have behaviors which interact with different actions.
  */
-public interface IPipelineAction extends ILoopAction, IObjectContainer<AbstractBehavior>
+public interface IPipelineAction extends ILoopAction
 {
     /**
      * This event is called each time a new behavior is added to the scene in some
