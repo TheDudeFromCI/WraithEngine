@@ -49,7 +49,7 @@ public class OpenGLApi implements IOpenGL
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (debugMode)
-            GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStreamWrapper(LogLevel.DEBUG)));
+            GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStreamWrapper(LogLevel.DEBUG, new LoggerApi())));
     }
 
     @Override
