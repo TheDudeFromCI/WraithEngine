@@ -1,17 +1,20 @@
 package net.whg.we.main;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import net.whg.we.util.IObjectContainer;
 
 /**
  * A scene is used to represent the current state of the world. It is comprised
  * of a collection of game objects which populate that world.
  */
-public class Scene implements IObjectContainer<GameObject>
+public class Scene
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
     private final List<IPipelineAction> pipelineActions = new CopyOnWriteArrayList<>();
+
+    private final List<GameObject> gameObjectsReadOnly = Collections.unmodifiableList(gameObjects);
+    private final List<IPipelineAction> pipelineActionsReadOnly = Collections.unmodifiableList(pipelineActions);
 
     /**
      * Adds a new game object to this scene. This method does nothing if the game
@@ -33,6 +36,9 @@ public class Scene implements IObjectContainer<GameObject>
 
         gameObjects.add(gameObject);
         gameObject.setScene(this);
+
+        for (AbstractBehavior behavior : gameObject.getBehaviors())
+            triggerEnableBehavior(behavior);
     }
 
     /**
@@ -52,18 +58,9 @@ public class Scene implements IObjectContainer<GameObject>
 
         gameObjects.remove(gameObject);
         gameObject.setScene(null);
-    }
 
-    @Override
-    public int getSize()
-    {
-        return gameObjects.size();
-    }
-
-    @Override
-    public GameObject getObjectAt(int index)
-    {
-        return gameObjects.get(index);
+        for (AbstractBehavior behavior : gameObject.getBehaviors())
+            triggerDisableBehavior(behavior);
     }
 
     /**
@@ -110,5 +107,51 @@ public class Scene implements IObjectContainer<GameObject>
         for (GameObject go : gameObjects)
             for (AbstractBehavior behavior : go.getBehaviors())
                 action.disableBehavior(behavior);
+    }
+
+    /**
+     * Gets a read-only list of all game objects in this scene.
+     * 
+     * @return A list of game objects.
+     */
+    public List<GameObject> gameObjects()
+    {
+        return gameObjectsReadOnly;
+    }
+
+    /**
+     * Gets a read-only list of all pipeline actions in this scene.
+     * 
+     * @return A list of pipeline actions.
+     */
+    public List<IPipelineAction> pipelineActions()
+    {
+        return pipelineActionsReadOnly;
+    }
+
+    /**
+     * When called, will cause all pipelines in this scene to recieve an
+     * enableBehavior event.
+     * 
+     * @param behavior
+     *     - The newly enabled behavior.
+     */
+    void triggerEnableBehavior(AbstractBehavior behavior)
+    {
+        for (IPipelineAction action : pipelineActions)
+            action.enableBehavior(behavior);
+    }
+
+    /**
+     * When called, will cause all pipelines in this scene to recieve a
+     * disableBehavior event.
+     * 
+     * @param behavior
+     *     - The newly disabled behavior.
+     */
+    void triggerDisableBehavior(AbstractBehavior behavior)
+    {
+        for (IPipelineAction action : pipelineActions)
+            action.disableBehavior(behavior);
     }
 }
