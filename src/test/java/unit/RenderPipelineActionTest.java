@@ -74,6 +74,6 @@ public class RenderPipelineActionTest
     @Test
     public void ensureCorrectPriority()
     {
-        assertEquals(3000, new RenderPipelineAction().getPriority());
+        assertEquals(30000, new RenderPipelineAction().getPriority());
     }
 }

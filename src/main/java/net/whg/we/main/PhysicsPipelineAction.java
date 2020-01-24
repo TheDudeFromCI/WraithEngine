@@ -31,6 +31,6 @@ public class PhysicsPipelineAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return -1000;
+        return -10000;
     }
 }

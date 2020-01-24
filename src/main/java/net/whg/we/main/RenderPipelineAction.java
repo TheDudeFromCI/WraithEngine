@@ -74,6 +74,6 @@ public class RenderPipelineAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return 3000;
+        return 30000;
     }
 }

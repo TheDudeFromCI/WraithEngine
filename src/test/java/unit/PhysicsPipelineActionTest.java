@@ -12,7 +12,7 @@ public class PhysicsPipelineActionTest
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(-1000, new PhysicsPipelineAction().getPriority());
+        assertEquals(-10000, new PhysicsPipelineAction().getPriority());
     }
 
     @Test
