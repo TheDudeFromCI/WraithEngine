@@ -1,5 +1,6 @@
 package net.whg.we.main;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -11,6 +12,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GameLoop
 {
     private final List<ILoopAction> loopActions = new CopyOnWriteArrayList<>();
+
+    private final List<ILoopAction> loopActionsReadOnly = Collections.unmodifiableList(loopActions);
+
     private boolean running;
 
     /**
@@ -82,12 +86,12 @@ public class GameLoop
     }
 
     /**
-     * Gets the number of loop actions currently in this game loop.
+     * Gets a read-only list of loop actions within this game loop.
      * 
-     * @return The number of loop actions.
+     * @return A list of loop actions.
      */
-    public int getActionCount()
+    public List<ILoopAction> loopActions()
     {
-        return loopActions.size();
+        return loopActionsReadOnly;
     }
 }

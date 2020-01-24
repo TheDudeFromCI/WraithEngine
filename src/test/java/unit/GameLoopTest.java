@@ -19,13 +19,16 @@ public class GameLoopTest
         gameLoop.addAction(action); // Duplicate
         gameLoop.addAction(null); // Null
 
-        assertEquals(1, gameLoop.getActionCount());
+        assertEquals(1, gameLoop.loopActions()
+                                .size());
 
         gameLoop.removeAction(null);
-        assertEquals(1, gameLoop.getActionCount());
+        assertEquals(1, gameLoop.loopActions()
+                                .size());
 
         gameLoop.removeAction(action);
-        assertEquals(0, gameLoop.getActionCount());
+        assertEquals(0, gameLoop.loopActions()
+                                .size());
     }
 
     @Test(timeout = 1000)

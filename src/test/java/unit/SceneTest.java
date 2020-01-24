@@ -11,6 +11,7 @@ import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.IPipelineAction;
+import net.whg.we.main.ISceneListener;
 import net.whg.we.main.Scene;
 
 public class SceneTest
@@ -294,5 +295,35 @@ public class SceneTest
         go.dispose();
 
         verify(action).disableBehavior(b);
+    }
+
+    @Test
+    public void listener_gameObjectAddedRemoved()
+    {
+        Scene scene = new Scene();
+        ISceneListener listener = mock(ISceneListener.class);
+        scene.addListener(listener);
+
+        GameObject go = new GameObject();
+        scene.addGameObject(go);
+        verify(listener).onGameObjectAdded(go);
+
+        scene.removeGameObject(go);
+        verify(listener).onGameObjectRemoved(go);
+    }
+
+    @Test
+    public void listener_pipelineAddedRemoved()
+    {
+        Scene scene = new Scene();
+        ISceneListener listener = mock(ISceneListener.class);
+        scene.addListener(listener);
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+        verify(listener).onPipelineAdded(action);
+
+        scene.removePipelineAction(action);
+        verify(listener).onPipelineRemoved(action);
     }
 }

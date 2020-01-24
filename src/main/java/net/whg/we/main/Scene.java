@@ -16,6 +16,8 @@ public class Scene
     private final List<GameObject> gameObjectsReadOnly = Collections.unmodifiableList(gameObjects);
     private final List<IPipelineAction> pipelineActionsReadOnly = Collections.unmodifiableList(pipelineActions);
 
+    private final List<ISceneListener> listeners = new CopyOnWriteArrayList<>();
+
     /**
      * Adds a new game object to this scene. This method does nothing if the game
      * object is null or is already in this scene.
@@ -36,6 +38,9 @@ public class Scene
 
         for (AbstractBehavior behavior : gameObject.getBehaviors())
             triggerEnableBehavior(behavior);
+
+        for (ISceneListener listener : listeners)
+            listener.onGameObjectAdded(gameObject);
     }
 
     /**
@@ -58,6 +63,9 @@ public class Scene
 
         for (AbstractBehavior behavior : gameObject.getBehaviors())
             triggerDisableBehavior(behavior);
+
+        for (ISceneListener listener : listeners)
+            listener.onGameObjectRemoved(gameObject);
     }
 
     /**
@@ -81,6 +89,9 @@ public class Scene
         for (GameObject go : gameObjects)
             for (AbstractBehavior behavior : go.getBehaviors())
                 action.enableBehavior(behavior);
+
+        for (ISceneListener listener : listeners)
+            listener.onPipelineAdded(action);
     }
 
     /**
@@ -104,6 +115,9 @@ public class Scene
         for (GameObject go : gameObjects)
             for (AbstractBehavior behavior : go.getBehaviors())
                 action.disableBehavior(behavior);
+
+        for (ISceneListener listener : listeners)
+            listener.onPipelineRemoved(action);
     }
 
     /**
@@ -150,5 +164,38 @@ public class Scene
     {
         for (IPipelineAction action : pipelineActions)
             action.disableBehavior(behavior);
+    }
+
+    /**
+     * Adds a new listener to this scene. This function does nothing if the listener
+     * is null or is already attached to this scene.
+     * 
+     * @param listener
+     *     - The listener to add.
+     */
+    public void addListener(ISceneListener listener)
+    {
+        if (listener == null)
+            return;
+
+        if (listeners.contains(listener))
+            return;
+
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes a listener from this scene. This function does nothing if the
+     * listener is null or is not attached to this scene.
+     * 
+     * @param listener
+     *     - The listener to remove.
+     */
+    public void removeListener(ISceneListener listener)
+    {
+        if (listener == null)
+            return;
+
+        listeners.remove(listener);
     }
 }
