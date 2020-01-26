@@ -326,4 +326,60 @@ public class SceneTest
         scene.removePipelineAction(action);
         verify(listener).onPipelineRemoved(action);
     }
+
+    @Test
+    public void gameObjectAddedRemoved_callsPipelineEvent()
+    {
+        IPipelineAction action = mock(IPipelineAction.class);
+        Scene scene = new Scene();
+        scene.addPipelineAction(action);
+
+        GameObject go = new GameObject();
+        scene.addGameObject(go);
+        verify(action).enableGameObject(go);
+
+        scene.removeGameObject(go);
+        verify(action).disableGameObject(go);
+    }
+
+    @Test
+    public void pipelineAdded_enableAllGameObjects()
+    {
+        Scene scene = new Scene();
+        GameObject go1 = new GameObject();
+        GameObject go2 = new GameObject();
+        GameObject go3 = new GameObject();
+        scene.addGameObject(go1);
+        scene.addGameObject(go2);
+        scene.addGameObject(go3);
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+
+        verify(action).enableGameObject(go1);
+        verify(action).enableGameObject(go2);
+        verify(action).enableGameObject(go3);
+    }
+
+    @Test
+    public void pipelineRemoved_disableAllGameObjects()
+    {
+        Scene scene = new Scene();
+
+        IPipelineAction action = mock(IPipelineAction.class);
+        scene.addPipelineAction(action);
+
+        GameObject go1 = new GameObject();
+        GameObject go2 = new GameObject();
+        GameObject go3 = new GameObject();
+        scene.addGameObject(go1);
+        scene.addGameObject(go2);
+        scene.addGameObject(go3);
+
+        scene.removePipelineAction(action);
+
+        verify(action).disableGameObject(go1);
+        verify(action).disableGameObject(go2);
+        verify(action).disableGameObject(go3);
+    }
 }

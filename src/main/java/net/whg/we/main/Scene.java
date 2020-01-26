@@ -36,6 +36,9 @@ public class Scene
         gameObjects.add(gameObject);
         gameObject.setScene(this);
 
+        for (IPipelineAction action : pipelineActions)
+            action.enableGameObject(gameObject);
+
         for (AbstractBehavior behavior : gameObject.getBehaviors())
             triggerEnableBehavior(behavior);
 
@@ -64,6 +67,9 @@ public class Scene
         for (AbstractBehavior behavior : gameObject.getBehaviors())
             triggerDisableBehavior(behavior);
 
+        for (IPipelineAction action : pipelineActions)
+            action.disableGameObject(gameObject);
+
         for (ISceneListener listener : listeners)
             listener.onGameObjectRemoved(gameObject);
     }
@@ -87,8 +93,12 @@ public class Scene
         pipelineActions.add(action);
 
         for (GameObject go : gameObjects)
+        {
+            action.enableGameObject(go);
+
             for (AbstractBehavior behavior : go.getBehaviors())
                 action.enableBehavior(behavior);
+        }
 
         for (ISceneListener listener : listeners)
             listener.onPipelineAdded(action);
@@ -113,8 +123,12 @@ public class Scene
         pipelineActions.remove(action);
 
         for (GameObject go : gameObjects)
+        {
             for (AbstractBehavior behavior : go.getBehaviors())
                 action.disableBehavior(behavior);
+
+            action.disableGameObject(go);
+        }
 
         for (ISceneListener listener : listeners)
             listener.onPipelineRemoved(action);
