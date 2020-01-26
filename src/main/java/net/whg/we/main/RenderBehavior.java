@@ -101,42 +101,9 @@ public class RenderBehavior extends AbstractBehavior
     }
 
     @Override
-    protected void onInit()
-    {
-        Scene scene = getGameObject().getScene();
-        if (scene != null)
-            scene.getRenderer()
-                 .addRenderedObject(this);
-    }
-
-    @Override
     protected void onDispose()
     {
         mesh = null;
         material = null;
-
-        GameObject go = getGameObject();
-        if (go != null)
-        {
-            Scene scene = go.getScene();
-            if (scene != null)
-                scene.getRenderer()
-                     .removeRenderedObject(this);
-        }
-    }
-
-    @Override
-    protected void onSceneChange(Scene oldScene, Scene newScene)
-    {
-        if (isDisposed())
-            return;
-
-        if (oldScene != null)
-            oldScene.getRenderer()
-                    .removeRenderedObject(this);
-
-        if (newScene != null)
-            newScene.getRenderer()
-                    .addRenderedObject(this);
     }
 }

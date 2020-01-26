@@ -1,8 +1,11 @@
 package unit;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -77,6 +80,8 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
+        assertFalse(shader.isCreated());
+
         shader.compile(shaderCode());
 
         verify(opengl, never()).deleteShaderProgram(anyInt());
@@ -85,6 +90,8 @@ public class GLShaderTest
         verify(opengl).createFragementShader(anyString());
         verify(opengl).createShaderProgram();
         verify(opengl).linkShader(anyInt());
+
+        assertTrue(shader.isCreated());
     }
 
     @Test
@@ -215,5 +222,33 @@ public class GLShaderTest
         shader.dispose();
 
         shader.setUniformMat4("cam", BufferUtils.createFloatBuffer(16));
+    }
+
+    @Test
+    public void setUniformInt()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        IShader shader = renderingEngine.createShader();
+        shader.compile(shaderCode());
+        shader.setUniformInt("texture", 1);
+
+        verify(opengl).getUniformLocation(anyInt(), eq("texture"));
+        verify(opengl).setUniformInt(anyInt(), eq(1));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void setUniformInt_alreadyDisposed()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        IShader shader = renderingEngine.createShader();
+        shader.dispose();
+
+        shader.setUniformInt("texture", 0);
     }
 }

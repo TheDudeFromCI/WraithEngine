@@ -1,6 +1,6 @@
 package net.whg.we.main;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -8,10 +8,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * A scene is used to represent the current state of the world. It is comprised
  * of a collection of game objects which populate that world.
  */
-public class Scene implements Iterable<GameObject>
+public class Scene
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
-    private final SceneRenderer renderer = new SceneRenderer();
+    private final List<IPipelineAction> pipelineActions = new CopyOnWriteArrayList<>();
+
+    private final List<GameObject> gameObjectsReadOnly = Collections.unmodifiableList(gameObjects);
+    private final List<IPipelineAction> pipelineActionsReadOnly = Collections.unmodifiableList(pipelineActions);
+
+    private final List<ISceneListener> listeners = new CopyOnWriteArrayList<>();
 
     /**
      * Adds a new game object to this scene. This method does nothing if the game
@@ -28,11 +33,17 @@ public class Scene implements Iterable<GameObject>
         if (gameObjects.contains(gameObject))
             return;
 
-        if (gameObject.getScene() != null)
-            gameObject.getScene().gameObjects.remove(gameObject);
-
         gameObjects.add(gameObject);
         gameObject.setScene(this);
+
+        for (IPipelineAction action : pipelineActions)
+            action.enableGameObject(gameObject);
+
+        for (AbstractBehavior behavior : gameObject.getBehaviors())
+            triggerEnableBehavior(behavior);
+
+        for (ISceneListener listener : listeners)
+            listener.onGameObjectAdded(gameObject);
     }
 
     /**
@@ -47,55 +58,158 @@ public class Scene implements Iterable<GameObject>
         if (gameObject == null)
             return;
 
+        if (!gameObjects.contains(gameObject))
+            return;
+
         gameObjects.remove(gameObject);
         gameObject.setScene(null);
+
+        for (AbstractBehavior behavior : gameObject.getBehaviors())
+            triggerDisableBehavior(behavior);
+
+        for (IPipelineAction action : pipelineActions)
+            action.disableGameObject(gameObject);
+
+        for (ISceneListener listener : listeners)
+            listener.onGameObjectRemoved(gameObject);
     }
 
     /**
-     * This method iterates over all game objects in the scene and removes all game
-     * objects which are currently marked for removal. This is usually called at the
-     * end of a frame to remove and clean up game objects.
-     */
-    public void cullGameObjects()
-    {
-        for (GameObject gameObject : gameObjects)
-            if (gameObject.isMarkedForRemoval())
-                removeGameObject(gameObject);
-    }
-
-    /**
-     * Gets the object in charge of rendering this scene.
+     * Adds a new pipeline action to this scene. This will also trigger the
+     * enableBehavior method for each behavior within this scene. This method does
+     * nothing if the action is null or is already in this scene.
      * 
-     * @return The scene renderer.
+     * @param action
+     *     - The action to add.
      */
-    public SceneRenderer getRenderer()
+    public void addPipelineAction(IPipelineAction action)
     {
-        return renderer;
+        if (action == null)
+            return;
+
+        if (pipelineActions.contains(action))
+            return;
+
+        pipelineActions.add(action);
+
+        for (GameObject go : gameObjects)
+        {
+            action.enableGameObject(go);
+
+            for (AbstractBehavior behavior : go.getBehaviors())
+                action.enableBehavior(behavior);
+        }
+
+        for (ISceneListener listener : listeners)
+            listener.onPipelineAdded(action);
     }
 
     /**
-     * Gets the number of game objects in this scene.
+     * Removes a pipeline action from this scene. This will also trigger the
+     * disableBehavior method for each behavior within this scene. The method does
+     * nothing if the action is null or is not in this scene.
      * 
-     * @return The number of game objects.
+     * @param action
+     *     - The action to remove.
      */
-    public int countGameObjects()
+    public void removePipelineAction(IPipelineAction action)
     {
-        return gameObjects.size();
-    }
+        if (action == null)
+            return;
 
-    @Override
-    public Iterator<GameObject> iterator()
-    {
-        return gameObjects.iterator();
+        if (!pipelineActions.contains(action))
+            return;
+
+        pipelineActions.remove(action);
+
+        for (GameObject go : gameObjects)
+        {
+            for (AbstractBehavior behavior : go.getBehaviors())
+                action.disableBehavior(behavior);
+
+            action.disableGameObject(go);
+        }
+
+        for (ISceneListener listener : listeners)
+            listener.onPipelineRemoved(action);
     }
 
     /**
-     * Checks if this scene contains the given game object.
+     * Gets a read-only list of all game objects in this scene.
      * 
-     * @return True if the given game object is in this scene. False otherwise.
+     * @return A list of game objects.
      */
-    public boolean hasGameObject(GameObject gameObject)
+    public List<GameObject> gameObjects()
     {
-        return gameObjects.contains(gameObject);
+        return gameObjectsReadOnly;
+    }
+
+    /**
+     * Gets a read-only list of all pipeline actions in this scene.
+     * 
+     * @return A list of pipeline actions.
+     */
+    public List<IPipelineAction> pipelineActions()
+    {
+        return pipelineActionsReadOnly;
+    }
+
+    /**
+     * When called, will cause all pipelines in this scene to recieve an
+     * enableBehavior event.
+     * 
+     * @param behavior
+     *     - The newly enabled behavior.
+     */
+    void triggerEnableBehavior(AbstractBehavior behavior)
+    {
+        for (IPipelineAction action : pipelineActions)
+            action.enableBehavior(behavior);
+    }
+
+    /**
+     * When called, will cause all pipelines in this scene to recieve a
+     * disableBehavior event.
+     * 
+     * @param behavior
+     *     - The newly disabled behavior.
+     */
+    void triggerDisableBehavior(AbstractBehavior behavior)
+    {
+        for (IPipelineAction action : pipelineActions)
+            action.disableBehavior(behavior);
+    }
+
+    /**
+     * Adds a new listener to this scene. This function does nothing if the listener
+     * is null or is already attached to this scene.
+     * 
+     * @param listener
+     *     - The listener to add.
+     */
+    public void addListener(ISceneListener listener)
+    {
+        if (listener == null)
+            return;
+
+        if (listeners.contains(listener))
+            return;
+
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes a listener from this scene. This function does nothing if the
+     * listener is null or is not attached to this scene.
+     * 
+     * @param listener
+     *     - The listener to remove.
+     */
+    public void removeListener(ISceneListener listener)
+    {
+        if (listener == null)
+            return;
+
+        listeners.remove(listener);
     }
 }

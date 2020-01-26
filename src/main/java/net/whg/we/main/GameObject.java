@@ -1,18 +1,18 @@
 package net.whg.we.main;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import net.whg.we.util.IDisposable;
-import net.whg.we.main.Transform3D;
 
 /**
  * A game object is a single entity which exists within the game. A game object
  * is comprised of a set of components which are used to define the object's
  * properties and behavior.
  */
-public class GameObject implements IDisposable
+public final class GameObject implements IDisposable
 {
     private static final String OBJECT_DISPOSED = "Object already disposed!";
 
@@ -92,6 +92,9 @@ public class GameObject implements IDisposable
 
         behavior.init(this);
         behaviors.add(behavior);
+
+        if (scene != null)
+            scene.triggerEnableBehavior(behavior);
     }
 
     /**
@@ -108,6 +111,9 @@ public class GameObject implements IDisposable
 
         if (behavior == null)
             return;
+
+        if (scene != null)
+            scene.triggerDisableBehavior(behavior);
 
         behaviors.remove(behavior);
         behavior.dispose();
@@ -130,6 +136,16 @@ public class GameObject implements IDisposable
                 return behavior;
 
         return null;
+    }
+
+    /**
+     * Gets a list of all behaviors on this game object.
+     * 
+     * @return A new list containing all behaviors on this game object.
+     */
+    public List<AbstractBehavior> getBehaviors()
+    {
+        return new ArrayList<>(behaviors);
     }
 
     /**
@@ -188,13 +204,13 @@ public class GameObject implements IDisposable
         if (isDisposed())
             return;
 
-        disposed = true;
-
         for (AbstractBehavior behavior : behaviors)
-            behavior.dispose();
-        behaviors.clear();
+            removeBehavior(behavior);
 
-        scene = null;
+        if (scene != null)
+            scene.removeGameObject(this);
+
+        disposed = true;
     }
 
     @Override
@@ -222,6 +238,12 @@ public class GameObject implements IDisposable
      */
     void setScene(Scene scene)
     {
+        if (this.scene == scene)
+            return;
+
+        if (this.scene != null)
+            this.scene.removeGameObject(this);
+
         Scene oldScene = this.scene;
         this.scene = scene;
 

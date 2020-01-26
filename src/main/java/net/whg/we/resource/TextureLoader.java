@@ -2,6 +2,7 @@ package net.whg.we.resource;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import net.whg.we.rendering.TextureData;
@@ -33,6 +34,9 @@ public final class TextureLoader
      */
     public static TextureData loadTexture(File file) throws IOException
     {
+        if (!file.exists())
+            throw new FileNotFoundException(file.getAbsolutePath());
+
         BufferedImage image = ImageIO.read(file);
 
         int width = image.getWidth();

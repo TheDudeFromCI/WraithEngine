@@ -3,6 +3,7 @@ package net.whg.we.window.glfw;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.whg.we.external.LoggerApi;
 import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.util.OutputStreamWrapper;
 import net.whg.we.util.OutputStreamWrapper.LogLevel;
@@ -69,7 +70,7 @@ public final class GlfwWindow implements IWindow
         this.renderingEngine = renderingEngine;
 
         glfw.init();
-        glfw.setErrorCallback(new PrintStream(new OutputStreamWrapper(LogLevel.ERROR)));
+        glfw.setErrorCallback(new PrintStream(new OutputStreamWrapper(LogLevel.ERROR, new LoggerApi())));
 
         buildWindow(settings);
         renderingEngine.init();

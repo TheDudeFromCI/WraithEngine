@@ -2,8 +2,6 @@ package net.whg.we.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A simple utility class for streaming to the logger, via an output stream.
@@ -24,8 +22,8 @@ public class OutputStreamWrapper extends OutputStream
         ERROR
     }
 
-    private final Logger logger = LoggerFactory.getLogger(OutputStreamWrapper.class);
     private final StringBuilder buffer = new StringBuilder();
+    private final ILogger logger;
     private final LogLevel logLevel;
 
     /**
@@ -33,10 +31,13 @@ public class OutputStreamWrapper extends OutputStream
      * 
      * @param logLevel
      *     - The log level this wrapper uses when writing.
+     * @param logger
+     *     - The logger to write messages to.
      */
-    public OutputStreamWrapper(LogLevel logLevel)
+    public OutputStreamWrapper(LogLevel logLevel, ILogger logger)
     {
         this.logLevel = logLevel;
+        this.logger = logger;
     }
 
     @Override
@@ -56,23 +57,23 @@ public class OutputStreamWrapper extends OutputStream
         switch (logLevel)
         {
             case TRACE:
-                logger.trace("{}", buffer);
+                logger.trace(buffer.toString());
                 break;
 
             case DEBUG:
-                logger.debug("{}", buffer);
+                logger.debug(buffer.toString());
                 break;
 
             case INFO:
-                logger.info("{}", buffer);
+                logger.info(buffer.toString());
                 break;
 
             case WARN:
-                logger.warn("{}", buffer);
+                logger.warn(buffer.toString());
                 break;
 
             case ERROR:
-                logger.error("{}", buffer);
+                logger.error(buffer.toString());
                 break;
         }
 
