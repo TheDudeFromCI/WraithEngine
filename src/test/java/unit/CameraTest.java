@@ -6,6 +6,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.junit.Test;
+import net.whg.we.main.Transform3D;
 import net.whg.we.rendering.Camera;
 
 public class CameraTest
@@ -49,5 +50,14 @@ public class CameraTest
         mat.perspective((float) Math.PI / 2f, 4f / 3f, 0.1f, 1000f);
 
         assertTrue(mat.equals(camera.getProjectionMatrix(), 0.0001f));
+    }
+
+    @Test
+    public void externalTransform()
+    {
+        Transform3D transform = new Transform3D();
+        Camera camera = new Camera(transform);
+
+        assertTrue(transform == camera.getTransform());
     }
 }

@@ -10,8 +10,8 @@ import net.whg.we.main.Transform3D;
  */
 public class Camera
 {
-    private final Transform3D transform = new Transform3D();
     private final Matrix4f projectionMatrix = new Matrix4f();
+    private final Transform3D transform;
     private float fov = (float) Math.toRadians(90f);
     private float nearClip = 0.1f;
     private float farClip = 1000f;
@@ -21,6 +21,21 @@ public class Camera
      */
     public Camera()
     {
+        this(new Transform3D());
+    }
+
+    /**
+     * Creates a new camera object with the default projection matrix. The transform
+     * for this camera is maintained externally, such as being attached to a game
+     * object, and will return the given transform when {@link #getTransform()} is
+     * called.
+     * 
+     * @param transform
+     *     - The transform this camera should use.
+     */
+    public Camera(Transform3D transform)
+    {
+        this.transform = transform;
         rebuildProjectionMatrix();
     }
 
