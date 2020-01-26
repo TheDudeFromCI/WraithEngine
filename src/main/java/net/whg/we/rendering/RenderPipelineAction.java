@@ -1,9 +1,11 @@
-package net.whg.we.main;
+package net.whg.we.rendering;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.whg.we.rendering.Camera;
+import net.whg.we.main.AbstractBehavior;
+import net.whg.we.main.IPipelineAction;
+import net.whg.we.main.PipelineConstants;
 
 /**
  * The renderer pipeline action is used to render elements within a scene. By
