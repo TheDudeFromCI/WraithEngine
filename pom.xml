@@ -298,16 +298,39 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.7.0.1746</version>
             </plugin>
-        </plugins>
-    </build>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
-        </plugins>
-    </reporting>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>deploy</phase>
+						<goals><goal>jar-no-fork</goal></goals> 
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId> 
+				<executions> 
+					<execution> 
+						<id>attach-javadocs</id>
+						<phase>deploy</phase>
+						<goals><goal>jar</goal></goals> 
+					</execution> 
+				</executions> 
+			</plugin>
+
+			<plugin> 
+				<artifactId>maven-deploy-plugin</artifactId> 
+				<executions> 
+					<execution> 
+						<id>deploy</id>
+						<phase>deploy</phase>
+						<goals><goal>deploy</goal></goals> 
+					</execution> 
+				</executions> 
+			</plugin>
+		</plugins>
+    </build>
 </project>
