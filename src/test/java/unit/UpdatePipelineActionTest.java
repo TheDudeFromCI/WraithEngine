@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.IUpdateable;
+import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.UpdatePipelineAction;
 
 public class UpdatePipelineActionTest
@@ -12,7 +13,7 @@ public class UpdatePipelineActionTest
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(0, new UpdatePipelineAction().getPriority());
+        assertEquals(PipelineConstants.FRAME_UPDATES, new UpdatePipelineAction().getPriority());
     }
 
     @Test

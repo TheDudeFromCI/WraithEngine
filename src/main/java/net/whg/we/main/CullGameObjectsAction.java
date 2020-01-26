@@ -30,6 +30,6 @@ public class CullGameObjectsAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return 40000;
+        return PipelineConstants.DISPOSE_GAMEOBJECTS;
     }
 }

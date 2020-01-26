@@ -74,6 +74,6 @@ public class RenderPipelineAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return 30000;
+        return PipelineConstants.RENDER_SOLIDS;
     }
 }

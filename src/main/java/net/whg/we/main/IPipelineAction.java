@@ -11,18 +11,7 @@ package net.whg.we.main;
  * <p>
  * Pipeline actions should also override the default priority level for loop
  * actions to ensure pipeline actions occur in the desired order. Default
- * priorities are:
- * <ul>
- * <li><i>Calculate Time Stamps</i> at <strong>-1000000</strong></li>
- * <li><i>Physics Updates</i> at <strong>-10000</strong></li>
- * <li><i>Updates</i> at <strong>0</strong></li>
- * <li><i>Animation Updates</i> at <strong>10000</strong></li>
- * <li><i>Late Updates</i> at <strong>20000</strong></li>
- * <li><i>Rendering Solids</i> at <strong>30000</strong></li>
- * <li><i>Rendering Transparents</i> at <strong>32500</strong></li>
- * <li><i>Dispose GameObjects</i> at <strong>40000</strong></li>
- * <li><i>End Frame</i> at <strong>1000000</strong></li>
- * </ul>
+ * priorities are defined in the {@link PipelineConstants}.
  */
 public interface IPipelineAction extends ILoopAction
 {

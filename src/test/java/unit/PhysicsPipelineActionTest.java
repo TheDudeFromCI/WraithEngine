@@ -6,13 +6,14 @@ import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.IFixedUpdateable;
 import net.whg.we.main.PhysicsPipelineAction;
+import net.whg.we.main.PipelineConstants;
 
 public class PhysicsPipelineActionTest
 {
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(-10000, new PhysicsPipelineAction().getPriority());
+        assertEquals(PipelineConstants.PHYSICS_UPDATES, new PhysicsPipelineAction().getPriority());
     }
 
     @Test

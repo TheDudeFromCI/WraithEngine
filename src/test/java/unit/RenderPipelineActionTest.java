@@ -7,6 +7,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
+import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.RenderBehavior;
 import net.whg.we.main.RenderPipelineAction;
 import net.whg.we.rendering.Camera;
@@ -74,6 +75,6 @@ public class RenderPipelineActionTest
     @Test
     public void ensureCorrectPriority()
     {
-        assertEquals(30000, new RenderPipelineAction().getPriority());
+        assertEquals(PipelineConstants.RENDER_SOLIDS, new RenderPipelineAction().getPriority());
     }
 }

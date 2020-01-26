@@ -29,6 +29,6 @@ public class TimerAction implements ILoopAction
     @Override
     public int getPriority()
     {
-        return -1000000;
+        return PipelineConstants.CALCULATE_TIMESTAMPS;
     }
 }

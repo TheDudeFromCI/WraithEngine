@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
+import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Timer;
 import net.whg.we.main.TimerAction;
 
@@ -23,6 +24,6 @@ public class TimerActionTest
     @Test
     public void priorityIs_Negative1000000()
     {
-        assertEquals(-1000000, new TimerAction(mock(Timer.class)).getPriority());
+        assertEquals(PipelineConstants.CALCULATE_TIMESTAMPS, new TimerAction(mock(Timer.class)).getPriority());
     }
 }

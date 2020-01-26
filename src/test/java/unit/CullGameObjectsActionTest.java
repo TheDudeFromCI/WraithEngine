@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import net.whg.we.main.CullGameObjectsAction;
 import net.whg.we.main.GameObject;
+import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Scene;
 
 public class CullGameObjectsActionTest
@@ -34,6 +35,6 @@ public class CullGameObjectsActionTest
     @Test
     public void defaultPriority()
     {
-        assertEquals(40000, new CullGameObjectsAction().getPriority());
+        assertEquals(PipelineConstants.DISPOSE_GAMEOBJECTS, new CullGameObjectsAction().getPriority());
     }
 }

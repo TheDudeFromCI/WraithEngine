@@ -31,6 +31,6 @@ public class UpdatePipelineAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return 0;
+        return PipelineConstants.FRAME_UPDATES;
     }
 }
