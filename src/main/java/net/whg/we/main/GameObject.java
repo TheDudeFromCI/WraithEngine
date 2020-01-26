@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 import net.whg.we.util.IDisposable;
 
 /**
@@ -129,11 +128,12 @@ public final class GameObject implements IDisposable
      * @return The behavior with the given superclass, or null if no matching
      *     behavior is found.
      */
-    public AbstractBehavior getBehavior(Class<? extends AbstractBehavior> behaviorType)
+    @SuppressWarnings("unchecked")
+    public <T> T getBehavior(Class<? extends T> behaviorType)
     {
         for (AbstractBehavior behavior : behaviors)
             if (behaviorType.isAssignableFrom(behavior.getClass()))
-                return behavior;
+                return (T) behavior;
 
         return null;
     }
@@ -156,11 +156,16 @@ public final class GameObject implements IDisposable
      *     - The type of behaviors to get.
      * @return A list of behaviors with the given superclass.
      */
-    public List<AbstractBehavior> getBehaviors(Class<? extends AbstractBehavior> behaviorType)
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getBehaviors(Class<? extends T> behaviorType)
     {
-        return behaviors.stream()
-                        .filter(behavior -> behaviorType.isAssignableFrom(behavior.getClass()))
-                        .collect(Collectors.toList());
+        List<T> list = new ArrayList<>();
+
+        for (AbstractBehavior behavior : behaviors)
+            if (behaviorType.isAssignableFrom(behavior.getClass()))
+                list.add((T) behavior);
+
+        return list;
     }
 
     /**
