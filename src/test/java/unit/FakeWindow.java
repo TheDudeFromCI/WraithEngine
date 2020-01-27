@@ -44,7 +44,9 @@ public class FakeWindow implements IWindow
 
     @Override
     public void removeWindowListener(IWindowListener listener)
-    {}
+    {
+        this.listener = null;
+    }
 
     @Override
     public void pollEvents()

@@ -1,6 +1,7 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import net.whg.we.window.Screen;
 import net.whg.we.window.WindowSettings;
@@ -33,5 +34,47 @@ public class ScreenTest
         assertEquals(1600, screen.getWidth());
         assertEquals(900, screen.getHeight());
         assertEquals(16f / 9f, screen.getAspect(), 0.0001f);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getWidth_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getWidth();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getHeight_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getHeight();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getAspect_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getAspect();
+    }
+
+    @Test
+    public void dipose()
+    {
+        FakeWindow window = new FakeWindow();
+
+        Screen screen = new Screen(window);
+        screen.dispose();
+        screen.dispose(); // To make sure nothing happens when you dispose twice
+
+        assertNull(window.listener);
     }
 }
