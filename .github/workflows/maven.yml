@@ -49,6 +49,7 @@ jobs:
 
     steps:
       - name: Generate build number
+        id: build_number
         uses: einaregilsson/build-number@v2
         with:
           token: ${{secrets.github_token}}
@@ -86,12 +87,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: build_${{ BUILD_NUMBER }}
-          release_name: Build ${{ BUILD_NUMBER }}
+          tag_name: build_${{ steps.build_number.outputs.build_number }}
+          release_name: Build ${{ steps.build_number.outputs.build_number }}
           draft: false
           prerelease: true
           body: |
-            Auto-generated Build ${{ BUILD_NUMBER }}.
+            Auto-generated Build ${{ steps.build_number.outputs.build_number }}.
 
       - name: Create Zip Release
         run: |
@@ -106,5 +107,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./dist/build.zip
-          asset_name: build_${BUILD_NUMBER}.zip
+          asset_name: build_${{ steps.build_number.outputs.build_number }}.zip
           asset_content_type: application/zip
