@@ -97,7 +97,9 @@ jobs:
       - name: Create Zip Release
         run: |
           cp target/wraithengine-*.jar dist
+          cd dist
           zip build *
+          cd ..
 
       - name: Upload Release Zip
         id: upload-release-asset
