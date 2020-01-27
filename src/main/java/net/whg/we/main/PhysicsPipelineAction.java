@@ -3,15 +3,36 @@ package net.whg.we.main;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * The physics pipeline action is an action in charge of triggering physics
+ * updates each frame based on the physics framerate.
+ */
 public class PhysicsPipelineAction implements IPipelineAction
 {
     private final List<IFixedUpdateable> objects = new CopyOnWriteArrayList<>();
+    private final Timer timer;
+
+    /**
+     * Creates a new Physics pipeline action.
+     * 
+     * @param timer
+     *     - The timer to being this action to.
+     */
+    public PhysicsPipelineAction(Timer timer)
+    {
+        this.timer = timer;
+    }
 
     @Override
     public void run()
     {
-        for (IFixedUpdateable obj : objects)
-            obj.fixedUpdate();
+        while (timer.getPhysicsFrame() < timer.getIdealPhysicsFrame())
+        {
+            timer.incrementPhysicsFrame();
+
+            for (IFixedUpdateable obj : objects)
+                obj.fixedUpdate();
+        }
     }
 
     @Override
