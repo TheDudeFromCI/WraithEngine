@@ -1,7 +1,4 @@
-package net.whg.we.main;
-
-import net.whg.we.window.IWindow;
-import net.whg.we.window.IWindowAdapter;
+package net.whg.we.window;
 
 /**
  * This input class is a reference for the current key and mouse states for the

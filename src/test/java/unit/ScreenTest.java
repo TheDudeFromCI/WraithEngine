@@ -2,7 +2,7 @@ package unit;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import net.whg.we.main.Screen;
+import net.whg.we.window.Screen;
 import net.whg.we.window.WindowSettings;
 
 public class ScreenTest

@@ -1,8 +1,4 @@
-package net.whg.we.main;
-
-import net.whg.we.window.IWindow;
-import net.whg.we.window.IWindowAdapter;
-import net.whg.we.window.WindowSettings;
+package net.whg.we.window;
 
 /**
  * The screen object is an object which can be used to determine various
