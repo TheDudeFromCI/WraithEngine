@@ -1,13 +1,14 @@
 package net.whg.we.main;
 
-import java.util.Arrays;
+import net.whg.we.window.IWindow;
+import net.whg.we.window.IWindowAdapter;
 
 /**
  * This input class is a reference for the current key and mouse states for the
  * focused window. This can be used to check for mouse inputs and key presses as
  * they occur.
  */
-public final class Input
+public class Input
 {
     /**
      * The largest key code input provided by GLFW. Used for making sure enough
@@ -21,85 +22,69 @@ public final class Input
      */
     private static final int MAX_INPUT_MOUSE_BUTTON = 7;
 
-    private static boolean[] keyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
-    private static boolean[] lastKeyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
-    private static boolean[] mouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
-    private static boolean[] lastMouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
-    private static float mouseX;
-    private static float mouseY;
-    private static float lastMouseX;
-    private static float lastMouseY;
-    private static float scrollWheelDelta;
-
     /**
-     * Clear all data stored in this class, resetting it to default settings. Any
-     * keys or buttons currently held are assumed unpressed. Mouse position is
-     * assumed to be at 0, 0.
+     * The input listener is a helper class which can be used to bind to a window to
+     * listen for events it triggers.
      */
-    public static void clear()
+    private class InputListener extends IWindowAdapter
     {
-        Arrays.fill(keyStates, false);
-        Arrays.fill(lastKeyStates, false);
-        Arrays.fill(mouseButtons, false);
-        Arrays.fill(lastMouseButtons, false);
+        @Override
+        public void onMouseMove(IWindow window, float newX, float newY)
+        {
+            Input.this.mouseX = newX;
+            Input.this.mouseY = newY;
+        }
 
-        mouseX = 0f;
-        mouseY = 0f;
-        lastMouseX = 0f;
-        lastMouseY = 0f;
-        scrollWheelDelta = 0f;
+        @Override
+        public void onKeyPressed(IWindow window, int keyCode)
+        {
+            Input.this.keyStates[keyCode] = true;
+        }
+
+        @Override
+        public void onKeyReleased(IWindow window, int keyCode)
+        {
+            Input.this.keyStates[keyCode] = false;
+        }
+
+        @Override
+        public void onMouseWheel(IWindow window, float scrollX, float scrollY)
+        {
+            Input.this.scrollWheelDelta = scrollY;
+        }
+
+        @Override
+        public void onMousePressed(IWindow window, int mouseButton)
+        {
+            Input.this.mouseButtons[mouseButton] = true;
+        }
+
+        @Override
+        public void onMouseReleased(IWindow window, int mouseButton)
+        {
+            Input.this.mouseButtons[mouseButton] = false;
+        }
     }
 
-    /**
-     * Assigns a new state to a given key.
-     * 
-     * @param key
-     *     - The key in question.
-     * @param pressed
-     *     - True if the key was pressed. False if the key was released.
-     */
-    static void setKeyState(final int key, final boolean pressed)
-    {
-        keyStates[key] = pressed;
-    }
+    private final boolean[] keyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
+    private final boolean[] lastKeyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
+    private final boolean[] mouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
+    private final boolean[] lastMouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
+    private float mouseX;
+    private float mouseY;
+    private float lastMouseX;
+    private float lastMouseY;
+    private float scrollWheelDelta;
 
     /**
-     * Assigns a new set of coords to the mouse position.
+     * Creates a new input object, and binds a listener to the given window.
      * 
-     * @param mouseX
-     *     - The current mouse x.
-     * @param mouseY
-     *     - The current mouse y.
+     * @param window
+     *     - The window to bind to.
      */
-    static void setMousePos(final float mouseX, final float mouseY)
+    public Input(IWindow window)
     {
-        Input.mouseX = mouseX;
-        Input.mouseY = mouseY;
-    }
-
-    /**
-     * Assigns a new state to the given mouse button.
-     * 
-     * @param button
-     *     - The mouse button in question.
-     * @param pressed
-     *     - True if the mouse button was pressed. False if the mouse button was
-     *     released.
-     */
-    static void setMouseButtonState(final int button, final boolean pressed)
-    {
-        mouseButtons[button] = pressed;
-    }
-
-    /**
-     * Assigns the amount the mouse wheel was scrolled this frame.
-     * 
-     * @param delta
-     *     - The scroll delta.
-     */
-    static void setScrollWheelDelta(final float delta)
-    {
-        scrollWheelDelta = delta;
+        window.addWindowListener(new InputListener());
     }
 
     /**
@@ -107,7 +92,7 @@ public final class Input
      * states are copied from the current frame buffer to the previous frame buffer,
      * to allow for delta functions to work as intended.
      */
-    public static void endFrame()
+    public void endFrame()
     {
         System.arraycopy(keyStates, 0, lastKeyStates, 0, keyStates.length);
         System.arraycopy(mouseButtons, 0, lastMouseButtons, 0, mouseButtons.length);
@@ -124,7 +109,7 @@ public final class Input
      *     - The key to check for.
      * @return True if the key is being pressed, false otherwise.
      */
-    public static boolean isKeyDown(final int key)
+    public boolean isKeyDown(final int key)
     {
         return keyStates[key];
     }
@@ -137,7 +122,7 @@ public final class Input
      * @return True if the key is being pressed and was not pressed on the previous
      *     frame. False otherwise.
      */
-    public static boolean isKeyJustDown(final int key)
+    public boolean isKeyJustDown(final int key)
     {
         return keyStates[key] && !lastKeyStates[key];
     }
@@ -150,7 +135,7 @@ public final class Input
      * @return True if the key was being pressed last frame and is no longer being
      *     pressed. False otherwise.
      */
-    public static boolean isKeyJustUp(final int key)
+    public boolean isKeyJustUp(final int key)
     {
         return !keyStates[key] && lastKeyStates[key];
     }
@@ -160,7 +145,7 @@ public final class Input
      * 
      * @return The mouse x pos.
      */
-    public static float getMouseX()
+    public float getMouseX()
     {
         return mouseX;
     }
@@ -170,7 +155,7 @@ public final class Input
      * 
      * @return The mouse y pos.
      */
-    public static float getMouseY()
+    public float getMouseY()
     {
         return mouseY;
     }
@@ -180,7 +165,7 @@ public final class Input
      * 
      * @return The mouse delta x.
      */
-    public static float getMouseDeltaX()
+    public float getMouseDeltaX()
     {
         return mouseX - lastMouseX;
     }
@@ -190,7 +175,7 @@ public final class Input
      * 
      * @return The mouse delta y.
      */
-    public static float getMouseDeltaY()
+    public float getMouseDeltaY()
     {
         return mouseY - lastMouseY;
     }
@@ -202,7 +187,7 @@ public final class Input
      *     - The mouse button to check for.
      * @return True if the mouse button is being pressed, false otherwise.
      */
-    public static boolean isMouseButtonDown(final int button)
+    public boolean isMouseButtonDown(final int button)
     {
         return mouseButtons[button];
     }
@@ -215,7 +200,7 @@ public final class Input
      * @return True if the mouse button is being pressed and was not pressed on the
      *     previous frame. False otherwise.
      */
-    public static boolean isMouseButtonJustDown(final int button)
+    public boolean isMouseButtonJustDown(final int button)
     {
         return mouseButtons[button] && !lastMouseButtons[button];
     }
@@ -228,7 +213,7 @@ public final class Input
      * @return True if the mouse button was being pressed last frame and is no
      *     longer being pressed. False otherwise.
      */
-    public static boolean isMouseButtonJustUp(final int button)
+    public boolean isMouseButtonJustUp(final int button)
     {
         return !mouseButtons[button] && lastMouseButtons[button];
     }
@@ -238,11 +223,8 @@ public final class Input
      * 
      * @return The scroll wheel delta.
      */
-    public static float getScrollWheelDelta()
+    public float getScrollWheelDelta()
     {
         return scrollWheelDelta;
     }
-
-    private Input()
-    {}
 }

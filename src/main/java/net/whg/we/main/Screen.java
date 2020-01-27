@@ -37,10 +37,10 @@ public class Screen
     private int height;
 
     /**
-     * Creates a new screen object.
+     * Creates a new screen object and binds to the given window.
      * 
      * @param window
-     *     - The window this screen is bound to.
+     *     - The window to bind to.
      */
     public Screen(IWindow window)
     {

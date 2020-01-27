@@ -3,197 +3,155 @@ package unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import org.junit.Test;
 import net.whg.we.main.Input;
-import net.whg.we.main.UserControlsUpdater;
-import net.whg.we.window.IWindow;
-import net.whg.we.window.IWindowListener;
-import net.whg.we.window.WindowSettings;
 
 public class InputTest
 {
-    private IWindow window()
-    {
-        IWindow window = mock(IWindow.class);
-        when(window.getProperties()).thenReturn(new WindowSettings());
-
-        return window;
-    }
-
-    private IWindowListener listener(IWindow window)
-    {
-        IWindowListener[] l = new IWindowListener[1];
-
-        doAnswer(a ->
-        { l[0] = a.getArgument(0); return null; }).when(window)
-                                                  .addWindowListener(any());
-
-        UserControlsUpdater.bind(window);
-        return l[0];
-    }
-
     @Test
     public void keyPressed()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onKeyPressed(window, 35);
 
-        listener.onKeyPressed(window, 35);
-
-        assertTrue(Input.isKeyDown(35));
-        assertTrue(Input.isKeyJustDown(35));
-        assertFalse(Input.isKeyJustUp(35));
+        assertTrue(input.isKeyDown(35));
+        assertTrue(input.isKeyJustDown(35));
+        assertFalse(input.isKeyJustUp(35));
     }
 
     @Test
     public void keyReleased()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onKeyPressed(window, 35);
+        input.endFrame();
+        window.listener.onKeyReleased(window, 35);
 
-        listener.onKeyPressed(window, 35);
-        Input.endFrame();
-        listener.onKeyReleased(window, 35);
-
-        assertFalse(Input.isKeyDown(35));
-        assertFalse(Input.isKeyJustDown(35));
-        assertTrue(Input.isKeyJustUp(35));
+        assertFalse(input.isKeyDown(35));
+        assertFalse(input.isKeyJustDown(35));
+        assertTrue(input.isKeyJustUp(35));
     }
 
     @Test
     public void keyHeld()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onKeyPressed(window, 35);
+        input.endFrame();
 
-        listener.onKeyPressed(window, 35);
-        Input.endFrame();
-
-        assertTrue(Input.isKeyDown(35));
-        assertFalse(Input.isKeyJustDown(35));
-        assertFalse(Input.isKeyJustUp(35));
+        assertTrue(input.isKeyDown(35));
+        assertFalse(input.isKeyJustDown(35));
+        assertFalse(input.isKeyJustUp(35));
     }
 
     @Test
     public void keyIdle()
     {
-        Input.clear();
-        Input.endFrame();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        assertFalse(Input.isKeyDown(35));
-        assertFalse(Input.isKeyJustDown(35));
-        assertFalse(Input.isKeyJustUp(35));
+        input.endFrame();
+
+        assertFalse(input.isKeyDown(35));
+        assertFalse(input.isKeyJustDown(35));
+        assertFalse(input.isKeyJustUp(35));
     }
 
     @Test
     public void mousePressed()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMousePressed(window, 2);
 
-        listener.onMousePressed(window, 2);
-
-        assertTrue(Input.isMouseButtonDown(2));
-        assertTrue(Input.isMouseButtonJustDown(2));
-        assertFalse(Input.isMouseButtonJustUp(2));
+        assertTrue(input.isMouseButtonDown(2));
+        assertTrue(input.isMouseButtonJustDown(2));
+        assertFalse(input.isMouseButtonJustUp(2));
     }
 
     @Test
     public void mouseReleased()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMousePressed(window, 2);
+        input.endFrame();
+        window.listener.onMouseReleased(window, 2);
 
-        listener.onMousePressed(window, 2);
-        Input.endFrame();
-        listener.onMouseReleased(window, 2);
-
-        assertFalse(Input.isMouseButtonDown(2));
-        assertFalse(Input.isMouseButtonJustDown(2));
-        assertTrue(Input.isMouseButtonJustUp(2));
+        assertFalse(input.isMouseButtonDown(2));
+        assertFalse(input.isMouseButtonJustDown(2));
+        assertTrue(input.isMouseButtonJustUp(2));
     }
 
     @Test
     public void mouseHeld()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMousePressed(window, 2);
+        input.endFrame();
 
-        listener.onMousePressed(window, 2);
-        Input.endFrame();
-
-        assertTrue(Input.isMouseButtonDown(2));
-        assertFalse(Input.isMouseButtonJustDown(2));
-        assertFalse(Input.isMouseButtonJustUp(2));
+        assertTrue(input.isMouseButtonDown(2));
+        assertFalse(input.isMouseButtonJustDown(2));
+        assertFalse(input.isMouseButtonJustUp(2));
     }
 
     @Test
     public void mouseIdle()
     {
-        Input.clear();
-        Input.endFrame();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        assertFalse(Input.isMouseButtonDown(1));
-        assertFalse(Input.isMouseButtonJustDown(1));
-        assertFalse(Input.isMouseButtonJustUp(1));
+        input.endFrame();
+
+        assertFalse(input.isMouseButtonDown(1));
+        assertFalse(input.isMouseButtonJustDown(1));
+        assertFalse(input.isMouseButtonJustUp(1));
     }
 
     @Test
     public void mouseMove()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMouseMove(window, 120f, 108f);
 
-        listener.onMouseMove(window, 120f, 108f);
-
-        assertEquals(120f, Input.getMouseX(), 0f);
-        assertEquals(108f, Input.getMouseY(), 0f);
+        assertEquals(120f, input.getMouseX(), 0f);
+        assertEquals(108f, input.getMouseY(), 0f);
     }
 
     @Test
     public void moveMouse_delta()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMouseMove(window, 120f, 108f);
+        input.endFrame();
+        window.listener.onMouseMove(window, 125f, 118f);
 
-        listener.onMouseMove(window, 120f, 108f);
-        Input.endFrame();
-        listener.onMouseMove(window, 125f, 118f);
-
-        assertEquals(5f, Input.getMouseDeltaX(), 0.0001f);
-        assertEquals(10f, Input.getMouseDeltaY(), 0.0001f);
+        assertEquals(5f, input.getMouseDeltaX(), 0.0001f);
+        assertEquals(10f, input.getMouseDeltaY(), 0.0001f);
     }
 
     @Test
     public void scrollWheel()
     {
-        Input.clear();
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
 
-        IWindow window = window();
-        IWindowListener listener = listener(window);
+        window.listener.onMouseWheel(window, 0f, 3.5f);
 
-        listener.onMouseWheel(window, 0f, 3.5f);
-
-        assertEquals(3.5f, Input.getScrollWheelDelta(), 0f);
+        assertEquals(3.5f, input.getScrollWheelDelta(), 0f);
     }
 }
