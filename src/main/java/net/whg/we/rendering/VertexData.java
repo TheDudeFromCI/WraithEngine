@@ -92,7 +92,7 @@ public class VertexData
      * Gets the size of each vertex in bytes.
      *
      * @return The size of each vertex in bytes.
-     * @see {@link #getVertexSize()}
+     * @see VertexData#getVertexSize()
      */
     public int getVertexByteSize()
     {

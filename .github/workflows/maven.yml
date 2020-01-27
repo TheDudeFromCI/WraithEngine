@@ -30,7 +30,7 @@ jobs:
       - name: Build with Maven
         uses: xlui/action-maven-cli/jdk8@master
         with:
-          args: -B clean jacoco:prepare-agent test --file pom.xml jacoco:report sonar:sonar
+          args: -B clean javadoc:jar test jacoco:report sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -38,8 +38,8 @@ jobs:
       - name: Show Error Logs
         if: failure()
         run: |
-          cat hs_err_pid*
-          rm hs_err_pid*
+          cat hs_err_pid* 2> /dev/null || true
+          rm hs_err_pid* 2> /dev/null || true
 
   deploy:
     name: Deploy

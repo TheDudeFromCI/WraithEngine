@@ -142,8 +142,8 @@ public class BindStates
      *     - The ID of the texture to bind.
      * @param slot
      *     - The slot to bind.
-     * @see {@link #bindTextureSlot(int)}
-     * @see {@link #bindTexture(int)}
+     * @see BindStates#bindTextureSlot(int)
+     * @see BindStates#bindTexture(int)
      */
     public void bindTexture(int texture, int slot)
     {
