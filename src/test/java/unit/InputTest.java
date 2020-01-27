@@ -2,6 +2,7 @@ package unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import net.whg.we.window.Input;
@@ -153,5 +154,136 @@ public class InputTest
         window.listener.onMouseWheel(window, 0f, 3.5f);
 
         assertEquals(3.5f, input.getScrollWheelDelta(), 0f);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void endFrame_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.endFrame();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isKeyDown_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isKeyDown(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isKeyJustDown_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isKeyJustDown(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isKeyJustUp_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isKeyJustUp(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getMouseX_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.getMouseX();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getMouseY_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.getMouseY();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getMouseDeltaX_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.getMouseDeltaX();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getMouseDeltaY_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.getMouseDeltaY();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isMouseButtonDown_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isMouseButtonDown(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isMouseButtonJustDown_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isMouseButtonJustDown(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void isMouseButtonJustUp_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.isMouseButtonJustUp(0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getScrollWheelDelta_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+
+        input.getScrollWheelDelta();
+    }
+
+    @Test
+    public void dispose()
+    {
+        FakeWindow window = new FakeWindow();
+        Input input = new Input(window);
+        input.dispose();
+        input.dispose();
+
+        assertNull(window.listener);
     }
 }
