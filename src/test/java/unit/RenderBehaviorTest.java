@@ -12,6 +12,7 @@ import net.whg.we.rendering.Material;
 import net.whg.we.rendering.RenderBehavior;
 import net.whg.we.rendering.RenderPipelineAction;
 import net.whg.we.main.Scene;
+import net.whg.we.main.Screen;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IShader;
@@ -76,7 +77,7 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
 
         RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -100,7 +101,7 @@ public class RenderBehaviorTest
         go.addBehavior(behavior);
 
         RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -122,7 +123,7 @@ public class RenderBehaviorTest
         go.addBehavior(behavior);
 
         RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -142,7 +143,7 @@ public class RenderBehaviorTest
         go.addBehavior(behavior);
 
         RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.PipelineConstants;
+import net.whg.we.main.Screen;
 import net.whg.we.rendering.RenderBehavior;
 import net.whg.we.rendering.RenderPipelineAction;
 import net.whg.we.rendering.Camera;
@@ -43,7 +44,7 @@ public class RenderPipelineActionTest
         go.addBehavior(behavior);
 
         RenderPipelineAction action = new RenderPipelineAction();
-        action.setCamera(new Camera());
+        action.setCamera(new Camera(mock(Screen.class)));
         action.enableBehavior(behavior);
 
         action.run();

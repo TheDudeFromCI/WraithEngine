@@ -1,28 +1,50 @@
 package net.whg.we.main;
 
+import net.whg.we.window.IWindow;
+import net.whg.we.window.IWindowAdapter;
+import net.whg.we.window.WindowSettings;
+
 /**
- * The screen object is a public static interface which can be used to determine
- * various information about the state of the game screen, as well as modidy the
- * screen in certain ways.
+ * The screen object is an object which can be used to determine various
+ * information about the state of the game screen, as well as modidy the screen
+ * in certain ways. Each screen is bound to a single window.
  */
-public final class Screen
+public class Screen
 {
-    private static int width;
-    private static int height;
+    /**
+     * A private listener class which recieved events from the window to store
+     * within the screen object.
+     */
+    private class ScreenListener extends IWindowAdapter
+    {
+        @Override
+        public void onWindowResized(IWindow window, int width, int height)
+        {
+            Screen.this.width = width;
+            Screen.this.height = height;
+        }
+
+        @Override
+        public void onWindowUpdated(IWindow window)
+        {
+            WindowSettings settings = window.getProperties();
+            Screen.this.width = settings.getWidth();
+            Screen.this.height = settings.getHeight();
+        }
+    }
+
+    private int width;
+    private int height;
 
     /**
-     * Assigns the current window size. This should be called every time the window
-     * is resized.
+     * Creates a new screen object.
      * 
-     * @param width
-     *     - The width of the window.
-     * @param height
-     *     - The height of the window.
+     * @param window
+     *     - The window this screen is bound to.
      */
-    static void updateWindowSize(int width, int height)
+    public Screen(IWindow window)
     {
-        Screen.width = width;
-        Screen.height = height;
+        window.addWindowListener(new ScreenListener());
     }
 
     /**
@@ -30,7 +52,7 @@ public final class Screen
      * 
      * @return The width.
      */
-    public static int getWidth()
+    public int getWidth()
     {
         return width;
     }
@@ -40,7 +62,7 @@ public final class Screen
      * 
      * @return The height.
      */
-    public static int getHeight()
+    public int getHeight()
     {
         return height;
     }
@@ -50,11 +72,8 @@ public final class Screen
      * 
      * @return The aspect ratio.
      */
-    public static float getAspect()
+    public float getAspect()
     {
         return (float) width / height;
     }
-
-    private Screen()
-    {}
 }

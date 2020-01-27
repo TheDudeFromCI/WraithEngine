@@ -2,10 +2,13 @@ package unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.junit.Test;
+import net.whg.we.main.Screen;
 import net.whg.we.main.Transform3D;
 import net.whg.we.rendering.Camera;
 
@@ -14,7 +17,7 @@ public class CameraTest
     @Test
     public void defaultProperties()
     {
-        Camera camera = new Camera();
+        Camera camera = new Camera(mock(Screen.class));
 
         assertEquals(0.1f, camera.getNearClip(), 0f);
         assertEquals(1000f, camera.getFarClip(), 0f);
@@ -31,7 +34,7 @@ public class CameraTest
     @Test
     public void setProperties()
     {
-        Camera camera = new Camera();
+        Camera camera = new Camera(mock(Screen.class));
 
         camera.setClippingDistance(15f, 30f);
         assertEquals(15f, camera.getNearClip(), 0f);
@@ -44,7 +47,9 @@ public class CameraTest
     @Test
     public void getProjectionMatrix()
     {
-        Camera camera = new Camera();
+        Screen screen = mock(Screen.class);
+        when(screen.getAspect()).thenReturn(4f / 3f);
+        Camera camera = new Camera(screen);
 
         Matrix4f mat = new Matrix4f();
         mat.perspective((float) Math.PI / 2f, 4f / 3f, 0.1f, 1000f);
@@ -56,7 +61,7 @@ public class CameraTest
     public void externalTransform()
     {
         Transform3D transform = new Transform3D();
-        Camera camera = new Camera(transform);
+        Camera camera = new Camera(transform, mock(Screen.class));
 
         assertTrue(transform == camera.getTransform());
     }

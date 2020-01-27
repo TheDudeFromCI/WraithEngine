@@ -12,16 +12,20 @@ public class Camera
 {
     private final Matrix4f projectionMatrix = new Matrix4f();
     private final Transform3D transform;
+    private final Screen screen;
     private float fov = (float) Math.toRadians(90f);
     private float nearClip = 0.1f;
     private float farClip = 1000f;
 
     /**
      * Creates a new camera object with the default projection matrix.
+     * 
+     * @param screen
+     *     - The screen this camera pulls information from.
      */
-    public Camera()
+    public Camera(Screen screen)
     {
-        this(new Transform3D());
+        this(new Transform3D(), screen);
     }
 
     /**
@@ -32,10 +36,13 @@ public class Camera
      * 
      * @param transform
      *     - The transform this camera should use.
+     * @param screen
+     *     - The screen this camera pulls information from.
      */
-    public Camera(Transform3D transform)
+    public Camera(Transform3D transform, Screen screen)
     {
         this.transform = transform;
+        this.screen = screen;
         rebuildProjectionMatrix();
     }
 
@@ -44,7 +51,7 @@ public class Camera
      */
     private void rebuildProjectionMatrix()
     {
-        float aspect = Screen.getAspect();
+        float aspect = screen.getAspect();
 
         projectionMatrix.identity();
         projectionMatrix.perspective(fov, aspect, nearClip, farClip);

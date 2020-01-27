@@ -1,61 +1,92 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import org.junit.Test;
 import net.whg.we.main.Screen;
-import net.whg.we.main.UserControlsUpdater;
+import net.whg.we.rendering.IRenderingEngine;
 import net.whg.we.window.IWindow;
 import net.whg.we.window.IWindowListener;
 import net.whg.we.window.WindowSettings;
 
 public class ScreenTest
 {
-    private IWindowListener listener(IWindow window)
+    private class FakeWindow implements IWindow
     {
-        IWindowListener[] l = new IWindowListener[1];
+        IWindowListener listener;
 
-        doAnswer(a ->
-        { l[0] = a.getArgument(0); return null; }).when(window)
-                                                  .addWindowListener(any());
+        @Override
+        public void dispose()
+        {}
 
-        UserControlsUpdater.bind(window);
-        return l[0];
+        @Override
+        public boolean isDisposed()
+        {
+            return false;
+        }
+
+        @Override
+        public void setProperties(WindowSettings settings)
+        {}
+
+        @Override
+        public WindowSettings getProperties()
+        {
+            WindowSettings settings = new WindowSettings();
+            settings.setWidth(1600);
+            settings.setHeight(900);
+            return settings;
+        }
+
+        @Override
+        public IRenderingEngine getRenderingEngine()
+        {
+            return null;
+        }
+
+        @Override
+        public void addWindowListener(IWindowListener listener)
+        {
+            this.listener = listener;
+        }
+
+        @Override
+        public void removeWindowListener(IWindowListener listener)
+        {}
+
+        @Override
+        public void pollEvents()
+        {}
+
+        @Override
+        public long getWindowId()
+        {
+            return 1;
+        }
     }
 
     @Test
     public void resizeScreen()
     {
-        IWindow window = mock(IWindow.class);
-        when(window.getProperties()).thenReturn(new WindowSettings());
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
 
-        IWindowListener listener = listener(window);
+        window.listener.onWindowResized(window, 320, 240);
 
-        listener.onWindowResized(window, 320, 240);
-
-        assertEquals(320, Screen.getWidth());
-        assertEquals(240, Screen.getHeight());
-        assertEquals(4f / 3f, Screen.getAspect(), 0.0001f);
+        assertEquals(320, screen.getWidth());
+        assertEquals(240, screen.getHeight());
+        assertEquals(4f / 3f, screen.getAspect(), 0.0001f);
     }
 
     @Test
     public void resizeScreen_updateTrigger()
     {
-        IWindow window = mock(IWindow.class);
-        WindowSettings settings = new WindowSettings();
-        settings.setWidth(1600);
-        settings.setHeight(900);
-        when(window.getProperties()).thenReturn(settings);
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
 
-        IWindowListener listener = listener(window);
+        window.listener.onWindowUpdated(window);
 
-        listener.onWindowUpdated(window);
-
-        assertEquals(1600, Screen.getWidth());
-        assertEquals(900, Screen.getHeight());
-        assertEquals(16f / 9f, Screen.getAspect(), 0.0001f);
+        assertEquals(1600, screen.getWidth());
+        assertEquals(900, screen.getHeight());
+        assertEquals(16f / 9f, screen.getAspect(), 0.0001f);
     }
 }
