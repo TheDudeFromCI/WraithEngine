@@ -86,12 +86,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: github.GITHUB_REF
-          release_name: Build $BUILD_NUMBER
+          tag_name: build_${{ BUILD_NUMBER }}
+          release_name: Build ${{ BUILD_NUMBER }}
           draft: false
           prerelease: true
           body: |
-            Auto-generated Build $BUILD_NUMBER.
+            Auto-generated Build ${{ BUILD_NUMBER }}.
 
       - name: Create Zip Release
         run: |
