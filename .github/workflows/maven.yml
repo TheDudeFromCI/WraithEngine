@@ -30,7 +30,7 @@ jobs:
       - name: Build with Maven
         uses: xlui/action-maven-cli/jdk8@master
         with:
-          args: -B clean jacoco:prepare-agent package --file pom.xml jacoco:report sonar:sonar
+          args: -B clean jacoco:prepare-agent test --file pom.xml jacoco:report sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -78,8 +78,8 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo "<settings><servers><server><id>github</id><username>${USERNAME}</username><password>${GITHUB_TOKEN}</password></server></servers></settings>" > ~/.m2/settings.xml
-          mvn -B deploy
-      
+          mvn -B clean package deploy
+
       - name: Create Release Version
         uses: actions/create-release@v1
         env:
@@ -92,8 +92,13 @@ jobs:
           body: |
             Auto-generated Build ${BUILD_NUMBER}.
 
+      - name: Create Zip Release
+        run: |
+          cp target/wraithengine-*.jar dist
+          zip build *
+
       - name: Upload Release Zip
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
