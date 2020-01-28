@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import net.whg.we.window.Screen;
-import net.whg.we.window.WindowSettings;
 
 public class ScreenTest
 {
@@ -25,7 +24,6 @@ public class ScreenTest
     public void resizeScreen_updateTrigger()
     {
         FakeWindow window = new FakeWindow();
-        window.settings = new WindowSettings();
         window.settings.setSize(1600, 900);
 
         Screen screen = new Screen(window);
@@ -76,5 +74,17 @@ public class ScreenTest
         screen.dispose(); // To make sure nothing happens when you dispose twice
 
         assertNull(window.listener);
+    }
+
+    @Test
+    public void initializeOnCreation()
+    {
+        FakeWindow window = new FakeWindow();
+        window.settings.setSize(400, 300);
+
+        Screen screen = new Screen(window);
+
+        assertEquals(400, screen.getWidth());
+        assertEquals(300, screen.getHeight());
     }
 }

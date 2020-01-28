@@ -8,7 +8,7 @@ import net.whg.we.window.WindowSettings;
 public class FakeWindow implements IWindow
 {
     public IWindowListener listener;
-    public WindowSettings settings;
+    public WindowSettings settings = new WindowSettings();
 
     @Override
     public void dispose()

@@ -49,6 +49,8 @@ public class Screen implements IDisposable
     {
         this.window = window;
         window.addWindowListener(listener);
+
+        listener.onWindowUpdated(window);
     }
 
     /**
