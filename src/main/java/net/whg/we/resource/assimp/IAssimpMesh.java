@@ -100,7 +100,7 @@ public interface IAssimpMesh
      *     - The position within the array to write the vertex uv to.
      * @param index
      *     - The index of the vertex to get.
-     * @param layer
+     * @param uvLayer
      *     - The layer of the vertex uv to get.
      */
     void getVertexUV(float[] data, int pos, int index, int uvLayer);

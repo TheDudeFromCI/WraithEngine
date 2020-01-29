@@ -171,7 +171,7 @@ public interface IGlfw
      * Attaches a callback for mouse move events, and passes them to the given list
      * of listeners.
      * 
-     * @param windowId
+     * @param window
      *     - The ID of the window to attach the callback to.
      * @param listeners
      *     - The list of listeners to forward the event to.
@@ -182,7 +182,7 @@ public interface IGlfw
      * Attaches a callback for mouse button events, and passes them to the given
      * list of listeners.
      * 
-     * @param windowId
+     * @param window
      *     - The ID of the window to attach the callback to.
      * @param listeners
      *     - The list of listeners to forward the event to.
@@ -193,7 +193,7 @@ public interface IGlfw
      * Attaches a callback for mouse wheel events, and passes them to the given list
      * of listeners.
      * 
-     * @param windowId
+     * @param window
      *     - The ID of the window to attach the callback to.
      * @param listeners
      *     - The list of listeners to forward the event to.
@@ -204,7 +204,7 @@ public interface IGlfw
      * Attaches a callback for key press and release events, and passes them to the
      * given list of listeners.
      * 
-     * @param windowId
+     * @param window
      *     - The ID of the window to attach the callback to.
      * @param listeners
      *     - The list of listeners to forward the event to.
@@ -215,7 +215,7 @@ public interface IGlfw
      * Attaches a callback for window resize events, and passes them to the given
      * list of listeners.
      * 
-     * @param windowId
+     * @param window
      *     - The ID of the window to attach the callback to.
      * @param listeners
      *     - The list of listeners to forward the event to.

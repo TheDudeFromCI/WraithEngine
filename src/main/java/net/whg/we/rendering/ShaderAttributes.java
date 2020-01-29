@@ -230,7 +230,7 @@ public class ShaderAttributes
      * Gets the size of each vertex in bytes.
      *
      * @return The size of each vertice in bytes.
-     * @see {@link #getVertexSize()}
+     * @see ShaderAttributes#getVertexSize()
      */
     public int getVertexByteSize()
     {
@@ -277,7 +277,7 @@ public class ShaderAttributes
      * <code>getPositionInVertex(indexOf(attrib))</code><br>
      * with error checking in case the attribute is not found.
      *
-     * @param attrib
+     * @param attribute
      *     - The name of the attribute.
      * @return The position within the vertex of this attribute, or -1 if the
      *     attribute could not be found.

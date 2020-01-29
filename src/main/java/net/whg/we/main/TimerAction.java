@@ -3,7 +3,7 @@ package net.whg.we.main;
 /**
  * A timer action is a game loop action which updates a reliable timer.
  * 
- * @see {@link Timer}
+ * @see Timer
  */
 public class TimerAction implements ILoopAction
 {

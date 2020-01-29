@@ -22,13 +22,16 @@ public interface IOpenGL
 
     /**
      * Sets whether or not depth testing should be enabled.
+     * 
+     * @param depthTesting
+     *     - Whether or not to enable depth testing.
      */
     void setDepthTesting(boolean depthTesting);
 
     /**
      * Sets the face culling mode for OpenGL.
      * 
-     * @param mode
+     * @param cullingMode
      *     - The new mode to assign.
      */
     void setCullingMode(CullingMode cullingMode);

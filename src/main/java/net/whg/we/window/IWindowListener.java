@@ -53,7 +53,7 @@ public interface IWindowListener
      *     - The window in which this event occured.
      * @param newX
      *     - The new x position of the mouse relative to the window.
-     * @param newX
+     * @param newY
      *     - The new y position of the mouse relative to the window.
      */
     void onMouseMove(IWindow window, float newX, float newY);

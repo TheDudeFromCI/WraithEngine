@@ -56,6 +56,10 @@ public final class GlfwWindow implements IWindow
     /**
      * Creates a new GLFW window.
      * 
+     * @param glfw
+     *     - The GLFW implementation to build this window on.
+     * @param renderingEngine
+     *     - The rendering engine to build this window with.
      * @param settings
      *     - The settings to initialize the window with.
      * @throws IllegalStateException

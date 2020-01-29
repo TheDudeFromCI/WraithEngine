@@ -18,8 +18,7 @@ public class WindowSettings
 
     /**
      * Creates a new window settings object with the default window properties
-     * assigned.
-     * <p>
+     * assigned. Default Values:
      * <ul>
      * <li>Title: "Untitled"</li>
      * <li>Width: 800</li>
@@ -313,8 +312,8 @@ public class WindowSettings
      *     - The new width.
      * @param height
      *     - The new height.
-     * @see {@link #setWidth(int)}
-     * @see {@link #setHeight(int)}
+     * @see WindowSettings#setWidth(int)
+     * @see WindowSettings#setHeight(int)
      */
     public void setSize(int width, int height)
     {

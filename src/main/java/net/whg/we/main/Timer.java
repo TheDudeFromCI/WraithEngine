@@ -131,7 +131,7 @@ public class Timer
      * </pre>
      * 
      * @return The physics frame that should have passed.
-     * @see {@link #getPhysicsFrame()}
+     * @see Timer#getPhysicsFrame()
      */
     public long getIdealPhysicsFrame()
     {
@@ -142,7 +142,7 @@ public class Timer
      * Gets the physics frame which has currently been handled.
      * 
      * @return The physics frame id.
-     * @see {@link #getIdealPhysicsFrame()}
+     * @see Timer#getIdealPhysicsFrame()
      */
     public long getPhysicsFrame()
     {
@@ -154,8 +154,8 @@ public class Timer
      * 
      * @throws IllegalStateException
      *     If the timer is not running.
-     * @see {@link #getIdealPhysicsFrame()}
-     * @see {@link #getPhysicsFrame()}
+     * @see Timer#getIdealPhysicsFrame()
+     * @see Timer#getPhysicsFrame()
      */
     public void incrementPhysicsFrame()
     {
