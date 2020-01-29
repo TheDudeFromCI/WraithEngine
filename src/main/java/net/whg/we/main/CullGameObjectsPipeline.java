@@ -3,7 +3,7 @@ package net.whg.we.main;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class CullGameObjectsAction implements IPipelineAction
+public class CullGameObjectsPipeline implements IPipelineAction
 {
     private final List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
 

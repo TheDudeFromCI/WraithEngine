@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * The physics pipeline action is an action in charge of triggering physics
  * updates each frame based on the physics framerate.
  */
-public class PhysicsPipelineAction implements IPipelineAction
+public class PhysicsPipeline implements IPipelineAction
 {
     private final List<IFixedUpdateable> objects = new CopyOnWriteArrayList<>();
     private final Timer timer;
@@ -18,7 +18,7 @@ public class PhysicsPipelineAction implements IPipelineAction
      * @param timer
      *     - The timer to being this action to.
      */
-    public PhysicsPipelineAction(Timer timer)
+    public PhysicsPipeline(Timer timer)
     {
         this.timer = timer;
     }

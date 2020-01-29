@@ -3,7 +3,7 @@ package unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import net.whg.we.main.CullGameObjectsAction;
+import net.whg.we.main.CullGameObjectsPipeline;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Scene;
@@ -23,7 +23,7 @@ public class CullGameObjectsActionTest
         scene.addGameObject(go3);
         go2.markForRemoval();
 
-        CullGameObjectsAction action = new CullGameObjectsAction();
+        CullGameObjectsPipeline action = new CullGameObjectsPipeline();
         scene.addPipelineAction(action);
 
         action.run();
@@ -35,6 +35,6 @@ public class CullGameObjectsActionTest
     @Test
     public void defaultPriority()
     {
-        assertEquals(PipelineConstants.DISPOSE_GAMEOBJECTS, new CullGameObjectsAction().getPriority());
+        assertEquals(PipelineConstants.DISPOSE_GAMEOBJECTS, new CullGameObjectsPipeline().getPriority());
     }
 }

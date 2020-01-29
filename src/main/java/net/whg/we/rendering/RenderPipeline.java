@@ -11,7 +11,7 @@ import net.whg.we.main.PipelineConstants;
  * The renderer pipeline action is used to render elements within a scene. By
  * default, all behaviors which extend {@link RenderBehavior} are used.
  */
-public class RenderPipelineAction implements IPipelineAction
+public class RenderPipeline implements IPipelineAction
 {
     private final List<RenderBehavior> renderedObjects = new ArrayList<>();
     private final List<RenderBehavior> renderedObjectsReadOnly = Collections.unmodifiableList(renderedObjects);

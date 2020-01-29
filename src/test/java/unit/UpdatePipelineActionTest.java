@@ -6,20 +6,20 @@ import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.IUpdateable;
 import net.whg.we.main.PipelineConstants;
-import net.whg.we.main.UpdatePipelineAction;
+import net.whg.we.main.UpdatePipeline;
 
 public class UpdatePipelineActionTest
 {
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(PipelineConstants.FRAME_UPDATES, new UpdatePipelineAction().getPriority());
+        assertEquals(PipelineConstants.FRAME_UPDATES, new UpdatePipeline().getPriority());
     }
 
     @Test
     public void updateBehaviors()
     {
-        UpdatePipelineAction action = new UpdatePipelineAction();
+        UpdatePipeline action = new UpdatePipeline();
         action.enableBehavior(mock(AbstractBehavior.class)); // To make sure no casting issues occur
 
         UpdatableAction behavior = new UpdatableAction();

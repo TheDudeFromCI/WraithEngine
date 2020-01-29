@@ -7,7 +7,7 @@ import net.whg.we.window.IWindow;
  * the render buffer, which needs to be done at the end of every frame in order
  * to render the game to the screen.
  */
-public class PollEventsAction implements ILoopAction
+public class PollEventsPipeline implements ILoopAction
 {
     private final IWindow window;
 
@@ -17,7 +17,7 @@ public class PollEventsAction implements ILoopAction
      * @param window
      *     - The window to poll the events for each frame.
      */
-    public PollEventsAction(IWindow window)
+    public PollEventsPipeline(IWindow window)
     {
         this.window = window;
     }

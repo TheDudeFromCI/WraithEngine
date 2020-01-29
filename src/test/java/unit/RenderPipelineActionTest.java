@@ -9,7 +9,7 @@ import org.junit.Test;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.PipelineConstants;
 import net.whg.we.rendering.RenderBehavior;
-import net.whg.we.rendering.RenderPipelineAction;
+import net.whg.we.rendering.RenderPipeline;
 import net.whg.we.window.Screen;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
@@ -21,7 +21,7 @@ public class RenderPipelineActionTest
     public void addBehavior()
     {
         RenderBehavior behavior = new RenderBehavior();
-        RenderPipelineAction action = new RenderPipelineAction();
+        RenderPipeline action = new RenderPipeline();
         action.enableBehavior(behavior);
 
         assertEquals(1, action.renderBehaviors()
@@ -43,7 +43,7 @@ public class RenderPipelineActionTest
         behavior.setMaterial(material);
         go.addBehavior(behavior);
 
-        RenderPipelineAction action = new RenderPipelineAction();
+        RenderPipeline action = new RenderPipeline();
         action.setCamera(new Camera(mock(Screen.class)));
         action.enableBehavior(behavior);
 
@@ -65,7 +65,7 @@ public class RenderPipelineActionTest
         behavior.setMaterial(material);
         go.addBehavior(behavior);
 
-        RenderPipelineAction action = new RenderPipelineAction();
+        RenderPipeline action = new RenderPipeline();
         action.enableBehavior(behavior);
 
         action.run();
@@ -76,6 +76,6 @@ public class RenderPipelineActionTest
     @Test
     public void ensureCorrectPriority()
     {
-        assertEquals(PipelineConstants.RENDER_SOLIDS, new RenderPipelineAction().getPriority());
+        assertEquals(PipelineConstants.RENDER_SOLIDS, new RenderPipeline().getPriority());
     }
 }

@@ -17,12 +17,12 @@ import net.whg.we.main.GameLoop;
 import net.whg.we.main.GameObject;
 import net.whg.we.main.ITimeSupplier;
 import net.whg.we.main.IUpdateable;
-import net.whg.we.main.PollEventsAction;
+import net.whg.we.main.PollEventsPipeline;
 import net.whg.we.main.Scene;
 import net.whg.we.main.SceneGameLoop;
 import net.whg.we.main.Timer;
 import net.whg.we.main.TimerAction;
-import net.whg.we.main.UpdatePipelineAction;
+import net.whg.we.main.UpdatePipeline;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.Color;
 import net.whg.we.rendering.IMesh;
@@ -33,7 +33,7 @@ import net.whg.we.rendering.ITexture;
 import net.whg.we.rendering.Material;
 import net.whg.we.rendering.RawShaderCode;
 import net.whg.we.rendering.RenderBehavior;
-import net.whg.we.rendering.RenderPipelineAction;
+import net.whg.we.rendering.RenderPipeline;
 import net.whg.we.rendering.ScreenClearPipeline;
 import net.whg.we.rendering.TextureData;
 import net.whg.we.rendering.VertexData;
@@ -77,14 +77,14 @@ public class SpinningCubeDemo
         camera.getTransform()
               .setPosition(0f, 0f, 3f);
 
-        RenderPipelineAction renderPipeline = new RenderPipelineAction();
+        RenderPipeline renderPipeline = new RenderPipeline();
         renderPipeline.setCamera(camera);
 
         IScreenClearHandler screenClear = renderingEngine.getScreenClearHandler();
         screenClear.setClearColor(new Color(0.2f, 0.2f, 0.5f));
 
         Scene scene = new Scene();
-        scene.addPipelineAction(new UpdatePipelineAction());
+        scene.addPipelineAction(new UpdatePipeline());
         scene.addPipelineAction(new ScreenClearPipeline(screenClear));
         scene.addPipelineAction(renderPipeline);
         scene.addGameObject(buildCube(renderingEngine, assimp, timer));
@@ -92,7 +92,7 @@ public class SpinningCubeDemo
         SceneGameLoop gameLoop = new SceneGameLoop();
         gameLoop.addScene(scene);
         gameLoop.addAction(new TimerAction(timer));
-        gameLoop.addAction(new PollEventsAction(window));
+        gameLoop.addAction(new PollEventsPipeline(window));
         addCloseListener(window, gameLoop);
 
         timer.startTimer();

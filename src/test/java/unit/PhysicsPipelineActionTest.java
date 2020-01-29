@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.IFixedUpdateable;
-import net.whg.we.main.PhysicsPipelineAction;
+import net.whg.we.main.PhysicsPipeline;
 import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Timer;
 
@@ -15,7 +15,7 @@ public class PhysicsPipelineActionTest
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(PipelineConstants.PHYSICS_UPDATES, new PhysicsPipelineAction(mock(Timer.class)).getPriority());
+        assertEquals(PipelineConstants.PHYSICS_UPDATES, new PhysicsPipeline(mock(Timer.class)).getPriority());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class PhysicsPipelineActionTest
         when(timer.getPhysicsFrame()).thenReturn(0L)
                                      .thenReturn(1L);
 
-        PhysicsPipelineAction action = new PhysicsPipelineAction(timer);
+        PhysicsPipeline action = new PhysicsPipeline(timer);
         action.enableBehavior(mock(AbstractBehavior.class)); // To make sure no casting issues occur
 
         UpdatableAction behavior = new UpdatableAction();
@@ -51,7 +51,7 @@ public class PhysicsPipelineActionTest
                                      .thenReturn(1L)
                                      .thenReturn(2L);
 
-        PhysicsPipelineAction action = new PhysicsPipelineAction(timer);
+        PhysicsPipeline action = new PhysicsPipeline(timer);
         UpdatableAction behavior = new UpdatableAction();
         action.enableBehavior(behavior);
 
@@ -66,7 +66,7 @@ public class PhysicsPipelineActionTest
         when(timer.getIdealPhysicsFrame()).thenReturn(2L);
         when(timer.getPhysicsFrame()).thenReturn(2L);
 
-        PhysicsPipelineAction action = new PhysicsPipelineAction(timer);
+        PhysicsPipeline action = new PhysicsPipeline(timer);
         UpdatableAction behavior = new UpdatableAction();
         action.enableBehavior(behavior);
 
