@@ -9,6 +9,10 @@ public interface IUpdateable
 {
     /**
      * Called once each frame to update this object.
+     * 
+     * @param timer
+     *     - The timer associated with the update pipeline. Used to retrieve delta
+     *     times.
      */
-    void update();
+    void update(Timer timer);
 }

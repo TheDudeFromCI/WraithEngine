@@ -1,8 +1,8 @@
 package net.whg.we.rendering;
 
 import org.joml.Matrix4f;
-import net.whg.we.main.Screen;
 import net.whg.we.main.Transform3D;
+import net.whg.we.window.Screen;
 
 /**
  * The camera is the object in charge of determing the projection and view
@@ -10,17 +10,39 @@ import net.whg.we.main.Transform3D;
  */
 public class Camera
 {
-    private final Transform3D transform = new Transform3D();
     private final Matrix4f projectionMatrix = new Matrix4f();
+    private final Transform3D transform;
+    private final Screen screen;
     private float fov = (float) Math.toRadians(90f);
     private float nearClip = 0.1f;
     private float farClip = 1000f;
 
     /**
      * Creates a new camera object with the default projection matrix.
+     * 
+     * @param screen
+     *     - The screen this camera pulls information from.
      */
-    public Camera()
+    public Camera(Screen screen)
     {
+        this(new Transform3D(), screen);
+    }
+
+    /**
+     * Creates a new camera object with the default projection matrix. The transform
+     * for this camera is maintained externally, such as being attached to a game
+     * object, and will return the given transform when {@link #getTransform()} is
+     * called.
+     * 
+     * @param transform
+     *     - The transform this camera should use.
+     * @param screen
+     *     - The screen this camera pulls information from.
+     */
+    public Camera(Transform3D transform, Screen screen)
+    {
+        this.transform = transform;
+        this.screen = screen;
         rebuildProjectionMatrix();
     }
 
@@ -29,7 +51,7 @@ public class Camera
      */
     private void rebuildProjectionMatrix()
     {
-        float aspect = Screen.getAspect();
+        float aspect = screen.getAspect();
 
         projectionMatrix.identity();
         projectionMatrix.perspective(fov, aspect, nearClip, farClip);

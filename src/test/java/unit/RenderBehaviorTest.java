@@ -9,8 +9,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
 import net.whg.we.rendering.Material;
-import net.whg.we.main.RenderBehavior;
-import net.whg.we.main.RenderPipelineAction;
+import net.whg.we.rendering.RenderBehavior;
+import net.whg.we.rendering.RenderPipeline;
+import net.whg.we.window.Screen;
 import net.whg.we.main.Scene;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
@@ -75,8 +76,8 @@ public class RenderBehaviorTest
         go.addBehavior(behavior);
         scene.addGameObject(go);
 
-        RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        RenderPipeline renderPipeline = new RenderPipeline();
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -99,8 +100,8 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        RenderPipeline renderPipeline = new RenderPipeline();
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -121,8 +122,8 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        RenderPipeline renderPipeline = new RenderPipeline();
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 
@@ -141,8 +142,8 @@ public class RenderBehaviorTest
         scene.addGameObject(go);
         go.addBehavior(behavior);
 
-        RenderPipelineAction renderPipeline = new RenderPipelineAction();
-        renderPipeline.setCamera(new Camera());
+        RenderPipeline renderPipeline = new RenderPipeline();
+        renderPipeline.setCamera(new Camera(mock(Screen.class)));
         renderPipeline.enableBehavior(behavior);
         renderPipeline.run();
 

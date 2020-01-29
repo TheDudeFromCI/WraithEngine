@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import org.joml.Matrix4f;
 import org.junit.Test;
 import net.whg.we.rendering.Material;
+import net.whg.we.window.Screen;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.ITexture;
@@ -57,7 +58,7 @@ public class MaterialTest
         IShader shader = mock(IShader.class);
         Material material = new Material(shader);
 
-        Camera camera = new Camera();
+        Camera camera = new Camera(mock(Screen.class));
         Matrix4f matrix = new Matrix4f();
 
         material.setCameraMatrix(camera, matrix);

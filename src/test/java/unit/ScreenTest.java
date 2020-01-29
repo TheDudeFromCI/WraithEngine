@@ -1,61 +1,90 @@
 package unit;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import net.whg.we.main.Screen;
-import net.whg.we.main.UserControlsUpdater;
-import net.whg.we.window.IWindow;
-import net.whg.we.window.IWindowListener;
-import net.whg.we.window.WindowSettings;
+import net.whg.we.window.Screen;
 
 public class ScreenTest
 {
-    private IWindowListener listener(IWindow window)
-    {
-        IWindowListener[] l = new IWindowListener[1];
-
-        doAnswer(a ->
-        { l[0] = a.getArgument(0); return null; }).when(window)
-                                                  .addWindowListener(any());
-
-        UserControlsUpdater.bind(window);
-        return l[0];
-    }
-
     @Test
     public void resizeScreen()
     {
-        IWindow window = mock(IWindow.class);
-        when(window.getProperties()).thenReturn(new WindowSettings());
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
 
-        IWindowListener listener = listener(window);
+        window.listener.onWindowResized(window, 320, 240);
 
-        listener.onWindowResized(window, 320, 240);
-
-        assertEquals(320, Screen.getWidth());
-        assertEquals(240, Screen.getHeight());
-        assertEquals(4f / 3f, Screen.getAspect(), 0.0001f);
+        assertEquals(320, screen.getWidth());
+        assertEquals(240, screen.getHeight());
+        assertEquals(4f / 3f, screen.getAspect(), 0.0001f);
     }
 
     @Test
     public void resizeScreen_updateTrigger()
     {
-        IWindow window = mock(IWindow.class);
-        WindowSettings settings = new WindowSettings();
-        settings.setWidth(1600);
-        settings.setHeight(900);
-        when(window.getProperties()).thenReturn(settings);
+        FakeWindow window = new FakeWindow();
+        window.settings.setSize(1600, 900);
 
-        IWindowListener listener = listener(window);
+        Screen screen = new Screen(window);
+        window.listener.onWindowUpdated(window);
 
-        listener.onWindowUpdated(window);
+        assertEquals(1600, screen.getWidth());
+        assertEquals(900, screen.getHeight());
+        assertEquals(16f / 9f, screen.getAspect(), 0.0001f);
+    }
 
-        assertEquals(1600, Screen.getWidth());
-        assertEquals(900, Screen.getHeight());
-        assertEquals(16f / 9f, Screen.getAspect(), 0.0001f);
+    @Test(expected = IllegalStateException.class)
+    public void getWidth_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getWidth();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getHeight_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getHeight();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getAspect_alreadyDisposed()
+    {
+        FakeWindow window = new FakeWindow();
+        Screen screen = new Screen(window);
+        screen.dispose();
+
+        screen.getAspect();
+    }
+
+    @Test
+    public void dipose()
+    {
+        FakeWindow window = new FakeWindow();
+
+        Screen screen = new Screen(window);
+        screen.dispose();
+        screen.dispose(); // To make sure nothing happens when you dispose twice
+
+        assertNull(window.listener);
+    }
+
+    @Test
+    public void initializeOnCreation()
+    {
+        FakeWindow window = new FakeWindow();
+        window.settings.setSize(400, 300);
+
+        Screen screen = new Screen(window);
+
+        assertEquals(400, screen.getWidth());
+        assertEquals(300, screen.getHeight());
     }
 }

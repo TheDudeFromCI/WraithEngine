@@ -1,19 +1,40 @@
-package net.whg.we.main;
+package net.whg.we.rendering;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.whg.we.rendering.Camera;
+import net.whg.we.main.AbstractBehavior;
+import net.whg.we.main.IPipelineAction;
+import net.whg.we.main.PipelineConstants;
 
 /**
  * The renderer pipeline action is used to render elements within a scene. By
  * default, all behaviors which extend {@link RenderBehavior} are used.
  */
-public class RenderPipelineAction implements IPipelineAction
+public class RenderPipeline implements IPipelineAction
 {
     private final List<RenderBehavior> renderedObjects = new ArrayList<>();
     private final List<RenderBehavior> renderedObjectsReadOnly = Collections.unmodifiableList(renderedObjects);
     private Camera camera;
+
+    /**
+     * Creates a new render pipeline action.
+     */
+    public RenderPipeline()
+    {
+        this(null);
+    }
+
+    /**
+     * Creates a new render pipeline action and initializes it with a camera.
+     * 
+     * @param camera
+     *     - The camera to attach to this render pipeline action.
+     */
+    public RenderPipeline(Camera camera)
+    {
+        this.camera = camera;
+    }
 
     @Override
     public void run()
@@ -74,6 +95,6 @@ public class RenderPipelineAction implements IPipelineAction
     @Override
     public int getPriority()
     {
-        return 30000;
+        return PipelineConstants.RENDER_SOLIDS;
     }
 }

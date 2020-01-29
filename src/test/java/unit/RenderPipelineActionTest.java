@@ -7,8 +7,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import net.whg.we.main.GameObject;
-import net.whg.we.main.RenderBehavior;
-import net.whg.we.main.RenderPipelineAction;
+import net.whg.we.main.PipelineConstants;
+import net.whg.we.rendering.RenderBehavior;
+import net.whg.we.rendering.RenderPipeline;
+import net.whg.we.window.Screen;
 import net.whg.we.rendering.Camera;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.Material;
@@ -19,7 +21,7 @@ public class RenderPipelineActionTest
     public void addBehavior()
     {
         RenderBehavior behavior = new RenderBehavior();
-        RenderPipelineAction action = new RenderPipelineAction();
+        RenderPipeline action = new RenderPipeline();
         action.enableBehavior(behavior);
 
         assertEquals(1, action.renderBehaviors()
@@ -41,8 +43,8 @@ public class RenderPipelineActionTest
         behavior.setMaterial(material);
         go.addBehavior(behavior);
 
-        RenderPipelineAction action = new RenderPipelineAction();
-        action.setCamera(new Camera());
+        RenderPipeline action = new RenderPipeline();
+        action.setCamera(new Camera(mock(Screen.class)));
         action.enableBehavior(behavior);
 
         action.run();
@@ -63,7 +65,7 @@ public class RenderPipelineActionTest
         behavior.setMaterial(material);
         go.addBehavior(behavior);
 
-        RenderPipelineAction action = new RenderPipelineAction();
+        RenderPipeline action = new RenderPipeline();
         action.enableBehavior(behavior);
 
         action.run();
@@ -74,6 +76,15 @@ public class RenderPipelineActionTest
     @Test
     public void ensureCorrectPriority()
     {
-        assertEquals(30000, new RenderPipelineAction().getPriority());
+        assertEquals(PipelineConstants.RENDER_SOLIDS, new RenderPipeline().getPriority());
+    }
+
+    @Test
+    public void initializeWithCamera()
+    {
+        Camera camera = mock(Camera.class);
+        RenderPipeline pipeline = new RenderPipeline(camera);
+
+        assertTrue(camera == pipeline.getCamera());
     }
 }
