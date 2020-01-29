@@ -17,6 +17,25 @@ public class RenderPipeline implements IPipelineAction
     private final List<RenderBehavior> renderedObjectsReadOnly = Collections.unmodifiableList(renderedObjects);
     private Camera camera;
 
+    /**
+     * Creates a new render pipeline action.
+     */
+    public RenderPipeline()
+    {
+        this(null);
+    }
+
+    /**
+     * Creates a new render pipeline action and initializes it with a camera.
+     * 
+     * @param camera
+     *     - The camera to attach to this render pipeline action.
+     */
+    public RenderPipeline(Camera camera)
+    {
+        this.camera = camera;
+    }
+
     @Override
     public void run()
     {

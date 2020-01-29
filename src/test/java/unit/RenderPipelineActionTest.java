@@ -78,4 +78,13 @@ public class RenderPipelineActionTest
     {
         assertEquals(PipelineConstants.RENDER_SOLIDS, new RenderPipeline().getPriority());
     }
+
+    @Test
+    public void initializeWithCamera()
+    {
+        Camera camera = mock(Camera.class);
+        RenderPipeline pipeline = new RenderPipeline(camera);
+
+        assertTrue(camera == pipeline.getCamera());
+    }
 }
