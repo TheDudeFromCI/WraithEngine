@@ -8,7 +8,9 @@ on:
       - ".github/**"
   pull_request:
     paths:
-      - "*"
+      - "**.java"
+      - "pom.xml"
+      - ".github/**"
 
 jobs:
   build:
@@ -28,9 +30,8 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build with Maven
-        uses: xlui/action-maven-cli/jdk8@master
-        with:
-          args: -B clean javadoc:jar test jacoco:report sonar:sonar
+        run: |
+          mvn -B clean javadoc:jar test jacoco:report sonar:sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -96,18 +97,25 @@ jobs:
 
       - name: Create Zip Release
         run: |
-          cp target/wraithengine-*.jar dist
-          cd dist
-          zip build *
-          cd ..
+          zip -j build target/wraithengine-*.jar
+          zip -j lib target/lib/*.jar
 
       - name: Upload Release Zip
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/build.zip
+          asset_path: ./build.zip
           asset_name: build_${{ steps.build_number.outputs.build_number }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Libraries Zip
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./lib.zip
+          asset_name: build_${{ steps.build_number.outputs.build_number }}_lib.zip
           asset_content_type: application/zip
