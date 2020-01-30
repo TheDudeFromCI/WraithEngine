@@ -83,6 +83,9 @@ If you're unsure how to create a Github API token, go into your user settings, a
 **Note:**
 Keep this token secret! This is a basically a password which allows software to access your account. This should be kept a secret! If your API token is ever compromised, delete it and create a new token.
 
+### Jar Download
+If your currently workflow does not use Maven, all builds, starting from build 14, can be found in the releases menu about. The libraries which WraithEngine relies on can be found next to the release zip.
+
 ## Contributing
 WraithEngine is open-source and community-driven. All contributions are welcome and highly encouraged! If you see an area of the project which is lacking, feel free to open an issue or submit a pull request. If you want to help but aren't sure where to start:
 
