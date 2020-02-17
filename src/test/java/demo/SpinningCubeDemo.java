@@ -79,7 +79,7 @@ public class SpinningCubeDemo
         // The window settings object can be used to configure how the window should be
         // displayed. This includes things like title, size, fullscreen, vSync, etc.
         WindowSettings windowSettings = new WindowSettings();
-        windowSettings.setTitle("Spinning Cubes Demo");
+        windowSettings.setTitle("Spinning Cube Demo");
 
         // The rendering engine is used to actually render the game. Here, we're loading
         // the OpenGL 3.3 rendering engine.
