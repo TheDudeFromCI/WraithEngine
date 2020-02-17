@@ -110,6 +110,18 @@ public abstract class DemoBase
     }
 
     /**
+     * Converts the given resource path into a file.
+     * 
+     * @param path
+     *     - The path of the resource, relative to the test/res folder.
+     * @return The file.
+     */
+    private File getFile(String path)
+    {
+        return new File("src/test/res/" + path);
+    }
+
+    /**
      * Loads a shader at the given path. The vertex and fragment shaders are
      * discovered by appending ".vert" and ".frag" to the path respectively.
      * 
@@ -121,9 +133,12 @@ public abstract class DemoBase
     {
         try
         {
+            String vertFile = getFile(path + ".vert").getAbsolutePath();
+            String fragFile = getFile(path + ".frag").getAbsolutePath();
+
             RawShaderCode shaderCode =
-                    new RawShaderCode(new String(Files.readAllBytes(Paths.get(path + ".vert")), StandardCharsets.UTF_8),
-                            new String(Files.readAllBytes(Paths.get(path + ".vert")), StandardCharsets.UTF_8));
+                    new RawShaderCode(new String(Files.readAllBytes(Paths.get(vertFile)), StandardCharsets.UTF_8),
+                            new String(Files.readAllBytes(Paths.get(fragFile)), StandardCharsets.UTF_8));
 
             IShader shader = renderingEngine.createShader();
             shader.compile(shaderCode);
@@ -150,7 +165,7 @@ public abstract class DemoBase
         {
             ModelLoader modelLoader = new ModelLoader(new AssimpAPI());
 
-            List<Resource> resources = modelLoader.loadScene(new File(path));
+            List<Resource> resources = modelLoader.loadScene(getFile(path));
             return (VertexData) resources.get(0)
                                          .getData();
         }
@@ -189,7 +204,7 @@ public abstract class DemoBase
     {
         try
         {
-            return TextureLoader.loadTexture(new File(path));
+            return TextureLoader.loadTexture(getFile(path));
         }
         catch (IOException e)
         {
