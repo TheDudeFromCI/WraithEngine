@@ -35,6 +35,8 @@ import net.whg.we.resource.ModelLoader;
 import net.whg.we.resource.Resource;
 import net.whg.we.resource.TextureLoader;
 import net.whg.we.window.IWindow;
+import net.whg.we.window.Input;
+import net.whg.we.window.InputEndFrameAction;
 import net.whg.we.window.Screen;
 import net.whg.we.window.WindowCloseHandler;
 import net.whg.we.window.WindowSettings;
@@ -59,6 +61,8 @@ public abstract class DemoBase
     private IRenderingEngine renderingEngine;
     private IScreenClearHandler screenClear;
     private Camera camera;
+    private Input input;
+    private Screen screen;
 
     /**
      * Initializes the demo with default settings. This will open the window but
@@ -91,6 +95,10 @@ public abstract class DemoBase
 
         timer = new Timer(new TimeSupplierApi());
         gameLoop.addAction(new TimerAction(timer));
+
+        input = new Input(window);
+        screen = new Screen(window);
+        gameLoop.addAction(new InputEndFrameAction(input));
 
         scene.addPipelineAction(new UpdatePipeline(timer));
 
@@ -269,5 +277,25 @@ public abstract class DemoBase
     protected Scene getScene()
     {
         return scene;
+    }
+
+    /**
+     * Gets the input handler.
+     * 
+     * @return The input handler.
+     */
+    protected Input getInput()
+    {
+        return input;
+    }
+
+    /**
+     * Gets the screen handler.
+     * 
+     * @return The screen handler.
+     */
+    protected Screen getScreen()
+    {
+        return screen;
     }
 }
