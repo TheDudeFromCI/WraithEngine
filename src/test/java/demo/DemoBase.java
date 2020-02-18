@@ -75,6 +75,8 @@ public abstract class DemoBase
         renderingEngine = new OpenGLRenderingEngine(new OpenGLApi());
         window = new GlfwWindow(new GlfwApi(), renderingEngine, windowSettings);
 
+        scene = new Scene();
+
         screenClear = renderingEngine.getScreenClearHandler();
         screenClear.setClearColor(new Color(0.2f, 0.4f, 0.8f));
         scene.addPipelineAction(new ScreenClearPipeline(screenClear));
@@ -84,7 +86,6 @@ public abstract class DemoBase
         camera.getTransform()
               .setPosition(0f, 0f, 3f);
 
-        scene = new Scene();
         gameLoop = new SceneGameLoop();
         gameLoop.addScene(scene);
 
@@ -258,5 +259,15 @@ public abstract class DemoBase
     protected IRenderingEngine getRenderingEngine()
     {
         return renderingEngine;
+    }
+
+    /**
+     * Gets the active scene.
+     * 
+     * @return The scene.
+     */
+    protected Scene getScene()
+    {
+        return scene;
     }
 }
