@@ -61,7 +61,7 @@ public class OrbitCamera extends AbstractBehavior implements IUpdateable
      * method will also clamp the yaw and pitch into the acceptable range if
      * required.
      */
-    private void updatePosition()
+    public void updatePosition()
     {
         yaw %= Math.PI * 2;
         pitch = (float) Math.max(-Math.PI / 2f, Math.min(Math.PI / 2f, pitch));
@@ -76,7 +76,8 @@ public class OrbitCamera extends AbstractBehavior implements IUpdateable
         camera.getTransform()
               .getPosition()
               .set(0f, 0f, distance)
-              .rotate(rot);
+              .rotate(rot)
+              .add(offset);
     }
 
     /**
@@ -146,7 +147,9 @@ public class OrbitCamera extends AbstractBehavior implements IUpdateable
 
     /**
      * Gets the offset vector for the cameras hover. This can be used if the camera
-     * should orbit around a location other than the origin.
+     * should orbit around a location other than the origin. Note, updating this
+     * value will not automatically apply the new offset. Call
+     * {@link #updatePosition()} after modifying this value to apply changes.
      * 
      * @return The offset vector.
      */
@@ -170,5 +173,15 @@ public class OrbitCamera extends AbstractBehavior implements IUpdateable
         this.pitch = pitch;
 
         updatePosition();
+    }
+
+    /**
+     * Gets the camera this orbit is operating on.
+     * 
+     * @return The camera.
+     */
+    public Camera getCamera()
+    {
+        return camera;
     }
 }
