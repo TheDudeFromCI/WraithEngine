@@ -1,5 +1,6 @@
 package demo;
 
+import org.joml.Vector3f;
 import net.whg.we.main.GameObject;
 import net.whg.we.rendering.IMesh;
 import net.whg.we.rendering.IShader;
@@ -13,17 +14,17 @@ import net.whg.we.rendering.TextureData.SampleMode;
 
 public class TerrainDemo extends DemoBase
 {
-    private static final int RESOLUTION = 64;
+    private static final int RESOLUTION = 127;
     private static final float SCALE = 30f;
 
     public TerrainDemo()
     {
         super("Terrain Demo");
         loadTerrain();
-        // buildCube();
 
         OrbitCamera orbit = new OrbitCamera(getCamera(), getInput());
         orbit.setDistance(SCALE / 1.414f);
+        orbit.setRotation(0f, -1f);
         GameObject go = new GameObject();
         go.setName("Orbit Camera");
         go.addBehavior(orbit);
@@ -66,13 +67,76 @@ public class TerrainDemo extends DemoBase
         return grassMaterial;
     }
 
+    private float clamp(float v, float min, float max)
+    {
+        return Math.min(max, Math.max(v, min));
+    }
+
     private float sampleHeight(TextureData heightmap, float x, float y)
     {
+        x = clamp(x, 0f, 1f);
+        y = clamp(y, 0f, 1f);
+
         int a = Math.round(x * (heightmap.getWidth() - 1));
         int b = Math.round(y * (heightmap.getHeight() - 1));
         int rgba = heightmap.getPixel(a, b);
 
         return (rgba & 0xFF) / 255f;
+    }
+
+    private void calculateNormals(float[] vertices, short[] triangles, int vertexSize, int posOffset, int normalOffset)
+    {
+        Vector3f p1 = new Vector3f();
+        Vector3f p2 = new Vector3f();
+        Vector3f p3 = new Vector3f();
+
+        Vector3f v = new Vector3f();
+        Vector3f w = new Vector3f();
+        Vector3f n = new Vector3f();
+
+        for (int t = 0; t < triangles.length; t += 3)
+        {
+            int index;
+
+            index = triangles[t + 0] * vertexSize + posOffset;
+            p1.set(vertices[index + 0], vertices[index + 1], vertices[index + 2]);
+
+            index = triangles[t + 1] * vertexSize + posOffset;
+            p2.set(vertices[index + 0], vertices[index + 1], vertices[index + 2]);
+
+            index = triangles[t + 2] * vertexSize + posOffset;
+            p3.set(vertices[index + 0], vertices[index + 1], vertices[index + 2]);
+
+            p2.sub(p1, v);
+            p3.sub(p1, w);
+            v.cross(w, n);
+            n.normalize();
+
+            vertices[triangles[t + 0] * vertexSize + normalOffset + 0] += n.x;
+            vertices[triangles[t + 0] * vertexSize + normalOffset + 1] += n.y;
+            vertices[triangles[t + 0] * vertexSize + normalOffset + 2] += n.z;
+
+            vertices[triangles[t + 1] * vertexSize + normalOffset + 0] += n.x;
+            vertices[triangles[t + 1] * vertexSize + normalOffset + 1] += n.y;
+            vertices[triangles[t + 1] * vertexSize + normalOffset + 2] += n.z;
+
+            vertices[triangles[t + 2] * vertexSize + normalOffset + 0] += n.x;
+            vertices[triangles[t + 2] * vertexSize + normalOffset + 1] += n.y;
+            vertices[triangles[t + 2] * vertexSize + normalOffset + 2] += n.z;
+        }
+
+        for (int i = normalOffset; i < vertices.length; i += vertexSize)
+        {
+            n.x = vertices[i + 0];
+            n.y = vertices[i + 1];
+            n.z = vertices[i + 2];
+
+            n.normalize();
+
+            vertices[i + 0] = n.x;
+            vertices[i + 1] = n.y;
+            vertices[i + 2] = n.z;
+        }
     }
 
     private VertexData generatePlane(int verts, float scale, float amplitude)
@@ -103,7 +167,7 @@ public class TerrainDemo extends DemoBase
                 vertices[i + 2] = dy * scale;
 
                 vertices[i + 3] = 0;
-                vertices[i + 4] = 1;
+                vertices[i + 4] = 0;
                 vertices[i + 5] = 0;
 
                 vertices[i + 6] = 0;
@@ -131,6 +195,8 @@ public class TerrainDemo extends DemoBase
                 triangles[ti + 5] = (short) (vi + verts + 2);
             }
         }
+
+        calculateNormals(vertices, triangles, vertexSize, 0, 3);
 
         return new VertexData(vertices, triangles, attributes);
     }
