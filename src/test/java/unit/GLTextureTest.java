@@ -214,6 +214,40 @@ public class GLTextureTest
     }
 
     @Test
+    public void update_sampleMode_NearestSmoothed()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        TextureData data = new TextureData(2, 2);
+        data.setSampleMode(SampleMode.NEAREST_SMOOTHED);
+        data.setMipmap(true);
+
+        ITexture texture = renderingEngine.createTexture();
+        texture.update(data);
+
+        verify(opengl).setTexture2DNearestSmoothedInterpolation();
+    }
+
+    @Test
+    public void update_sampleMode_NearestSmoothed_NoMipmap()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        TextureData data = new TextureData(2, 2);
+        data.setSampleMode(SampleMode.NEAREST_SMOOTHED);
+        data.setMipmap(false);
+
+        ITexture texture = renderingEngine.createTexture();
+        texture.update(data);
+
+        verify(opengl).setTexture2DNearestInterpolation(false);
+    }
+
+    @Test
     public void update_wrapMode_clamp()
     {
         IOpenGL opengl = opengl();

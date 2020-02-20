@@ -12,6 +12,6 @@ out vec4 color;
 void main()
 {
     vec3 col = texture(diffuse, pass_uv).rgb;
-    col *= dot(pass_normal, lightDir) * 0.15 + 0.85;
+    col *= dot(pass_normal, lightDir) * 0.25 + 0.75;
 	color = vec4(col, 1.0);
 }

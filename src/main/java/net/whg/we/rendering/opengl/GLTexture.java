@@ -110,11 +110,20 @@ public class GLTexture implements ITexture
     {
         SampleMode sampleMode = textureData.getSampleMode();
 
-        if (sampleMode == SampleMode.TRILINEAR && !textureData.hasMipmap())
+        if (!textureData.hasMipmap())
         {
-            sampleMode = SampleMode.BILINEAR;
-            logger.warn("Texture uploaded with Sample mode TRILINEAR, but mipmaps "
-                    + "disabled. Setting sampling mode to BILINEAR.");
+            if (sampleMode == SampleMode.TRILINEAR)
+            {
+                sampleMode = SampleMode.BILINEAR;
+                logger.warn("Texture uploaded with Sample mode TRILINEAR, but with mipmaps "
+                        + "disabled. Setting sampling mode to BILINEAR.");
+            }
+            if (sampleMode == SampleMode.NEAREST_SMOOTHED)
+            {
+                sampleMode = SampleMode.NEAREST;
+                logger.warn("Texture uploaded with Sample mode NEAREST SMOOTHED, but with mipmaps "
+                        + "disabled. Setting sampling mode to NEAREST.");
+            }
         }
 
         switch (sampleMode)
@@ -129,6 +138,10 @@ public class GLTexture implements ITexture
 
             case TRILINEAR:
                 opengl.setTexture2DTrilinearpolation();
+                break;
+
+            case NEAREST_SMOOTHED:
+                opengl.setTexture2DNearestSmoothedInterpolation();
                 break;
 
             default:

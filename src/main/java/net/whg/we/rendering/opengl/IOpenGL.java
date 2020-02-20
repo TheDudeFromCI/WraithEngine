@@ -326,6 +326,12 @@ public interface IOpenGL
     void setTexture2DTrilinearpolation();
 
     /**
+     * Sets the interpolation mode for the currently bound texture, as a 2D texture,
+     * to use nearest with smoothed mipmapping.
+     */
+    void setTexture2DNearestSmoothedInterpolation();
+
+    /**
      * Sets the value of a uniform as an int.
      * 
      * @param location
