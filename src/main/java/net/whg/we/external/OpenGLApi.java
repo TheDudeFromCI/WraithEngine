@@ -331,6 +331,13 @@ public class OpenGLApi implements IOpenGL
     }
 
     @Override
+    public void setTexture2DNearestSmoothedInterpolation()
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+
+    @Override
     public void setUniformInt(int location, int value)
     {
         glUniform1i(location, value);

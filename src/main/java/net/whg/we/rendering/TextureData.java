@@ -40,8 +40,20 @@ public class TextureData
          * for the current mipmap level, the level above, and the level below, are all
          * blended together linearly. This is the slowest operation, but the highest
          * quality.
+         * <p>
+         * If mipmapping is disabled, this mode acts identical to bileaner
+         * interpolation.
          */
         TRILINEAR,
+
+        /**
+         * In this sampling mode, the pixels of the texture are sampled just like in
+         * nearst sampling mode, but with the exception that different mipmap levels are
+         * blended together, which helps reduce random artifacts in far away objects.
+         * <p>
+         * If mipmapping is disabled, this mode acts identical to nearest interpolation.
+         */
+        NEAREST_SMOOTHED,
     }
 
     /**
