@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.RawShaderCode;
+import net.whg.we.rendering.ShaderAttributes;
 
 public class GLShader implements IShader
 {
@@ -77,7 +78,7 @@ public class GLShader implements IShader
     }
 
     @Override
-    public void compile(RawShaderCode shaderCode)
+    public void update(RawShaderCode shaderCode, ShaderAttributes shaderAttributes)
     {
         if (isDisposed())
             throw new IllegalStateException(SHADER_DISPOSED);
@@ -95,12 +96,18 @@ public class GLShader implements IShader
 
         created = true;
 
+        logger.trace("Building Vertex Shader:\n{}", shaderCode.getVertexShader());
+        logger.trace("Building Fragment Shader:\n{}", shaderCode.getFragmentShader());
+
         int vId = opengl.createVertexShader(shaderCode.getVertexShader());
         int fId = opengl.createFragementShader(shaderCode.getFragmentShader());
         shaderId = opengl.createShaderProgram();
 
         opengl.attachShaderProgram(shaderId, vId);
         opengl.attachShaderProgram(shaderId, fId);
+
+        bindShaderAttributes(shaderAttributes);
+
         opengl.linkShader(shaderId);
 
         opengl.deleteShader(vId);
@@ -109,6 +116,33 @@ public class GLShader implements IShader
         logger.debug("Compiled shader with ID: {}", shaderId);
     }
 
+    /**
+     * Used to bind the shader attributes object to the shader before linking the
+     * program. Does nothing if the given shader attributes are null.
+     * 
+     * @param shaderAttributes
+     *     - The shader attribute layout to assign to the shader program.
+     */
+    private void bindShaderAttributes(ShaderAttributes shaderAttributes)
+    {
+        if (shaderAttributes == null)
+            return;
+
+        int attribCount = shaderAttributes.getCount();
+        for (int i = 0; i < attribCount; i++)
+            opengl.bindAttributeLocation(shaderId, shaderAttributes.getAttributeName(i), i);
+
+        logger.debug("Assigned Shader Attributes: {}", shaderAttributes);
+    }
+
+    /**
+     * Gets the location of a uniform.
+     * 
+     * @param uniform
+     *     - The name of the uniform.
+     * @return The location of the uniform. verify(opengl).bindAttributeLocation(1,
+     *     "pos", 0);
+     */
     private int getUniform(String uniform)
     {
         if (uniforms.containsKey(uniform))

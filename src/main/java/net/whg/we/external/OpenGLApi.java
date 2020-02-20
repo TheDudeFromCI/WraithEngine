@@ -342,4 +342,10 @@ public class OpenGLApi implements IOpenGL
     {
         glUniform1i(location, value);
     }
+
+    @Override
+    public void bindAttributeLocation(int shaderId, String attribute, int location)
+    {
+        glBindAttribLocation(shaderId, location, attribute);
+    }
 }

@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.lwjgl.BufferUtils;
 import net.whg.we.rendering.IShader;
 import net.whg.we.rendering.RawShaderCode;
+import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.opengl.IOpenGL;
 import net.whg.we.rendering.opengl.OpenGLRenderingEngine;
 
@@ -82,7 +83,7 @@ public class GLShaderTest
         IShader shader = renderingEngine.createShader();
         assertFalse(shader.isCreated());
 
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
 
         verify(opengl, never()).deleteShaderProgram(anyInt());
 
@@ -102,10 +103,10 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
         reset(opengl);
 
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
 
         verify(opengl).deleteShaderProgram(anyInt());
 
@@ -123,7 +124,7 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
         reset(opengl);
 
         shader.dispose();
@@ -151,7 +152,7 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
 
         shader.setUniformMat4("any_uni", BufferUtils.createFloatBuffer(16));
         shader.setUniformMat4("any_uni", BufferUtils.createFloatBuffer(16));
@@ -169,7 +170,7 @@ public class GLShaderTest
 
         IShader shader = renderingEngine.createShader();
         shader.dispose();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -180,7 +181,7 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(null);
+        shader.update(null, null);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -203,7 +204,7 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
         shader.bind();
 
         shader.dispose();
@@ -232,7 +233,7 @@ public class GLShaderTest
         renderingEngine.init();
 
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode());
+        shader.update(shaderCode(), null);
         shader.setUniformInt("texture", 1);
 
         verify(opengl).getUniformLocation(anyInt(), eq("texture"));
@@ -250,5 +251,25 @@ public class GLShaderTest
         shader.dispose();
 
         shader.setUniformInt("texture", 0);
+    }
+
+    @Test
+    public void updateWithAttributes()
+    {
+        IOpenGL opengl = opengl();
+        OpenGLRenderingEngine renderingEngine = new OpenGLRenderingEngine(opengl);
+        renderingEngine.init();
+
+        ShaderAttributes att = new ShaderAttributes();
+        att.addAttribute("pos", 3);
+        att.addAttribute("normal", 3);
+        att.addAttribute("uv", 2);
+
+        IShader shader = renderingEngine.createShader();
+        shader.update(shaderCode(), att);
+
+        verify(opengl).bindAttributeLocation(1, "pos", 0);
+        verify(opengl).bindAttributeLocation(1, "normal", 1);
+        verify(opengl).bindAttributeLocation(1, "uv", 2);
     }
 }

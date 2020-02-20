@@ -22,13 +22,24 @@ public interface IShader extends IRenderResource
      * providing these two components to the shader can be used to compile the
      * shader with. Additional shaders may be added to the pipeline if the
      * underlaying rendering engine supports it.
+     * <p>
+     * If a shader attributes object is defined, the shader will bind the new layout
+     * when creating the shader. This will allow shaders to be initialized to read
+     * vertex attribute data in the intended manner. If some attributes are
+     * specified in the shader but not in the new layout, or attributes are defined
+     * in the layout but not in the shader, unintended behaviors may occur when
+     * rendering. If a shader directly requests attributes to be defined with a
+     * given layout, that layout value is prioritized over the layout.
      * 
      * @param shaderCode
      *     - The shader code to send to the rendering engine, to compile.
+     * @param shaderAttributes
+     *     - The new shader attributes layout this shader should use, or null if the
+     *     default shader attributes should be layed out automatically.
      * @throws IllegalArgumentException
      *     If shader code object is null.
      */
-    void compile(RawShaderCode shaderCode);
+    void update(RawShaderCode shaderCode, ShaderAttributes shaderAttributes);
 
     /**
      * Assigns a uniform to this shader in the form of a 4x4 matrix. May also be

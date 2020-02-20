@@ -150,7 +150,7 @@ public abstract class DemoBase
                             new String(Files.readAllBytes(Paths.get(fragFile)), StandardCharsets.UTF_8));
 
             IShader shader = renderingEngine.createShader();
-            shader.compile(shaderCode);
+            shader.update(shaderCode, null);
             return shader;
         }
         catch (IOException e)
