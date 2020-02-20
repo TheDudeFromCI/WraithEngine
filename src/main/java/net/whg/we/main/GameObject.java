@@ -123,6 +123,9 @@ public final class GameObject implements IDisposable
      * Subclasses of the given type are also considered as well. If multiple
      * matching behaviors are present, only the first instance is returned.
      * 
+     * @param <T>
+     *     - The class type of behavior to retrieve. Used for casting the behavior
+     *     when returning.
      * @param behaviorType
      *     - The type of behavior to get.
      * @return The behavior with the given superclass, or null if no matching
@@ -152,6 +155,9 @@ public final class GameObject implements IDisposable
      * Gets a list of all behaviors attached to this game object of the given class
      * type. All subclasses of the given type are returned as well.
      * 
+     * @param <T>
+     *     - The class type of behavior to retrieve. Used for casting the behavior
+     *     when returning.
      * @param behaviorType
      *     - The type of behaviors to get.
      * @return A list of behaviors with the given superclass.

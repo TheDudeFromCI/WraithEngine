@@ -20,6 +20,7 @@ public class WindowCloseHandler implements IDisposable
      *     - The window to bind to.
      * @param gameLoop
      *     - The game loop to stop when the window requests to close.
+     * @return A reference to the newly created window close handler.
      */
     public static WindowCloseHandler bindToWindow(IWindow window, GameLoop gameLoop)
     {
