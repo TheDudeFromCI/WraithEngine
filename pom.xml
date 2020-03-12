@@ -253,7 +253,7 @@
 		<dependency>
 			<groupId>org.joml</groupId>
 			<artifactId>joml</artifactId>
-			<version>1.9.19</version>
+			<version>1.9.22</version>
 		</dependency>
 	</dependencies>
 
