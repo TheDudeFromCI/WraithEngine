@@ -2,7 +2,6 @@ package net.whg.we.window;
 
 import net.whg.we.main.ILoopAction;
 import net.whg.we.main.PipelineConstants;
-import net.whg.we.window.Input;
 
 /**
  * This action triggers the end-frame method for input objects near the end of

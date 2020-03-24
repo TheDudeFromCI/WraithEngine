@@ -340,4 +340,17 @@ public interface IOpenGL
      *     - The int value.
      */
     void setUniformInt(int location, int value);
+
+    /**
+     * When called before linking a shader program, this can be used to ensure a
+     * given attribute is bound to the specific location.
+     * 
+     * @param shaderId
+     *     - The shader being bound.
+     * @param attribute
+     *     - The name of the attribute.
+     * @param location
+     *     - The desired location of the attribute.
+     */
+    void bindAttributeLocation(int shaderId, String attribute, int location);
 }

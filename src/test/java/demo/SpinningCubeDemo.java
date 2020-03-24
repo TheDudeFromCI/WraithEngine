@@ -214,7 +214,7 @@ public class SpinningCubeDemo
 
         // Like the mesh, create the shader and compile it using the shader code.
         IShader shader = renderingEngine.createShader();
-        shader.compile(shaderCode);
+        shader.update(shaderCode, null);
 
         // Now for the texture. We can load a texture in the same manner as loading a
         // model, using the TextureLoader object. We also want to change the sampling
