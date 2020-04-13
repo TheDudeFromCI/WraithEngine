@@ -10,6 +10,11 @@
 # WraithEngine
 WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relivant for their projects.
 
+## Screenshots
+
+![Spinning Cube](wiki/spinning-cube.webp)
+![Terrain](wiki/terrain.webp)
+
 ## Getting Started
 WraithEngine primarily uses Maven for package management, but for users who wish to use their own package management system, the jar file and dependencies can be found in the releases tab.
 
