@@ -13,7 +13,7 @@ WraithEngine is a free, open-source, Java-based game engine built on top of LWJG
 
 #### Java Version
 
-Starting with build 27, Java 14 is now the targeted version being used to compile the project. (Previously version 8.)
+Starting with build 27, Java 13 is now the targeted version being used to compile the project. (Previously version 8.)
 
 ## Screenshots
 
