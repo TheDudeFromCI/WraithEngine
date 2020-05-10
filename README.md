@@ -4,6 +4,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=coverage)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_index)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
+[![BCH compliance](https://bettercodehub.com/edge/badge/TheDudeFromCI/WraithEngine?branch=master)](https://bettercodehub.com/)
 
 ---
 
