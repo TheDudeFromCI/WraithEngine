@@ -65,7 +65,7 @@ public class Tuple
      */
     public static <A, B> Tuple2<A, B> of(A a, B b)
     {
-        return new Tuple2<A, B>(a, b);
+        return new Tuple2<>(a, b);
     }
 
     /**
