@@ -27,6 +27,8 @@ public class SimpleServer implements IServer
     private IDataHandler dataHandler;
     private IServerSocket socket;
 
+    private volatile boolean activeServerThread;
+
     @Override
     public void setClientHandler(IClientHandler handler)
     {
@@ -55,8 +57,16 @@ public class SimpleServer implements IServer
             throw new IllegalArgumentException("Server socket already open!");
 
         this.socket = socket;
+        startServerSocket(port);
+    }
+
+    private void startServerSocket(int port) throws IOException
+    {
         socket.start(port);
 
+        logger.info("Started server socket on port {}.", socket.getLocalPort());
+
+        activeServerThread = true;
         var thread = new Thread(new ListenerThread());
         thread.setName("server-thread");
         thread.setDaemon(false);
@@ -69,6 +79,29 @@ public class SimpleServer implements IServer
         if (!isRunning())
             return;
 
+        activeServerThread = false;
+        kickAllClients();
+        tryCloseSocket();
+        packets.clear();
+    }
+
+    private void tryCloseSocket()
+    {
+        try
+        {
+            socket.close();
+        }
+        catch (IOException e)
+        {
+            logger.error("Failed to close server socket!", e);
+        }
+    }
+
+    /**
+     * Kicks all clients currently connected.
+     */
+    public void kickAllClients()
+    {
         while (!connectedClients.isEmpty())
         {
             var client = connectedClients.get(0);
@@ -85,17 +118,6 @@ public class SimpleServer implements IServer
                 logger.error("Failed to kick client {}!", e, ip);
             }
         }
-
-        try
-        {
-            socket.close();
-        }
-        catch (IOException e)
-        {
-            logger.error("Failed to close server socket!", e);
-        }
-
-        packets.clear();
     }
 
     @Override
@@ -134,25 +156,10 @@ public class SimpleServer implements IServer
         {
             try
             {
-                logger.info("Started server socket on port {}.", socket.getLocalPort());
-
-                while (true)
-                {
-                    var s = socket.waitForClient();
-                    var client = new ServerClient(s, dataHandler);
-
-                    var ip = s.getIP();
-                    logger.info("Client '{}' connected.", ip);
-
-                    var thread = new Thread(new ClientThread(client));
-                    thread.setName("client-" + ip);
-                    thread.setDaemon(true);
-                    thread.start();
-                }
+                listenForClients();
             }
             catch (SocketException e)
             {
-                // Socket closed normally.
                 logger.info("Closed server socket.");
             }
             catch (Exception e)
@@ -161,15 +168,24 @@ public class SimpleServer implements IServer
             }
             finally
             {
-                try
-                {
-                    if (!socket.isClosed())
-                        socket.close();
-                }
-                catch (IOException e)
-                {
-                    logger.error("Failed to close server socket!", e);
-                }
+                tryCloseSocket();
+            }
+        }
+
+        private void listenForClients() throws IOException
+        {
+            while (activeServerThread)
+            {
+                var s = socket.waitForClient();
+                var client = new ServerClient(s, dataHandler);
+
+                var ip = s.getIP();
+                logger.info("Client '{}' connected.", ip);
+
+                var thread = new Thread(new ClientThread(client));
+                thread.setName("client-" + ip);
+                thread.setDaemon(true);
+                thread.start();
             }
         }
     }
@@ -195,7 +211,7 @@ public class SimpleServer implements IServer
             {
                 clientHandler.onClientConnected(client);
 
-                while (true)
+                while (activeServerThread)
                     packets.put(client.readPacket());
             }
             catch (SocketException e)
