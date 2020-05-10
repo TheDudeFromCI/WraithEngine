@@ -247,7 +247,7 @@ public class Tuple
      *     - The third argument type.
      * @param <D>
      *     - The fourth argument type.
-     * @param <D>
+     * @param <E>
      *     - The fifth argument type.
      * @param a
      *     - The first object.

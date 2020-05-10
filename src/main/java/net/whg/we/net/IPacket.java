@@ -5,5 +5,8 @@ package net.whg.we.net;
  */
 public interface IPacket
 {
-
+    /**
+     * Called from the main thread to handle this packet.
+     */
+    void handle();
 }

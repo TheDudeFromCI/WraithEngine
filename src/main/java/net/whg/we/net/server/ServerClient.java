@@ -1,17 +1,17 @@
 package net.whg.we.net.server;
 
 import java.io.IOException;
-import java.net.Socket;
 import net.whg.we.net.ConnectionData;
 import net.whg.we.net.IDataHandler;
 import net.whg.we.net.IPacket;
+import net.whg.we.net.ISocket;
 
 /**
  * A basic implementation of the connection client interface.
  */
 public class ServerClient implements IConnectedClient
 {
-    private final Socket socket;
+    private final ISocket socket;
     private final ConnectionData connection;
     private final IDataHandler dataHandler;
 
@@ -23,14 +23,14 @@ public class ServerClient implements IConnectedClient
      * @param dataHandler
      *     - The data handler for parsing byte data.
      */
-    public ServerClient(Socket socket, IDataHandler dataHandler)
+    public ServerClient(ISocket socket, IDataHandler dataHandler)
     {
         this.socket = socket;
         this.dataHandler = dataHandler;
 
-        var ip = socket.getInetAddress();
+        var ip = socket.getIP();
         var port = socket.getPort();
-        connection = new ConnectionData(ip.toString(), port);
+        connection = new ConnectionData(ip, port);
     }
 
     @Override

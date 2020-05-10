@@ -1,32 +1,33 @@
 package net.whg.we.net.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.whg.we.net.IDataHandler;
 import net.whg.we.net.IPacket;
+import net.whg.we.net.IServerSocket;
 
 public class SocketListener
 {
     private static final Logger logger = LoggerFactory.getLogger(SocketListener.class);
 
     private final List<IConnectedClient> connectedClients = Collections.synchronizedList(new ArrayList<>());
-    private final ServerSocket socket;
+    private final BlockingQueue<IPacket> packets = new ArrayBlockingQueue<>(256);
+    private final IServerSocket socket;
     private final IClientHandler clientHandler;
     private final IDataHandler dataHandler;
 
     /**
      * Creates a new socket listener.
      * 
-     * @param port
-     *     - The port to open the socket on.
+     * @param socket
+     *     - The server socket backing this listener.
      * @param clientHandler
      *     - The client handler object.
      * @param dataHandler
@@ -34,11 +35,12 @@ public class SocketListener
      * @throws IOException
      *     If there is an error opening the server socket.
      */
-    public SocketListener(int port, IClientHandler clientHandler, IDataHandler dataHandler) throws IOException
+    public SocketListener(IServerSocket socket, IClientHandler clientHandler, IDataHandler dataHandler)
+            throws IOException
     {
         this.clientHandler = clientHandler;
         this.dataHandler = dataHandler;
-        socket = new ServerSocket(port);
+        this.socket = socket;
 
         var thread = new Thread(new ListenerThread());
         thread.setName("server-thread");
@@ -99,6 +101,23 @@ public class SocketListener
     }
 
     /**
+     * Processes all queued packets. <br>
+     * <br>
+     * Note: Additional packets received while handling are not processed until the
+     * next frame to avoid basic packet overloading, stalling frames for extended
+     * periods of time.
+     */
+    public void handlePackets()
+    {
+        int count = packets.size();
+        for (int i = 0; i < count; i++)
+        {
+            var packet = packets.poll();
+            packet.handle();
+        }
+    }
+
+    /**
      * The thread in charge of listening for incoming client connections.
      */
     private class ListenerThread implements Runnable
@@ -112,10 +131,10 @@ public class SocketListener
 
                 while (true)
                 {
-                    var s = socket.accept();
+                    var s = socket.waitForClient();
                     var client = new ServerClient(s, dataHandler);
 
-                    var ip = s.getInetAddress();
+                    var ip = s.getIP();
                     logger.info("Client '{}' connected.", ip);
 
                     var thread = new Thread(new ClientThread(client));
@@ -153,7 +172,6 @@ public class SocketListener
      */
     private class ClientThread implements Runnable
     {
-        private final Collection<IPacket> packets = new LinkedBlockingDeque<>();
         private final IConnectedClient client;
 
         public ClientThread(IConnectedClient client)
@@ -171,7 +189,7 @@ public class SocketListener
                 clientHandler.onClientConnected(client);
 
                 while (true)
-                    packets.add(client.readPacket());
+                    packets.put(client.readPacket());
             }
             catch (SocketException e)
             {
@@ -179,20 +197,20 @@ public class SocketListener
             }
             catch (Exception e)
             {
-                logger.error("Failed to accept client socket!", e);
+                logger.error("Failed to read incoming packet!", e);
             }
             finally
             {
                 try
                 {
-                    socket.close();
-                    clientHandler.onClientDisconnected(client);
+                    client.kick();
                 }
                 catch (IOException e)
                 {
                     logger.error("Failed to close server socket!", e);
                 }
 
+                clientHandler.onClientDisconnected(client);
                 connectedClients.remove(client);
             }
         }

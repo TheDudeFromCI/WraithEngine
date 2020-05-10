@@ -1,12 +1,15 @@
 package net.whg.we.net.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import net.whg.we.net.IDataHandler;
+import net.whg.we.net.IServerSocket;
 
 /**
  * A standard implementation for a TCP, multithreaded server.
  */
-public class ServerSocket implements IServer
+public class SimpleServer implements IServer
 {
     private IClientHandler clientHandler;
     private IDataHandler dataHandler;
@@ -31,12 +34,16 @@ public class ServerSocket implements IServer
     }
 
     @Override
-    public void start(int port) throws IOException
+    public void start(IServerSocket socket, int port) throws IOException
     {
         if (isRunning())
             throw new IllegalStateException("Server is already running!");
 
-        socketListener = new SocketListener(port, clientHandler, dataHandler);
+        if (!socket.isClosed())
+            throw new IllegalArgumentException("Server socket already open!");
+
+        socket.start(port);
+        socketListener = new SocketListener(socket, clientHandler, dataHandler);
     }
 
     @Override
@@ -53,5 +60,21 @@ public class ServerSocket implements IServer
     public boolean isRunning()
     {
         return socketListener != null && !socketListener.isClosed();
+    }
+
+    @Override
+    public List<IConnectedClient> getConnectedClients()
+    {
+        if (isRunning())
+            return socketListener.getConnectedClients();
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void handlePackets()
+    {
+        if (isRunning())
+            socketListener.handlePackets();
     }
 }

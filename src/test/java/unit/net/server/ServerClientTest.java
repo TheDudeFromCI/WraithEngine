@@ -11,33 +11,29 @@ import static org.mockito.Mockito.eq;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import org.junit.Before;
 import org.junit.Test;
 import net.whg.we.net.IDataHandler;
 import net.whg.we.net.IPacket;
+import net.whg.we.net.ISocket;
 import net.whg.we.net.server.ServerClient;
 
 public class ServerClientTest
 {
     private final String IP_VALUE = "192.168.1.5";
     private final int PORT = 3445;
-    private Socket socket;
+    private ISocket socket;
     private IDataHandler dataHandler;
 
     @Before
     public void init() throws IOException
     {
-        var ip = mock(InetAddress.class);
-        when(ip.toString()).thenReturn(IP_VALUE);
-
         var inputStream = mock(InputStream.class);
         var outputStream = mock(OutputStream.class);
 
-        socket = mock(Socket.class);
-        when(socket.getInetAddress()).thenReturn(ip);
+        socket = mock(ISocket.class);
+        when(socket.getIP()).thenReturn(IP_VALUE);
         when(socket.getPort()).thenReturn(PORT);
         when(socket.getInputStream()).thenReturn(inputStream);
         when(socket.getOutputStream()).thenReturn(outputStream);
