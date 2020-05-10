@@ -36,6 +36,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Deep clone (For Sonar blame details)
+        run: git fetch --prune --unshallow
+
       - name: Build with Maven
         run: |
           mvn -B clean javadoc:jar test jacoco:report sonar:sonar
