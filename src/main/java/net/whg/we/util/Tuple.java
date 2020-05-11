@@ -22,6 +22,9 @@ package net.whg.we.util;
  */
 public class Tuple
 {
+    private Tuple()
+    {}
+
     /**
      * An immutable tuple with 2 arguments.
      * 
