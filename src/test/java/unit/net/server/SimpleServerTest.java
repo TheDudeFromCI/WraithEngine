@@ -155,7 +155,7 @@ public class SimpleServerTest
         var client = login();
 
         verify(clientHandler).onClientConnected(client.b);
-        verify(dataHandler).readPacket(client.a.getInputStream());
+        verify(dataHandler).readPacket(any());
 
         logout(client.a);
 

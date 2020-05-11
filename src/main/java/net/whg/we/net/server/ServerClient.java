@@ -1,5 +1,9 @@
 package net.whg.we.net.server;
 
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import net.whg.we.net.ConnectionData;
 import net.whg.we.net.IDataHandler;
@@ -14,6 +18,8 @@ public class ServerClient implements IConnectedClient
     private final ISocket socket;
     private final ConnectionData connection;
     private final IDataHandler dataHandler;
+    private final DataInput dataInput;
+    private final DataOutput dataOutput;
 
     /**
      * Creates a new server client wrapper.
@@ -22,11 +28,15 @@ public class ServerClient implements IConnectedClient
      *     - The socket this client is wrapping.
      * @param dataHandler
      *     - The data handler for parsing byte data.
+     * @throws IOException
      */
-    public ServerClient(ISocket socket, IDataHandler dataHandler)
+    public ServerClient(ISocket socket, IDataHandler dataHandler) throws IOException
     {
         this.socket = socket;
         this.dataHandler = dataHandler;
+
+        this.dataInput = new DataInputStream(socket.getInputStream());
+        this.dataOutput = new DataOutputStream(socket.getOutputStream());
 
         var ip = socket.getIP();
         var port = socket.getPort();
@@ -48,12 +58,12 @@ public class ServerClient implements IConnectedClient
     @Override
     public IPacket readPacket() throws IOException
     {
-        return dataHandler.readPacket(socket.getInputStream());
+        return dataHandler.readPacket(dataInput);
     }
 
     @Override
     public void writePacket(IPacket packet) throws IOException
     {
-        dataHandler.writePacket(socket.getOutputStream(), packet);
+        dataHandler.writePacket(dataOutput, packet);
     }
 }

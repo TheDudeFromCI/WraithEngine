@@ -42,7 +42,7 @@ public class ServerClientTest
     }
 
     @Test
-    public void getConnectionTest()
+    public void getConnectionTest() throws IOException
     {
         var client = new ServerClient(socket, dataHandler);
         var connection = client.getConnection();
