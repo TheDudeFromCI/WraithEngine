@@ -21,10 +21,10 @@ public class PacketDataHandlerTest
         var factory = mock(PacketFactory.class);
         var stream = mock(DataInput.class);
 
-        when(factory.getPacket(stream)).thenReturn(packet);
+        when(factory.getPacket(stream, null)).thenReturn(packet);
 
         var handler = new PacketDataHandler(factory);
-        assertEquals(packet, handler.readPacket(stream));
+        assertEquals(packet, handler.readPacket(stream, null));
     }
 
     @Test

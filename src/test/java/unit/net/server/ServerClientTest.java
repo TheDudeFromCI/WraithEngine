@@ -67,7 +67,7 @@ public class ServerClientTest
         var client = new ServerClient(socket, dataHandler);
 
         var packet = mock(IPacket.class);
-        when(dataHandler.readPacket(any())).thenReturn(packet);
+        when(dataHandler.readPacket(any(), any())).thenReturn(packet);
 
         assertEquals(packet, client.readPacket());
     }
@@ -77,7 +77,7 @@ public class ServerClientTest
     {
         var client = new ServerClient(socket, dataHandler);
 
-        when(dataHandler.readPacket(any())).thenThrow(new SocketException());
+        when(dataHandler.readPacket(any(), any())).thenThrow(new SocketException());
 
         assertThrows(SocketException.class, () -> client.readPacket());
     }

@@ -2,6 +2,7 @@ package net.whg.we.net.packets;
 
 import java.io.DataInput;
 import java.io.IOException;
+import net.whg.we.net.IPacketSender;
 
 /**
  * Given to a packet factory in order to create new instances of a packet as
@@ -18,11 +19,13 @@ public interface IPacketInitializer<T extends IBinaryPacket>
      * 
      * @param input
      *     - The data input to read from.
+     * @param sender
+     *     - The sender we received this packet from.
      * @return The new packet object.
      * @throws IOException
      *     If an error occurs while preforming this action.
      */
-    T loadPacket(DataInput input) throws IOException;
+    T loadPacket(DataInput input, IPacketSender sender) throws IOException;
 
     /**
      * Gets the unique packet identifier for the packet type this initializer

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.whg.we.net.IPacketSender;
 
 /**
  * Used to build packets based on a given input stream using a set of registered
@@ -34,11 +35,13 @@ public class PacketFactory
     /**
      * @param input
      *     - The data input to read from.
+     * @param sender
+     *     - The sender that managing this data input stream.
      * @return The newly loaded packet.
      * @throws IOException
      *     If an error occurs while reading from the input stream.
      */
-    public IBinaryPacket getPacket(DataInput input) throws IOException
+    public IBinaryPacket getPacket(DataInput input, IPacketSender sender) throws IOException
     {
         var id = input.readLong();
         var initializer = getInitializer(id);
@@ -46,7 +49,7 @@ public class PacketFactory
         if (initializer == null)
             throw new IOException("Unknown packet ID '" + id + "'!");
 
-        return initializer.loadPacket(input);
+        return initializer.loadPacket(input, sender);
     }
 
     /**

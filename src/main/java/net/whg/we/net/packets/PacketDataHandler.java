@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import net.whg.we.net.IDataHandler;
 import net.whg.we.net.IPacket;
+import net.whg.we.net.IPacketSender;
 
 /**
  * A simple data handler for reading and writing binary packets.
@@ -25,9 +26,9 @@ public class PacketDataHandler implements IDataHandler
     }
 
     @Override
-    public IBinaryPacket readPacket(DataInput stream) throws IOException
+    public IBinaryPacket readPacket(DataInput stream, IPacketSender sender) throws IOException
     {
-        return factory.getPacket(stream);
+        return factory.getPacket(stream, sender);
     }
 
     @Override

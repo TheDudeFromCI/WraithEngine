@@ -85,7 +85,7 @@ public class SimpleServerTest
         clientHandler = mock(IClientHandler.class);
         dataHandler = mock(IDataHandler.class);
 
-        when(dataHandler.readPacket(any())).thenAnswer(a ->
+        when(dataHandler.readPacket(any(), any())).thenAnswer(a ->
         {
             var packet = receivedPackets.take();
             if (packet == killPacket)
@@ -144,7 +144,7 @@ public class SimpleServerTest
         assertFalse(server.isRunning());
 
         verify(clientHandler, never()).onClientConnected(any());
-        verify(dataHandler, never()).readPacket(any());
+        verify(dataHandler, never()).readPacket(any(), any());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class SimpleServerTest
         var client = login();
 
         verify(clientHandler).onClientConnected(client.b);
-        verify(dataHandler).readPacket(any());
+        verify(dataHandler).readPacket(any(), any());
 
         logout(client.a);
 

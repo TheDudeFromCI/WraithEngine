@@ -21,7 +21,7 @@ public class PacketFactoryTest
         var initializer = mock(IPacketInitializer.class);
         when(packet.getPacketID()).thenReturn(packetID);
         when(initializer.getPacketID()).thenReturn(packetID);
-        when(initializer.loadPacket(any())).thenReturn(packet);
+        when(initializer.loadPacket(any(), any())).thenReturn(packet);
 
         var input = mock(DataInput.class);
         when(input.readLong()).thenReturn(packetID);
@@ -29,7 +29,7 @@ public class PacketFactoryTest
         var factory = new PacketFactory();
         factory.register(initializer);
 
-        assertEquals(packet, factory.getPacket(input));
+        assertEquals(packet, factory.getPacket(input, null));
     }
 
     @Test(expected = IOException.class)
@@ -39,7 +39,7 @@ public class PacketFactoryTest
         when(input.readLong()).thenReturn(17L);
 
         var factory = new PacketFactory();
-        factory.getPacket(input);
+        factory.getPacket(input, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -65,22 +65,22 @@ public class PacketFactoryTest
 
         var init1 = mock(IPacketInitializer.class);
         when(init1.getPacketID()).thenReturn(1L);
-        when(init1.loadPacket(any())).thenReturn(packet1);
+        when(init1.loadPacket(any(), any())).thenReturn(packet1);
         factory.register(init1);
 
         var init2 = mock(IPacketInitializer.class);
         when(init2.getPacketID()).thenReturn(2L);
-        when(init2.loadPacket(any())).thenReturn(packet2);
+        when(init2.loadPacket(any(), any())).thenReturn(packet2);
         factory.register(init2);
 
         var init3 = mock(IPacketInitializer.class);
         when(init3.getPacketID()).thenReturn(3L);
-        when(init3.loadPacket(any())).thenReturn(packet3);
+        when(init3.loadPacket(any(), any())).thenReturn(packet3);
         factory.register(init3);
 
         var input = mock(DataInput.class);
         when(input.readLong()).thenReturn(2L);
 
-        assertEquals(packet2, factory.getPacket(input));
+        assertEquals(packet2, factory.getPacket(input, null));
     }
 }

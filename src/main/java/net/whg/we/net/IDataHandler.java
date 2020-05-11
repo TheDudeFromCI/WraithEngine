@@ -14,11 +14,13 @@ public interface IDataHandler
      * 
      * @param stream
      *     - The input stream to read from.
+     * @param sender
+     *     - The packet sender managing this input stream.
      * @return The packet.
      * @throws IOException
      *     If an exception occurs while preforming this action.
      */
-    IPacket readPacket(DataInput stream) throws IOException;
+    IPacket readPacket(DataInput stream, IPacketSender sender) throws IOException;
 
     /**
      * Writes a packet to the output stream.
