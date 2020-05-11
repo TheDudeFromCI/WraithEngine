@@ -38,7 +38,7 @@ If your project uses a Maven workflow, the following dependency should be added 
 </dependency>
 ```
 
-Replace BUILD*NUMBER with the build number you wish to use, in the format `build*#`. Or,`build_3` to use build 3, for example.
+Replace BUILD_NUMBER with the build number you wish to use, in the format `build_#`. Or,`build_3` to use build 3, for example.
 
 As WraithEngine uses the Github Package Repository, you must also add this repository to your project in order to access WraithEngine. This can be done by modifying your Maven settings.xml file. This file is a Maven user settings file, which tells Maven useful tips such as what servers to check to resolve dependencies, and account information for logging in to those servers to access them. This file is found at `USER_HOME_FOLDER/.m2/settings.xml`.
 
