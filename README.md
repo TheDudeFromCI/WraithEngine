@@ -8,9 +8,10 @@
 
 ---
 
-# WraithEngine
+# <div align="center">WraithEngine</div>
+*<p align="justify">WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relivant for their projects.</p>*
 
-WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relevant for their projects.
+---
 
 #### Java Version
 
@@ -121,3 +122,9 @@ WraithEngine is open-source and community-driven. All contributions are welcome 
 - Features and Enhancements
 
   These are the realy big ones, for the brave. If you see a crucial feature on the todo list, that's really taking far too long to be implemented, feel free to get the ball rolling. It keeps things moving and ensures that the most important features actually make it into the project.
+
+---
+
+If this project is something that has helped you, please consider donating. Many hours have gone into the development of this project and I would immesly appreciate it. It helps me continue doing what I love, making open source game assets. Thank you.
+
+<p align="center"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6U3RFW3H3Y7AU&currency_code=USD&source=url"><img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" title="Donate with PayPal"/></a></p>
