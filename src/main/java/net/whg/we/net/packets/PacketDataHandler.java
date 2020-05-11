@@ -35,6 +35,8 @@ public class PacketDataHandler implements IDataHandler
     public void writePacket(DataOutput stream, IPacket packet) throws IOException
     {
         var binary = (IBinaryPacket) packet;
+
+        stream.writeLong(binary.getPacketID());
         binary.write(stream);
     }
 }

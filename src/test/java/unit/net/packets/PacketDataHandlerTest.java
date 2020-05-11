@@ -30,13 +30,17 @@ public class PacketDataHandlerTest
     @Test
     public void writePacket() throws IOException
     {
-        var stream = mock(DataOutput.class);
+        var packetID = 120938L;
         var packet = mock(IBinaryPacket.class);
+        when(packet.getPacketID()).thenReturn(packetID);
+
         var factory = mock(PacketFactory.class);
+        var stream = mock(DataOutput.class);
 
         var handler = new PacketDataHandler(factory);
         handler.writePacket(stream, packet);
 
         verify(packet).write(stream);
+        verify(stream).writeLong(packetID);
     }
 }
