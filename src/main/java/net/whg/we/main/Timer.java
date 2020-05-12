@@ -15,7 +15,6 @@ public class Timer
     private long elapsedTime;
     private long lastFrame;
     private float deltaTime;
-    private long renderFrame;
 
     /**
      * Creates a new timer object.
@@ -40,7 +39,6 @@ public class Timer
         running = true;
         startTime = timeSupplier.nanoTime();
 
-        renderFrame = 0;
         elapsedTime = 0;
         deltaTime = 0;
         lastFrame = startTime;
@@ -86,16 +84,6 @@ public class Timer
     }
 
     /**
-     * Gets the current render frame number.
-     * 
-     * @return The render frame number.
-     */
-    public long getRenderFrame()
-    {
-        return renderFrame;
-    }
-
-    /**
      * Gets the current frames per second. This method only calculates the Fps based
      * on the current frame delta, and applies no smoothing.
      * 
@@ -107,7 +95,7 @@ public class Timer
     }
 
     /**
-     * Called at the begining of each frame to calculate time updates such as delta
+     * Called at the beginning of each frame to calculate time updates such as delta
      * time, elapsed time, etc.
      * 
      * @throws IllegalStateException
@@ -117,8 +105,6 @@ public class Timer
     {
         if (!running)
             throw new IllegalStateException(TIMER_NOT_STARTED);
-
-        renderFrame++;
 
         long time = timeSupplier.nanoTime();
         elapsedTime = time - startTime;

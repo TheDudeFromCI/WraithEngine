@@ -73,19 +73,4 @@ public class TimerTest
         timer.beginFrame();
         assertEquals(0.1f, timer.getDeltaTime(), 0.00001f);
     }
-
-    @Test
-    public void getRenderFrame()
-    {
-        Timer timer = new Timer(mock(ITimeSupplier.class));
-
-        timer.startTimer();
-        assertEquals(0, timer.getRenderFrame());
-
-        timer.beginFrame();
-        assertEquals(1, timer.getRenderFrame());
-
-        timer.beginFrame();
-        assertEquals(2, timer.getRenderFrame());
-    }
 }
