@@ -88,7 +88,7 @@ public class ServerClientTest
         var client = new ServerClient(socket, dataHandler);
 
         var packet = mock(IPacket.class);
-        client.writePacket(packet);
+        client.sendPacket(packet);
 
         verify(dataHandler).writePacket(any(), eq(packet));
     }
@@ -102,6 +102,6 @@ public class ServerClientTest
                                       .writePacket(any(), any());
 
         var packet = mock(IPacket.class);
-        assertThrows(SocketException.class, () -> client.writePacket(packet));
+        assertThrows(SocketException.class, () -> client.sendPacket(packet));
     }
 }

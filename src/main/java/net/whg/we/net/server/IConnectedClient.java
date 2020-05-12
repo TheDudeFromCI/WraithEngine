@@ -3,11 +3,12 @@ package net.whg.we.net.server;
 import java.io.IOException;
 import net.whg.we.net.ConnectionData;
 import net.whg.we.net.IPacket;
+import net.whg.we.net.IPacketSender;
 
 /**
  * Represents a connected client socket within a server.
  */
-public interface IConnectedClient
+public interface IConnectedClient extends IPacketSender
 {
     /**
      * Gets details about the client connection.
@@ -33,14 +34,4 @@ public interface IConnectedClient
      *     If an exception occurs while preforming this action.
      */
     IPacket readPacket() throws IOException;
-
-    /**
-     * Writes the given packet to the output stream.
-     * 
-     * @param packet
-     *     - The packet to write.
-     * @throws IOException
-     *     If an exception occurs while preforming this action.
-     */
-    void writePacket(IPacket packet) throws IOException;
 }
