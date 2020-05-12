@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
-import net.whg.we.main.IFixedUpdateable;
+import net.whg.we.main.IFixedUpdatable;
 import net.whg.we.main.PhysicsPipeline;
 import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Timer;
@@ -74,7 +74,7 @@ public class PhysicsPipelineActionTest
         assertEquals(0, behavior.calls);
     }
 
-    class UpdatableAction extends AbstractBehavior implements IFixedUpdateable
+    class UpdatableAction extends AbstractBehavior implements IFixedUpdatable
     {
         int calls = 0;
 

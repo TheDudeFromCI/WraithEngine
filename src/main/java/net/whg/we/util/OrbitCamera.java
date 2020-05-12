@@ -4,7 +4,7 @@ import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import net.whg.we.main.AbstractBehavior;
-import net.whg.we.main.IUpdateable;
+import net.whg.we.main.IUpdatable;
 import net.whg.we.main.Timer;
 import net.whg.we.rendering.Camera;
 import net.whg.we.window.Input;
@@ -18,7 +18,7 @@ import net.whg.we.window.Input;
  * This type of camera is useful when it comes to actions such as displaying a
  * rendered model.
  */
-public class OrbitCamera extends AbstractBehavior implements IUpdateable
+public class OrbitCamera extends AbstractBehavior implements IUpdatable
 {
     private Camera camera;
     private Input input;

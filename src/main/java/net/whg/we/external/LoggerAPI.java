@@ -7,9 +7,9 @@ import net.whg.we.util.ILogger;
 /**
  * The implementation of the logger api.
  */
-public class LoggerApi implements ILogger
+public class LoggerAPI implements ILogger
 {
-    private static final Logger logger = LoggerFactory.getLogger(LoggerApi.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoggerAPI.class);
 
     @Override
     public void trace(String msg)

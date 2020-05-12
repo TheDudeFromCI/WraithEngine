@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import net.whg.we.main.AbstractBehavior;
-import net.whg.we.main.IUpdateable;
+import net.whg.we.main.IUpdatable;
 import net.whg.we.main.PipelineConstants;
 import net.whg.we.main.Timer;
 import net.whg.we.main.UpdatePipeline;
@@ -38,7 +38,7 @@ public class UpdatePipelineActionTest
         assertEquals(1, behavior.calls);
     }
 
-    class UpdatableAction extends AbstractBehavior implements IUpdateable
+    class UpdatableAction extends AbstractBehavior implements IUpdatable
     {
         Timer timer;
         int calls = 0;

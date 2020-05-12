@@ -9,9 +9,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.whg.we.external.AssimpAPI;
-import net.whg.we.external.GlfwApi;
-import net.whg.we.external.OpenGLApi;
-import net.whg.we.external.TimeSupplierApi;
+import net.whg.we.external.GlfwAPI;
+import net.whg.we.external.OpenGLAPI;
+import net.whg.we.external.TimeSupplierAPI;
 import net.whg.we.main.PollEventsPipeline;
 import net.whg.we.main.Scene;
 import net.whg.we.main.SceneGameLoop;
@@ -76,8 +76,8 @@ public abstract class DemoBase
         WindowSettings windowSettings = new WindowSettings();
         windowSettings.setTitle(name);
 
-        renderingEngine = new OpenGLRenderingEngine(new OpenGLApi());
-        window = new GlfwWindow(new GlfwApi(), renderingEngine, windowSettings);
+        renderingEngine = new OpenGLRenderingEngine(new OpenGLAPI());
+        window = new GlfwWindow(new GlfwAPI(), renderingEngine, windowSettings);
 
         scene = new Scene();
 
@@ -93,7 +93,7 @@ public abstract class DemoBase
         gameLoop = new SceneGameLoop();
         gameLoop.addScene(scene);
 
-        timer = new Timer(new TimeSupplierApi());
+        timer = new Timer(new TimeSupplierAPI());
         gameLoop.addAction(new TimerAction(timer));
 
         input = new Input(window);

@@ -6,5 +6,12 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "target": true
-  }
+  },
+  "cSpell.words": [
+    "Assimp",
+    "Glfw",
+    "Quaternionf",
+    "Trilinearpolation",
+    "fullscreen"
+  ]
 }

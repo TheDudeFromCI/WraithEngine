@@ -10,12 +10,12 @@ import org.joml.Quaternionf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.whg.we.external.AssimpAPI;
-import net.whg.we.external.GlfwApi;
-import net.whg.we.external.OpenGLApi;
-import net.whg.we.external.TimeSupplierApi;
+import net.whg.we.external.GlfwAPI;
+import net.whg.we.external.OpenGLAPI;
+import net.whg.we.external.TimeSupplierAPI;
 import net.whg.we.main.AbstractBehavior;
 import net.whg.we.main.GameObject;
-import net.whg.we.main.IUpdateable;
+import net.whg.we.main.IUpdatable;
 import net.whg.we.main.PollEventsPipeline;
 import net.whg.we.main.Scene;
 import net.whg.we.main.SceneGameLoop;
@@ -83,11 +83,11 @@ public class SpinningCubeDemo
 
         // The rendering engine is used to actually render the game. Here, we're loading
         // the OpenGL 3.3 rendering engine.
-        IRenderingEngine renderingEngine = new OpenGLRenderingEngine(new OpenGLApi());
+        IRenderingEngine renderingEngine = new OpenGLRenderingEngine(new OpenGLAPI());
 
         // Creates and displays the window. This window uses the GLFW window handling
         // framework. The window will initialize the rendering engine for us here.
-        IWindow window = new GlfwWindow(new GlfwApi(), renderingEngine, windowSettings);
+        IWindow window = new GlfwWindow(new GlfwAPI(), renderingEngine, windowSettings);
 
         // Now we can start building our scene. A scene is simply a collection of game
         // objects which are active at a given time. This could mean they are being
@@ -98,7 +98,7 @@ public class SpinningCubeDemo
 
         // As we can to clear the screen each frame, to draw a new image, we'll add a
         // screen clear pipeline action to the scene. This will tell the scene to clear
-        // the screen each frame at the correct time. We'll also confiugre the clear
+        // the screen each frame at the correct time. We'll also configure the clear
         // color to be a dark blue color.
         IScreenClearHandler screenClear = renderingEngine.getScreenClearHandler();
         screenClear.setClearColor(new Color(0.2f, 0.2f, 0.5f));
@@ -115,7 +115,7 @@ public class SpinningCubeDemo
 
         // A game loop is the more important element. This loop is in charge of handling
         // running the events each frame which are required to run the game. A
-        // SceneGameLoop is an extention of the game loop which will automatically
+        // SceneGameLoop is an extension of the game loop which will automatically
         // handle scenes and pipelines as well.
         SceneGameLoop gameLoop = new SceneGameLoop();
         gameLoop.addScene(scene);
@@ -124,17 +124,17 @@ public class SpinningCubeDemo
         // our case, the time is needed each frame in order to update the rotation of
         // the cube. So we'll add that here. Notice this is added to the game loop
         // itself, not the scene.
-        Timer timer = new Timer(new TimeSupplierApi());
+        Timer timer = new Timer(new TimeSupplierAPI());
         gameLoop.addAction(new TimerAction(timer));
 
         // In order to spin the cube, it will need to be updated every frame. To trigger
         // these updates, we'll need to add an update pipeline action to the scene. We
-        // can use the timer object we created eariler to initialize the pipeline with.
+        // can use the timer object we created earlier to initialize the pipeline with.
         scene.addPipelineAction(new UpdatePipeline(timer));
 
         // When working with a window, it's extremely important to poll the window
         // events at the end of each frame in order to actually display anything on
-        // screen or recieve any window events. We can add this helper here to do that
+        // screen or receive any window events. We can add this helper here to do that
         // for us. Once again, this is added to the game loop and not the scene.
         gameLoop.addAction(new PollEventsPipeline(window));
 
@@ -238,8 +238,8 @@ public class SpinningCubeDemo
         gameObject.setName("Cube");
 
         // A Behavior is a piece of logic which is attached to a game object to change
-        // it's behavior. A render behavoir is an example of that which can be used to
-        // get an object to render. You simplely need to provide it with a mesh and a
+        // it's behavior. A render behavior is an example of that which can be used to
+        // get an object to render. You simply need to provide it with a mesh and a
         // material to work with. Once added to the cube, the cube should be appear on
         // screen.
         RenderBehavior renderBehavior = new RenderBehavior();
@@ -259,7 +259,7 @@ public class SpinningCubeDemo
      * This class contains a simple set of logic which will rotate the cube forever,
      * updating the rotation each frame before rendering.
      */
-    private static class SpinCube extends AbstractBehavior implements IUpdateable
+    private static class SpinCube extends AbstractBehavior implements IUpdatable
     {
         @Override
         public void update(Timer timer)

@@ -14,7 +14,7 @@ import net.whg.we.window.glfw.IGlfw;
 /**
  * This class acts as the bridge between GLFW and WraithEngine.
  */
-public final class GlfwApi implements IGlfw
+public final class GlfwAPI implements IGlfw
 {
     @Override
     public void terminate()

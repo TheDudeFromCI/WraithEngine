@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class PhysicsPipeline implements IPipelineAction
 {
-    private final List<IFixedUpdateable> objects = new CopyOnWriteArrayList<>();
+    private final List<IFixedUpdatable> objects = new CopyOnWriteArrayList<>();
     private final Timer timer;
 
     /**
@@ -30,7 +30,7 @@ public class PhysicsPipeline implements IPipelineAction
         {
             timer.incrementPhysicsFrame();
 
-            for (IFixedUpdateable obj : objects)
+            for (IFixedUpdatable obj : objects)
                 obj.fixedUpdate();
         }
     }
@@ -38,15 +38,15 @@ public class PhysicsPipeline implements IPipelineAction
     @Override
     public void enableBehavior(AbstractBehavior behavior)
     {
-        if (behavior instanceof IFixedUpdateable)
-            objects.add((IFixedUpdateable) behavior);
+        if (behavior instanceof IFixedUpdatable)
+            objects.add((IFixedUpdatable) behavior);
     }
 
     @Override
     public void disableBehavior(AbstractBehavior behavior)
     {
-        if (behavior instanceof IFixedUpdateable)
-            objects.remove((IFixedUpdateable) behavior);
+        if (behavior instanceof IFixedUpdatable)
+            objects.remove((IFixedUpdatable) behavior);
     }
 
     @Override

@@ -16,14 +16,14 @@ import net.whg.we.util.OutputStreamWrapper.LogLevel;
 /**
  * The implementation of the OpenGL api.
  */
-public class OpenGLApi implements IOpenGL
+public class OpenGLAPI implements IOpenGL
 {
     private boolean debugMode;
 
     /**
      * Creates a new OpenGL API bridge instance.
      */
-    public OpenGLApi()
+    public OpenGLAPI()
     {
         this(false);
     }
@@ -35,7 +35,7 @@ public class OpenGLApi implements IOpenGL
      *     - Whether or not to enable debug mode. Provides useful debugging
      *     messages, but may be slower.
      */
-    public OpenGLApi(boolean debugMode)
+    public OpenGLAPI(boolean debugMode)
     {
         this.debugMode = debugMode;
     }
@@ -49,7 +49,7 @@ public class OpenGLApi implements IOpenGL
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (debugMode)
-            GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStreamWrapper(LogLevel.DEBUG, new LoggerApi())));
+            GLUtil.setupDebugMessageCallback(new PrintStream(new OutputStreamWrapper(LogLevel.DEBUG, new LoggerAPI())));
     }
 
     @Override

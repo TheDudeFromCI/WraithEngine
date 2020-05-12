@@ -5,7 +5,7 @@ package net.whg.we.main;
  * each time a frame is rendered. This is used to prepare the objects in a scene
  * for rendering, such as animations or camera movements which occur each frame.
  */
-public interface IUpdateable
+public interface IUpdatable
 {
     /**
      * Called once each frame to update this object.
