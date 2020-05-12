@@ -11,7 +11,7 @@ import net.whg.we.rendering.ShaderAttributes;
 import net.whg.we.rendering.TextureData;
 import net.whg.we.rendering.VertexData;
 import net.whg.we.rendering.TextureData.SampleMode;
-import net.whg.we.util.OrbitCamera;
+import net.whg.lib.behaviors.OrbitCamera;
 
 /**
  * This demo shows an introduction to working with procedurally generated

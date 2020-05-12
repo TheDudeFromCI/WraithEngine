@@ -1,4 +1,4 @@
-package net.whg.we.util;
+package net.whg.lib.behaviors;
 
 import org.joml.Math;
 import org.joml.Quaternionf;

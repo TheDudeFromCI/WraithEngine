@@ -7,7 +7,7 @@ import org.junit.Test;
 import net.whg.we.main.Timer;
 import net.whg.we.main.Transform3D;
 import net.whg.we.rendering.Camera;
-import net.whg.we.util.OrbitCamera;
+import net.whg.lib.behaviors.OrbitCamera;
 import net.whg.we.window.Input;
 
 public class OrbitCameraTest
