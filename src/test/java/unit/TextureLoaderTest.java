@@ -14,7 +14,7 @@ public class TextureLoaderTest
     @Test
     public void loadTexture() throws IOException
     {
-        TextureData data = TextureLoader.loadTexture(new File("src/test/res/grass.png"));
+        TextureData data = TextureLoader.loadTexture(new File("src/test/resources/grass.png"));
 
         assertEquals(16, data.getWidth());
         assertEquals(16, data.getHeight());
