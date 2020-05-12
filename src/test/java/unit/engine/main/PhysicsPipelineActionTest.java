@@ -15,18 +15,17 @@ public class PhysicsPipelineActionTest
     @Test
     public void ensurePipelinePriority()
     {
-        assertEquals(PipelineConstants.PHYSICS_UPDATES, new PhysicsPipeline(mock(Timer.class)).getPriority());
+        assertEquals(PipelineConstants.PHYSICS_UPDATES, new PhysicsPipeline(mock(Timer.class), 1f).getPriority());
     }
 
     @Test
     public void updateBehaviors()
     {
         Timer timer = mock(Timer.class);
-        when(timer.getIdealPhysicsFrame()).thenReturn(1L);
-        when(timer.getPhysicsFrame()).thenReturn(0L)
-                                     .thenReturn(1L);
+        when(timer.getElapsedTime()).thenReturn(0.0)
+                                    .thenReturn(1.0);
 
-        PhysicsPipeline action = new PhysicsPipeline(timer);
+        PhysicsPipeline action = new PhysicsPipeline(timer, 1f);
         action.enableBehavior(mock(AbstractBehavior.class)); // To make sure no casting issues occur
 
         UpdatableAction behavior = new UpdatableAction();
@@ -45,33 +44,14 @@ public class PhysicsPipelineActionTest
     public void update_twice()
     {
         Timer timer = mock(Timer.class);
-        when(timer.getIdealPhysicsFrame()).thenReturn(1L)
-                                          .thenReturn(2L);
-        when(timer.getPhysicsFrame()).thenReturn(0L)
-                                     .thenReturn(1L)
-                                     .thenReturn(2L);
+        when(timer.getElapsedTime()).thenReturn(1.0);
 
-        PhysicsPipeline action = new PhysicsPipeline(timer);
+        PhysicsPipeline action = new PhysicsPipeline(timer, 1f);
         UpdatableAction behavior = new UpdatableAction();
         action.enableBehavior(behavior);
 
         action.run();
         assertEquals(2, behavior.calls);
-    }
-
-    @Test
-    public void update_never()
-    {
-        Timer timer = mock(Timer.class);
-        when(timer.getIdealPhysicsFrame()).thenReturn(2L);
-        when(timer.getPhysicsFrame()).thenReturn(2L);
-
-        PhysicsPipeline action = new PhysicsPipeline(timer);
-        UpdatableAction behavior = new UpdatableAction();
-        action.enableBehavior(behavior);
-
-        action.run();
-        assertEquals(0, behavior.calls);
     }
 
     class UpdatableAction extends AbstractBehavior implements IFixedUpdatable

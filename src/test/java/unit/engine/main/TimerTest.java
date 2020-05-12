@@ -31,7 +31,7 @@ public class TimerTest
     }
 
     @Test
-    public void ellapsedTime()
+    public void elapsedTime()
     {
         ITimeSupplier timeSupplier = mock(ITimeSupplier.class);
         when(timeSupplier.nanoTime()).thenReturn(1000000000L)
@@ -72,69 +72,6 @@ public class TimerTest
 
         timer.beginFrame();
         assertEquals(0.1f, timer.getDeltaTime(), 0.00001f);
-    }
-
-    @Test
-    public void defaultPhysicsFrameRate()
-    {
-        assertEquals(30f, new Timer(mock(ITimeSupplier.class)).getPhysicsFrameRate(), 0f);
-    }
-
-    @Test
-    public void idealPhysicsFrame()
-    {
-        ITimeSupplier timeSupplier = mock(ITimeSupplier.class);
-        when(timeSupplier.nanoTime()).thenReturn(1000000000L)
-                                     .thenReturn(1000000001L)
-                                     .thenReturn(1100000000L);
-
-        Timer timer = new Timer(timeSupplier);
-        timer.setPhysicsFrameRate(100f);
-
-        timer.startTimer();
-        assertEquals(0, timer.getIdealPhysicsFrame());
-
-        timer.beginFrame();
-        assertEquals(1, timer.getIdealPhysicsFrame());
-
-        timer.beginFrame();
-        assertEquals(11, timer.getIdealPhysicsFrame());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void setPhysicsFrameRate_timerStarted()
-    {
-        Timer timer = new Timer(mock(ITimeSupplier.class));
-        timer.startTimer();
-        timer.setPhysicsFrameRate(2f);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setPhysicsFrameRate_negativeValue()
-    {
-        Timer timer = new Timer(mock(ITimeSupplier.class));
-        timer.setPhysicsFrameRate(-1f);
-    }
-
-    @Test
-    public void incrementPhysicsFrame()
-    {
-        Timer timer = new Timer(mock(ITimeSupplier.class));
-
-        timer.startTimer();
-        assertEquals(0, timer.getPhysicsFrame());
-
-        timer.incrementPhysicsFrame();
-        assertEquals(1, timer.getPhysicsFrame());
-
-        timer.incrementPhysicsFrame();
-        assertEquals(2, timer.getPhysicsFrame());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void incrementPhysicsFrame_timerNotStarted()
-    {
-        new Timer(mock(ITimeSupplier.class)).incrementPhysicsFrame();
     }
 
     @Test
