@@ -1,4 +1,4 @@
-package demo;
+package graphics;
 
 import org.joml.Vector3f;
 import net.whg.we.main.GameObject;

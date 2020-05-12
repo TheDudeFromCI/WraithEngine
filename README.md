@@ -9,7 +9,8 @@
 ---
 
 # <div align="center">WraithEngine</div>
-*<p align="justify">WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relivant for their projects.</p>*
+
+*<p align="justify">WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relevant for their projects.</p>*
 
 ---
 
@@ -19,8 +20,8 @@ Starting with build 27, Java 13 is now the targeted version being used to compil
 
 ## Screenshots
 
-![Spinning Cube](wiki/spinning-cube.webp)
-![Terrain](wiki/terrain.webp)
+<img src="wiki/spinning-cube.webp" width="250px" />
+<img src="wiki/terrain.webp" width="250px" />
 
 ## Getting Started
 
@@ -38,7 +39,7 @@ If your project uses a Maven workflow, the following dependency should be added 
 </dependency>
 ```
 
-Replace BUILD_NUMBER with the build number you wish to use, in the format `build_#`. Or,`build_3` to use build 3, for example.
+Replace **BUILD_NUMBER** with the build number you wish to use, in the format `build*#`. Or,`build_3` to use build 3, for example.
 
 As WraithEngine uses the Github Package Repository, you must also add this repository to your project in order to access WraithEngine. This can be done by modifying your Maven settings.xml file. This file is a Maven user settings file, which tells Maven useful tips such as what servers to check to resolve dependencies, and account information for logging in to those servers to access them. This file is found at `USER_HOME_FOLDER/.m2/settings.xml`.
 
@@ -103,6 +104,32 @@ Keep this token secret! This is a basically a password which allows software to 
 
 If your currently workflow does not use Maven, all builds, starting from build 14, can be found in the releases menu about. The libraries which WraithEngine relies on can be found next to the release zip.
 
+### Building From Source
+
+*Requires Maven*
+
+You can build the project from source by simple cloning the project and running:
+* `mvn -DskipTests dependency:copy-dependencies package`
+
+in the project directory. The WraithEngine jar file can be found in the `target` folder. All of the dependencies for it will automatically be downloaded into the `target/dependency` folder.
+
+## Project Demos
+
+*Requires Maven*
+
+Various demos for WraithEngine can be found within the `Demos` folder, showing off some of the various features of WraithEngine, as well as how they are used. If you'd like to run these projects yourself, you can clone the project, then run the following command from within the project directory:
+
+* `mvn -DskipTests dependency:copy-dependencies package`
+* `mvn -f Demos/pom.xml dependency:copy-dependencies package`
+
+For **Unix** / **Mac**:
+* `java -cp "Demos/target/*:Demos/target/dependency/*" DEMO_NAME`
+
+For **Windows**:
+* `java -cp "Demos/target/*;Demos/target/dependency/*" DEMO_NAME`
+
+where **DEMO_NAME** is the name of the demo you wish to run, including the path. (I.e `graphics.SpinningCubeDemo` to run the spinning cube demo.)
+
 ## Contributing
 
 WraithEngine is open-source and community-driven. All contributions are welcome and highly encouraged! If you see an area of the project which is lacking, feel free to open an issue or submit a pull request. If you want to help but aren't sure where to start:
@@ -113,7 +140,7 @@ WraithEngine is open-source and community-driven. All contributions are welcome 
 
 - Documentation
 
-  Sometimes documentation is poorly worded or doesn't properly explain what's going on. If you think of a better way of explaining something, or just generally tweaking the grammer and formatting, go for it.
+  Sometimes documentation is poorly worded or doesn't properly explain what's going on. If you think of a better way of explaining something, or just generally tweaking the grammar and formatting, go for it.
 
 - Bug Fixes
 
@@ -121,10 +148,10 @@ WraithEngine is open-source and community-driven. All contributions are welcome 
 
 - Features and Enhancements
 
-  These are the realy big ones, for the brave. If you see a crucial feature on the todo list, that's really taking far too long to be implemented, feel free to get the ball rolling. It keeps things moving and ensures that the most important features actually make it into the project.
+  These are the really big ones, for the brave. If you see a crucial feature on the todo list, that's really taking far too long to be implemented, feel free to get the ball rolling. It keeps things moving and ensures that the most important features actually make it into the project.
 
 ---
 
-If this project is something that has helped you, please consider donating. Many hours have gone into the development of this project and I would immesly appreciate it. It helps me continue doing what I love, making open source game assets. Thank you.
+If this project is something that has helped you, please consider donating. Many hours have gone into the development of this project and I would immensely appreciate it. It helps me continue doing what I love, making open source game assets. Thank you.
 
 <p align="center"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6U3RFW3H3Y7AU&currency_code=USD&source=url"><img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" title="Donate with PayPal"/></a></p>

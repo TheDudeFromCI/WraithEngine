@@ -1,4 +1,4 @@
-package demo;
+package graphics;
 
 import java.io.File;
 import java.io.IOException;
@@ -184,10 +184,10 @@ public class SpinningCubeDemo
     private static GameObject buildCube(IRenderingEngine renderingEngine) throws IOException
     {
         // Just laying out the file paths to where each resource is located.
-        File cubeFile = new File("src/test/res/cube.obj");
-        File diffuseVertFile = new File("src/test/res/diffuse.vert");
-        File diffuseFragFile = new File("src/test/res/diffuse.frag");
-        File grassFile = new File("src/test/res/grass.png");
+        File cubeFile = new File("Demos/res/cube.obj");
+        File diffuseVertFile = new File("Demos/res/diffuse.vert");
+        File diffuseFragFile = new File("Demos/res/diffuse.frag");
+        File grassFile = new File("Demos/res/grass.png");
 
         // First, let's load the mesh. This one is a bit messy looking, so let's break
         // it down. The model loader is an object which can be used to load 3D model

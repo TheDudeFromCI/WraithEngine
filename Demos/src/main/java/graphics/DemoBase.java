@@ -1,4 +1,4 @@
-package demo;
+package graphics;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ import net.whg.we.window.WindowSettings;
 import net.whg.we.window.glfw.GlfwWindow;
 
 /**
- * This class is used to handle most of the low-level implmentation for several
+ * This class is used to handle most of the low-level implementation for several
  * of the more complex demos available to keep the code examples clean and to
  * the point. If you're looking where to get started, see the
  * {@link SpinningCubeDemo} demo for a more friendly introduction.
@@ -127,7 +127,7 @@ public abstract class DemoBase
      */
     private File getFile(String path)
     {
-        return new File("src/test/res/" + path);
+        return new File("Demos/res/" + path);
     }
 
     /**
