@@ -19,9 +19,10 @@ public class ServerSocketAPI implements IServerSocket
     @Override
     public void start(int port) throws IOException
     {
-        if (isClosed())
-            throw new IOException("Server socket not open!");
+        if (!isClosed())
+            throw new IOException("Server already open!");
 
+        socket = new ServerSocket(port);
     }
 
     @Override
