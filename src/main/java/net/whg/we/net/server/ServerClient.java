@@ -8,13 +8,12 @@ import java.io.IOException;
 import net.whg.we.net.ConnectionData;
 import net.whg.we.net.IDataHandler;
 import net.whg.we.net.IPacket;
-import net.whg.we.net.IPacketSender;
 import net.whg.we.net.ISocket;
 
 /**
  * A basic implementation of the connection client interface.
  */
-public class ServerClient implements IConnectedClient, IPacketSender
+public class ServerClient implements IConnectedClient
 {
     private final ISocket socket;
     private final ConnectionData connection;
@@ -63,7 +62,7 @@ public class ServerClient implements IConnectedClient, IPacketSender
     }
 
     @Override
-    public void writePacket(IPacket packet) throws IOException
+    public void sendPacket(IPacket packet) throws IOException
     {
         dataHandler.writePacket(dataOutput, packet);
     }

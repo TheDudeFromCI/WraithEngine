@@ -1,6 +1,7 @@
 package net.whg.we.net.packets;
 
 import java.io.DataOutput;
+import java.io.IOException;
 import net.whg.we.net.IPacket;
 
 /**
@@ -21,6 +22,8 @@ public interface IBinaryPacket extends IPacket
      * 
      * @param out
      *     - The data output to write to.
+     * @throws IOException
+     *     If an error occurs while writing to the data output.
      */
-    void write(DataOutput out);
+    void write(DataOutput out) throws IOException;
 }

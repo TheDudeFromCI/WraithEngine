@@ -12,5 +12,6 @@
 hs_err_pid*
 
 /target
+/Demos/target
 *.code-workspace
 bin

@@ -56,6 +56,12 @@ public class SimpleServer implements IServer
         if (!socket.isClosed())
             throw new IllegalArgumentException("Server socket already open!");
 
+        if (clientHandler == null)
+            throw new IllegalStateException("Client handler not defined!");
+
+        if (dataHandler == null)
+            throw new IllegalStateException("Data handler not defined!");
+
         this.socket = socket;
         startServerSocket(port);
     }

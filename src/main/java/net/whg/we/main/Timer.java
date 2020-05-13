@@ -10,15 +10,11 @@ public class Timer
     private static final String TIMER_NOT_STARTED = "Timer not started!";
 
     private final ITimeSupplier timeSupplier;
-    private float physicsFrameRate = 30f;
     private boolean running;
     private long startTime;
     private long elapsedTime;
-    private long idealPhysicsFrame;
     private long lastFrame;
     private float deltaTime;
-    private long physicsFrame;
-    private long renderFrame;
 
     /**
      * Creates a new timer object.
@@ -32,7 +28,7 @@ public class Timer
     }
 
     /**
-     * Starts, (resetting all values if nessicary), the timer. This will record the
+     * Starts, (resetting all values if necessary), the timer. This will record the
      * current time in nano seconds and preform all time-based operations based on
      * this value. If attached to a game loop, this should be called right as the
      * game loop is started. If this timer is already running, it is simply reset
@@ -43,10 +39,7 @@ public class Timer
         running = true;
         startTime = timeSupplier.nanoTime();
 
-        physicsFrame = 0;
-        renderFrame = 0;
         elapsedTime = 0;
-        idealPhysicsFrame = 0;
         deltaTime = 0;
         lastFrame = startTime;
     }
@@ -71,37 +64,6 @@ public class Timer
     }
 
     /**
-     * Assigns the target framerate for physics to run at.
-     * 
-     * @param frameRate
-     *     - The number of physics frames to run per second.
-     * @throws IllegalStateException
-     *     If the timer is currentlyrunning.
-     * @throws IllegalArgumentException
-     *     If the framerate is negative.
-     */
-    public void setPhysicsFrameRate(float frameRate)
-    {
-        if (running)
-            throw new IllegalStateException("Cannot modify physics timestep while running!");
-
-        if (frameRate < 0f)
-            throw new IllegalArgumentException("Physics framerate cannot be negative!");
-
-        physicsFrameRate = frameRate;
-    }
-
-    /**
-     * Gets the target physics framerate for this timer.
-     * 
-     * @return The number of physics frames which should be run each second.
-     */
-    public float getPhysicsFrameRate()
-    {
-        return physicsFrameRate;
-    }
-
-    /**
      * Gets the amount of time which has passed since the timer was started.
      * 
      * @return The number of seconds this timer has been running.
@@ -112,60 +74,6 @@ public class Timer
     }
 
     /**
-     * Gets the physics frame which should have been run, given the amount of time
-     * which has passed since starting the timer.
-     * <p>
-     * When dealing with physics updates, which need to run on a relable timer, this
-     * class takes care of that by calculating the ideal physics frame at the
-     * begining of each frame. Physics can then be called a number of times to catch
-     * up. The physics frame should be used as:
-     * 
-     * <pre>
-     * timer.beginFrame();
-     * while (timer.getPhysicsFrame() &lt; timer.getIdealPhysicsFrame)
-     * {
-     *     timer.incrementPhysicsFrame();
-     *     doPhysicsUpdate();
-     * }
-     * doFrameUpdate();
-     * </pre>
-     * 
-     * @return The physics frame that should have passed.
-     * @see Timer#getPhysicsFrame()
-     */
-    public long getIdealPhysicsFrame()
-    {
-        return idealPhysicsFrame;
-    }
-
-    /**
-     * Gets the physics frame which has currently been handled.
-     * 
-     * @return The physics frame id.
-     * @see Timer#getIdealPhysicsFrame()
-     */
-    public long getPhysicsFrame()
-    {
-        return physicsFrame;
-    }
-
-    /**
-     * Increments the current physics frame.
-     * 
-     * @throws IllegalStateException
-     *     If the timer is not running.
-     * @see Timer#getIdealPhysicsFrame()
-     * @see Timer#getPhysicsFrame()
-     */
-    public void incrementPhysicsFrame()
-    {
-        if (!running)
-            throw new IllegalStateException(TIMER_NOT_STARTED);
-
-        physicsFrame++;
-    }
-
-    /**
      * Gets the time which has passed since the previous render frame.
      * 
      * @return The time in seconds.
@@ -173,16 +81,6 @@ public class Timer
     public float getDeltaTime()
     {
         return deltaTime;
-    }
-
-    /**
-     * Gets the current render frame number.
-     * 
-     * @return The render frame number.
-     */
-    public long getRenderFrame()
-    {
-        return renderFrame;
     }
 
     /**
@@ -197,7 +95,7 @@ public class Timer
     }
 
     /**
-     * Called at the begining of each frame to calculate time updates such as delta
+     * Called at the beginning of each frame to calculate time updates such as delta
      * time, elapsed time, etc.
      * 
      * @throws IllegalStateException
@@ -208,11 +106,8 @@ public class Timer
         if (!running)
             throw new IllegalStateException(TIMER_NOT_STARTED);
 
-        renderFrame++;
-
         long time = timeSupplier.nanoTime();
         elapsedTime = time - startTime;
-        idealPhysicsFrame = (long) (getElapsedTime() * physicsFrameRate) + 1;
         deltaTime = (float) ((time - lastFrame) / 1.0e9);
 
         lastFrame = time;
