@@ -121,7 +121,7 @@ public class SimpleServer implements IServer
                 var ip = client.getConnection()
                                .getIP();
 
-                logger.error("Failed to kick client {}!", e, ip);
+                logger.error("Failed to kick client {}!", ip, e);
             }
         }
     }
