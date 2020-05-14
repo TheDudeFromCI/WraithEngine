@@ -1,16 +1,12 @@
 package net.whg.we.window;
 
-import net.whg.we.util.IDisposable;
-
 /**
  * This input class is a reference for the current key and mouse states for the
  * focused window. This can be used to check for mouse inputs and key presses as
  * they occur.
  */
-public class Input implements IDisposable
+public class Input extends WindowReceiver
 {
-    private static final String INPUT_DISPOSED = "Input already disposed!";
-
     /**
      * The largest key code input provided by GLFW. Used for making sure enough
      * memory is allocated to store all key states.
@@ -67,18 +63,15 @@ public class Input implements IDisposable
         }
     }
 
-    private final InputListener listener = new InputListener();
     private final boolean[] keyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
     private final boolean[] lastKeyStates = new boolean[MAX_INPUT_KEY_CODE + 1];
     private final boolean[] mouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
     private final boolean[] lastMouseButtons = new boolean[MAX_INPUT_MOUSE_BUTTON + 1];
-    private IWindow window;
     private float mouseX;
     private float mouseY;
     private float lastMouseX;
     private float lastMouseY;
     private float scrollWheelDelta;
-    private boolean disposed;
 
     /**
      * Creates a new input object, and binds a listener to the given window.
@@ -88,8 +81,7 @@ public class Input implements IDisposable
      */
     public Input(IWindow window)
     {
-        this.window = window;
-        window.addWindowListener(listener);
+        listenTo(window, new InputListener());
     }
 
     /**
@@ -102,8 +94,7 @@ public class Input implements IDisposable
      */
     public void endFrame()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
+        checkDisposed();
 
         System.arraycopy(keyStates, 0, lastKeyStates, 0, keyStates.length);
         System.arraycopy(mouseButtons, 0, lastMouseButtons, 0, mouseButtons.length);
@@ -124,9 +115,7 @@ public class Input implements IDisposable
      */
     public boolean isKeyDown(final int key)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return keyStates[key];
     }
 
@@ -142,9 +131,7 @@ public class Input implements IDisposable
      */
     public boolean isKeyJustDown(final int key)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return keyStates[key] && !lastKeyStates[key];
     }
 
@@ -160,9 +147,7 @@ public class Input implements IDisposable
      */
     public boolean isKeyJustUp(final int key)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return !keyStates[key] && lastKeyStates[key];
     }
 
@@ -175,9 +160,7 @@ public class Input implements IDisposable
      */
     public float getMouseX()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseX;
     }
 
@@ -190,9 +173,7 @@ public class Input implements IDisposable
      */
     public float getMouseY()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseY;
     }
 
@@ -205,9 +186,7 @@ public class Input implements IDisposable
      */
     public float getMouseDeltaX()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseX - lastMouseX;
     }
 
@@ -220,9 +199,7 @@ public class Input implements IDisposable
      */
     public float getMouseDeltaY()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseY - lastMouseY;
     }
 
@@ -237,9 +214,7 @@ public class Input implements IDisposable
      */
     public boolean isMouseButtonDown(final int button)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseButtons[button];
     }
 
@@ -255,9 +230,7 @@ public class Input implements IDisposable
      */
     public boolean isMouseButtonJustDown(final int button)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return mouseButtons[button] && !lastMouseButtons[button];
     }
 
@@ -273,9 +246,7 @@ public class Input implements IDisposable
      */
     public boolean isMouseButtonJustUp(final int button)
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return !mouseButtons[button] && lastMouseButtons[button];
     }
 
@@ -288,26 +259,19 @@ public class Input implements IDisposable
      */
     public float getScrollWheelDelta()
     {
-        if (isDisposed())
-            throw new IllegalStateException(INPUT_DISPOSED);
-
+        checkDisposed();
         return scrollWheelDelta;
     }
 
-    @Override
-    public void dispose()
+    /**
+     * Checks if this screen is currently disposed or not.
+     * 
+     * @throws IllegalStateException
+     *     If this screen is disposed.
+     */
+    private void checkDisposed()
     {
         if (isDisposed())
-            return;
-
-        disposed = true;
-        window.removeWindowListener(listener);
-        window = null;
-    }
-
-    @Override
-    public boolean isDisposed()
-    {
-        return disposed;
+            throw new IllegalStateException("Input already disposed!");
     }
 }
