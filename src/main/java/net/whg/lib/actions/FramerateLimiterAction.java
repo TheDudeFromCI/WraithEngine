@@ -1,5 +1,7 @@
 package net.whg.lib.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import net.whg.we.main.ILoopAction;
 import net.whg.we.main.Timer;
 import net.whg.we.main.PipelineConstants;
@@ -10,6 +12,8 @@ import net.whg.we.main.PipelineConstants;
  */
 public class FramerateLimiterAction implements ILoopAction
 {
+    private static final Logger logger = LoggerFactory.getLogger(FramerateLimiterAction.class);
+
     private final Timer timer;
     private final double targetFPS;
     private double smoothing;
@@ -47,8 +51,7 @@ public class FramerateLimiterAction implements ILoopAction
     }
 
     /**
-     * Causes the thread to sleep for a given period of time, catching interrupted
-     * exceptions if they occur.
+     * Causes the thread to sleep for a given period of time.
      * 
      * @param ms
      *     - The number of milliseconds to sleep.
@@ -63,7 +66,10 @@ public class FramerateLimiterAction implements ILoopAction
         }
         catch (InterruptedException e)
         {
-            // TODO Find better approach for handling this exceptions.
+            logger.error("Framerate limiter interrupted!", e);
+
+            Thread.currentThread()
+                  .interrupt();
         }
     }
 
