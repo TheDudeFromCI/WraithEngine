@@ -77,7 +77,7 @@ If the file does not exist, create it. After creating it, you want to add the fo
         <repository>
           <id>github</id>
           <name>GitHub thedudefromci Apache Maven Packages</name>
-          <url>https://maven.pkg.github.com/thedudefromci/WraithEngine</url>
+          <url>https://maven.pkg.github.com/WraithEngine/WraithEngine</url>
         </repository>
       </repositories>
     </profile>
