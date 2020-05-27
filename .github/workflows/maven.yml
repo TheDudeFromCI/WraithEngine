@@ -3,12 +3,12 @@ name: CI
 on:
   push:
     paths:
-      - "**.java"
+      - "src/**"
       - "pom.xml"
       - ".github/**"
   pull_request:
     paths:
-      - "**.java"
+      - "src/**"
       - "pom.xml"
       - ".github/**"
 
