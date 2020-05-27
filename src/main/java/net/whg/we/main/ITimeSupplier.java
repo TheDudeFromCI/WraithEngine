@@ -12,4 +12,14 @@ public interface ITimeSupplier
      * @return The time in nano seconds.
      */
     long nanoTime();
+
+    /**
+     * Causes the thread to sleep for a given period of time.
+     * 
+     * @param ms
+     *     - The number of milliseconds to sleep.
+     * @param ns
+     *     - The number of nanoseconds to sleep.
+     */
+    void sleep(long ms, int ns);
 }

@@ -112,4 +112,21 @@ public class Timer
 
         lastFrame = time;
     }
+
+    /**
+     * Causes the current thread to sleep for the given number of seconds.
+     * 
+     * @param seconds
+     *     - The number of seconds to sleep.
+     */
+    public void sleep(float seconds)
+    {
+        if (seconds <= 0)
+            return;
+
+        long ms = (long) (seconds * 1000);
+        int ns = (int) ((seconds % 0.001) * 1.0e+9);
+
+        timeSupplier.sleep(ms, ns);
+    }
 }

@@ -1,7 +1,5 @@
 package net.whg.lib.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import net.whg.we.main.ILoopAction;
 import net.whg.we.main.Timer;
 import net.whg.we.main.PipelineConstants;
@@ -12,8 +10,6 @@ import net.whg.we.main.PipelineConstants;
  */
 public class FramerateLimiterAction implements ILoopAction
 {
-    private static final Logger logger = LoggerFactory.getLogger(FramerateLimiterAction.class);
-
     private final Timer timer;
     private final double targetFPS;
     private double smoothing;
@@ -39,38 +35,8 @@ public class FramerateLimiterAction implements ILoopAction
         double toWait = (smoothing + delta) / 2;
         smoothing = delta;
 
-        toWait = (2 / targetFPS) - toWait;
-
-        if (toWait > 0)
-        {
-            long ms = (long) (toWait * 1000);
-            int ns = (int) ((toWait % 0.001) * 1.0e+9);
-
-            sleep(ms, ns);
-        }
-    }
-
-    /**
-     * Causes the thread to sleep for a given period of time.
-     * 
-     * @param ms
-     *     - The number of milliseconds to sleep.
-     * @param ns
-     *     - The number of nanoseconds to sleep.
-     */
-    private void sleep(long ms, int ns)
-    {
-        try
-        {
-            Thread.sleep(ms, ns);
-        }
-        catch (InterruptedException e)
-        {
-            logger.error("Framerate limiter interrupted!", e);
-
-            Thread.currentThread()
-                  .interrupt();
-        }
+        var seconds = (float) ((2 / targetFPS) - toWait);
+        timer.sleep(seconds);
     }
 
     @Override
