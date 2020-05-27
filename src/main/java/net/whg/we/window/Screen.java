@@ -1,18 +1,14 @@
 package net.whg.we.window;
 
-import net.whg.we.util.IDisposable;
-
 /**
  * The screen object is an object which can be used to determine various
- * information about the state of the game screen, as well as modidy the screen
+ * information about the state of the game screen, as well as modify the screen
  * in certain ways. Each screen is bound to a single window.
  */
-public class Screen implements IDisposable
+public class Screen extends WindowReceiver
 {
-    private static final String SCREEN_DISPOSED = "Screen already disposed!";
-
     /**
-     * A private listener class which recieved events from the window to store
+     * A private listener class which received events from the window to store
      * within the screen object.
      */
     private class ScreenListener extends IWindowAdapter
@@ -33,11 +29,8 @@ public class Screen implements IDisposable
         }
     }
 
-    private final IWindowListener listener = new ScreenListener();
-    private IWindow window;
     private int width;
     private int height;
-    private boolean disposed;
 
     /**
      * Creates a new screen object and binds to the given window.
@@ -47,8 +40,8 @@ public class Screen implements IDisposable
      */
     public Screen(IWindow window)
     {
-        this.window = window;
-        window.addWindowListener(listener);
+        var listener = new ScreenListener();
+        listenTo(window, listener);
 
         listener.onWindowUpdated(window);
     }
@@ -60,9 +53,7 @@ public class Screen implements IDisposable
      */
     public int getWidth()
     {
-        if (isDisposed())
-            throw new IllegalStateException(SCREEN_DISPOSED);
-
+        checkDisposed();
         return width;
     }
 
@@ -73,9 +64,7 @@ public class Screen implements IDisposable
      */
     public int getHeight()
     {
-        if (isDisposed())
-            throw new IllegalStateException(SCREEN_DISPOSED);
-
+        checkDisposed();
         return height;
     }
 
@@ -86,26 +75,19 @@ public class Screen implements IDisposable
      */
     public float getAspect()
     {
-        if (isDisposed())
-            throw new IllegalStateException(SCREEN_DISPOSED);
-
+        checkDisposed();
         return (float) width / height;
     }
 
-    @Override
-    public void dispose()
+    /**
+     * Checks if this screen is currently disposed or not.
+     * 
+     * @throws IllegalStateException
+     *     If this screen is disposed.
+     */
+    private void checkDisposed()
     {
         if (isDisposed())
-            return;
-
-        disposed = true;
-        window.removeWindowListener(listener);
-        window = null;
-    }
-
-    @Override
-    public boolean isDisposed()
-    {
-        return disposed;
+            throw new IllegalStateException("Screen already disposed!");
     }
 }

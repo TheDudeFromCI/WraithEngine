@@ -35,7 +35,9 @@ public class HeartbeatPacket implements IBinaryPacket
 
     @Override
     public void handle()
-    {}
+    {
+        // TODO Mark sender as still active.
+    }
 
     @Override
     public long getPacketID()

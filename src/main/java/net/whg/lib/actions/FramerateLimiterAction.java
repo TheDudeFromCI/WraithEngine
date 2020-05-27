@@ -35,36 +35,8 @@ public class FramerateLimiterAction implements ILoopAction
         double toWait = (smoothing + delta) / 2;
         smoothing = delta;
 
-        toWait = (2 / targetFPS) - toWait;
-
-        if (toWait > 0)
-        {
-            long ms = (long) (toWait * 1000);
-            int ns = (int) ((toWait % 0.001) * 1.0e+9);
-
-            sleep(ms, ns);
-        }
-    }
-
-    /**
-     * Causes the thread to sleep for a given period of time, catching interrupted
-     * exceptions if they occur.
-     * 
-     * @param ms
-     *     - The number of milliseconds to sleep.
-     * @param ns
-     *     - The number of nanoseconds to sleep.
-     */
-    private void sleep(long ms, int ns)
-    {
-        try
-        {
-            Thread.sleep(ms, ns);
-        }
-        catch (InterruptedException e)
-        {
-            // TODO Find better approach for handling this exceptions.
-        }
+        var seconds = (float) ((2 / targetFPS) - toWait);
+        timer.sleep(seconds);
     }
 
     @Override
