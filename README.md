@@ -1,16 +1,43 @@
-[![Actions Status](https://github.com/TheDudeFromCI/WraithEngine/workflows/CI/badge.svg)](https://github.com/TheDudeFromCI/WraithEngine/actions)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=alert_status)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=bugs)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=coverage)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_index)](https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine)
-[![BCH compliance](https://bettercodehub.com/edge/badge/TheDudeFromCI/WraithEngine?branch=master)](https://bettercodehub.com/)
+<h1 align="center">WraithEngine</h1>
+<p align="center"><i>WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relevant for their projects.</i></p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/license/TheDudeFromCI/nodelib" />
+  <img src="https://img.shields.io/github/repo-size/TheDudeFromCI/nodelib" />
+  <img src="https://img.shields.io/github/issues/TheDudeFromCI/nodelib" />
+  <img src="https://img.shields.io/github/v/release/TheDudeFromCI/nodelib?include_prereleases" />
+  <a href="https://github.com/TheDudeFromCI/WraithEngine/actions"><img alt="Actions Status" src="https://github.com/TheDudeFromCI/WraithEngine/workflows/CI/badge.svg" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine"><img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=alert_status" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine"><img alt="Bugs" src="https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=bugs" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine"><img alt="Coverage" src="https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=coverage" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine"><img alt="Maintainability Rating" src="https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_rating" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=TheDudeFromCI_WraithEngine"><img alt="Technical Debt" src="https://sonarcloud.io/api/project_badges/measure?project=TheDudeFromCI_WraithEngine&metric=sqale_index" /></a>
+  <a href="https://bettercodehub.com/"><img alt="BCH compliance" src="https://bettercodehub.com/edge/badge/TheDudeFromCI/WraithEngine?branch=master" /></a>
+</p>
 
 ---
 
-# <div align="center">WraithEngine</div>
+<h2 align="center">A Super Special Thanks To</h2>
+<p align="center">
+  :star: Mika, Alora Brown :star:
+</p>
 
-*<p align="justify">WraithEngine is a free, open-source, Java-based game engine built on top of LWJGL. It is designed to use high-level API for creating games quickly and easily. It is designed to allow users to be able to browse and modify the engine to fit their needs, and only apply components which are relevant for their projects.</p>*
+<br />
+
+<h3 align="center">And a Warm Thank You To</h3>
+<p align="center">
+  :rocket:  :rocket:
+</p>
+
+<br />
+<br />
+
+Thank you all for supporting me and helping this project to continue being developed.
+
+<br />
+
+<p>Want to support this project? Join my Patreon!</p>
+<a href="https://www.patreon.com/thedudefromci"><img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="150px" /></a>
 
 ---
 
@@ -149,9 +176,3 @@ WraithEngine is open-source and community-driven. All contributions are welcome 
 - Features and Enhancements
 
   These are the really big ones, for the brave. If you see a crucial feature on the todo list, that's really taking far too long to be implemented, feel free to get the ball rolling. It keeps things moving and ensures that the most important features actually make it into the project.
-
----
-
-If this project is something that has helped you, please consider donating. Many hours have gone into the development of this project and I would immensely appreciate it. It helps me continue doing what I love, making open source game assets. Thank you.
-
-<p align="center"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6U3RFW3H3Y7AU&currency_code=USD&source=url"><img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" title="Donate with PayPal"/></a></p>
