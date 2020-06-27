@@ -26,7 +26,8 @@
 
 <h3 align="center">And a Warm Thank You To</h3>
 <p align="center">
-  :rocket: chezhead :rocket:
+  :rocket: chezhead
+ :rocket:
 </p>
 
 <br />
@@ -147,7 +148,7 @@ in the project directory. The WraithEngine jar file can be found in the `target`
 
 Various demos for WraithEngine can be found within the `Demos` folder, showing off some of the various features of WraithEngine, as well as how they are used. If you'd like to run these projects yourself, you can clone the project, then run the following command from within the project directory:
 
-* `mvn -DskipTests dependency:copy-dependencies package`
+* `mvn -DskipTests dependency:copy-dependencies install`
 * `mvn -f Demos/pom.xml dependency:copy-dependencies package`
 
 For **Unix** / **Mac**:
